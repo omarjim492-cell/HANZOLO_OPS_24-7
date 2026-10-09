@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HANZOLO, LDA - ops 247</title>
+    <title>HANZOLO, LDA - OPS 247</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -31,53 +31,79 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0b0f19; }
         ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        @media print {
+            aside, header button, .no-print { display: none !important; }
+            main { padding: 0 !important; width: 100% !important; }
+            body { background: #fff !important; color: #000 !important; }
+            .bg-\[\#111827\], .bg-gray-900\/60 { background: #fff !important; border: 1px solid #ccc !important; color: #000 !important; }
+            .text-white, .text-gray-400, .text-gray-300 { color: #000 !important; }
+        }
     </style>
 </head>
 <body class="bg-[#0b0f19] text-gray-100 font-sans min-h-screen flex">
 
     <!-- Sidebar Lateral -->
-    <aside class="w-64 bg-[#111827] border-r border-gray-800 flex flex-col justify-between hidden md:flex">
-        <div>
+    <aside class="w-72 bg-[#111827] border-r border-gray-800 flex flex-col justify-between hidden md:flex h-screen sticky top-0">
+        <div class="flex-1 overflow-y-auto">
             <!-- Header Logo -->
-            <div class="p-6 border-b border-gray-800 flex items-center space-x-3">
+            <div class="p-5 border-b border-gray-800 flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-sky-600 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-sky-500/20">
                     H
                 </div>
                 <div>
                     <h1 class="font-bold text-sm tracking-wider text-white">HANZOLO, LDA</h1>
-                    <p class="text-xs text-sky-400 font-semibold tracking-wider">ops 24-7</p>
+                    <p class="text-xs text-sky-400 font-semibold tracking-wider">OPS 24-7</p>
                 </div>
             </div>
 
-            <!-- Menus -->
-            <nav class="mt-4 px-3 space-y-1" id="sidebar-nav">
-                <button onclick="switchTab('painel')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-white bg-sky-600/20 text-sky-400 border border-sky-500/30">
-                    <i class="fa-solid font-bold fa-chart-line w-5"></i>
-                    <span>Painel Geral</span>
+            <!-- Menus e Departamentos -->
+            <nav class="p-3 space-y-1 text-xs" id="sidebar-nav">
+                <p class="px-3 pt-2 pb-1 text-[10px] uppercase font-bold text-gray-500 tracking-wider">Geral & Operações</p>
+                <button onclick="switchTab('painel')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-white bg-sky-600/20 text-sky-400 border border-sky-500/30">
+                    <i class="fa-solid fa-chart-line w-4"></i>
+                    <span>Painel Geral & KPIs</span>
                 </button>
-                <button onclick="switchTab('frota')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
-                    <i class="fa-solid fa-truck-fast w-5"></i>
-                    <span>Frota & KPIs</span>
+                <button onclick="switchTab('organograma')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-sitemap w-4"></i>
+                    <span>Organograma da Empresa</span>
                 </button>
-                <button onclick="switchTab('kanban')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
-                    <i class="fa-solid fa-[#0284c7] fa-list-check w-5"></i>
-                    <span>Kanban de Tarefas</span>
+                <button onclick="switchTab('folha_obra')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-file-signature w-4"></i>
+                    <span>Folhas de Obras & Evidências</span>
                 </button>
-                <button onclick="switchTab('requisicoes')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
-                    <i class="fa-solid fa-box-open w-5"></i>
-                    <span>Requisições NRM</span>
+
+                <p class="px-3 pt-3 pb-1 text-[10px] uppercase font-bold text-gray-500 tracking-wider">Departamentos</p>
+                <button onclick="switchTab('dgp')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-diagram-project w-4 text-sky-400"></i>
+                    <span>DGP - Gestão Projectos</span>
                 </button>
-                <button onclick="switchTab('inventario')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
-                    <i class="fa-solid fa-cubes w-5"></i>
-                    <span>Inventário & Stock</span>
+                <button onclick="switchTab('se')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-shield-virus w-4 text-emerald-400"></i>
+                    <span>SE - Seg. Eletrónica</span>
                 </button>
-                <button onclick="switchTab('financas')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
-                    <i class="fa-solid fa-sack-dollar w-5"></i>
-                    <span>Finanças & Orçamentos</span>
+                <button onclick="switchTab('df')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-sack-dollar w-4 text-amber-400"></i>
+                    <span>DF - Finanças</span>
                 </button>
-                <button onclick="switchTab('hst')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
-                    <i class="fa-solid fa-shield-halved w-5"></i>
-                    <span>Segurança & HST</span>
+                <button onclick="switchTab('dl')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-boxes-packing w-4 text-indigo-400"></i>
+                    <span>DL - Logística & Stock</span>
+                </button>
+                <button onclick="switchTab('dt')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-truck-fast w-4 text-purple-400"></i>
+                    <span>DT - Transportes & Frota</span>
+                </button>
+                <button onclick="switchTab('drh')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-id-card w-4 text-rose-400"></i>
+                    <span>DRH - Recursos Humanos</span>
+                </button>
+                <button onclick="switchTab('tecnicos')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-screwdriver-wrench w-4 text-amber-500"></i>
+                    <span>Técnicos & Serv. Gerais</span>
+                </button>
+                <button onclick="switchTab('hsst')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-user-shield w-4 text-teal-400"></i>
+                    <span>Gestão Qualidade & HSST</span>
                 </button>
             </nav>
         </div>
@@ -85,12 +111,12 @@
         <!-- Footer Perfil -->
         <div class="p-4 border-t border-gray-800">
             <div class="flex items-center space-x-3 bg-gray-900 p-2.5 rounded-lg border border-gray-800">
-                <div class="w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center font-bold text-white text-sm">
+                <div class="w-9 h-9 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white text-sm">
                     OJ
                 </div>
                 <div class="overflow-hidden">
                     <p class="text-xs font-semibold text-white truncate">Omar Jim</p>
-                    <p class="text-[10px] text-gray-400 truncate">Direção Operacional</p>
+                    <p class="text-[10px] text-sky-400 truncate">Direção Operacional (NIF: 5417082912)</p>
                 </div>
             </div>
         </div>
@@ -100,62 +126,60 @@
     <main class="flex-1 overflow-y-auto p-4 md:p-8">
         
         <!-- Navbar Topo -->
-        <header class="flex justify-between items-center pb-6 border-b border-gray-800 mb-6">
+        <header class="flex flex-wrap justify-between items-center pb-6 border-b border-gray-800 mb-6 gap-4">
             <div>
-                <h2 id="page-title" class="text-xl font-bold text-white tracking-wide">Painel Geral & Operações</h2>
-                <p class="text-xs text-gray-400">Monitorização em tempo real das equipas técnicas (Luanda, Angola)</p>
+                <h2 id="page-title" class="text-xl font-bold text-white tracking-wide">Painel Geral & Operações 24/7</h2>
+                <p class="text-xs text-gray-400">Sincronizado em tempo real | Luanda, Angola (NIF: 5417082912)</p>
             </div>
-            <div class="flex items-center space-x-3">
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    <span class="w-2 h-2 mr-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    GPS & Servidor Online
-                </span>
+            
+            <!-- Botões de Exportação -->
+            <div class="flex items-center flex-wrap gap-2 no-print">
+                <button onclick="exportExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-lg font-medium flex items-center gap-2 transition">
+                    <i class="fa-solid fa-file-excel"></i> Exportar Excel
+                </button>
+                <button onclick="window.print()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs px-3 py-2 rounded-lg font-medium flex items-center gap-2 transition">
+                    <i class="fa-solid fa-file-pdf"></i> Imprimir / PDF
+                </button>
+                <button onclick="exportPowerPoint()" class="bg-orange-600 hover:bg-orange-500 text-white text-xs px-3 py-2 rounded-lg font-medium flex items-center gap-2 transition">
+                    <i class="fa-solid fa-file-powerpoint"></i> PPT Evidências
+                </button>
             </div>
         </header>
 
-        <!-- SEÇÃO: PAINEL GERAL / FROTA -->
-        <div id="content-painel" class="tab-content space-y-6">
-            
-            <!-- Cards Métricas Principais -->
+        <!-- ABA 1: PAINEL GERAL -->
+        <div id="tab-painel" class="tab-content space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Card 1 -->
-                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between shadow-sm">
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Total Viaturas</p>
+                        <p class="text-xs text-gray-400 font-medium uppercase">Total Viaturas (DT)</p>
                         <h3 class="text-2xl font-bold text-white mt-1">3</h3>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
                         <i class="fa-solid fa-truck text-lg"></i>
                     </div>
                 </div>
-
-                <!-- Card 2 -->
-                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between shadow-sm">
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Em Rota / Ativas</p>
-                        <h3 class="text-2xl font-bold text-emerald-400 mt-1">3</h3>
+                        <p class="text-xs text-gray-400 font-medium uppercase">Projectos Ativos (DGP)</p>
+                        <h3 class="text-2xl font-bold text-emerald-400 mt-1">12</h3>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                        <i class="fa-solid fa-location-arrow text-lg"></i>
+                        <i class="fa-solid fa-diagram-project text-lg"></i>
                     </div>
                 </div>
-
-                <!-- Card 3 -->
-                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between shadow-sm">
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Em Manutenção</p>
-                        <h3 class="text-2xl font-bold text-amber-400 mt-1">0</h3>
+                        <p class="text-xs text-gray-400 font-medium uppercase">Equipa Técnica</p>
+                        <h3 class="text-2xl font-bold text-amber-400 mt-1">18</h3>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-                        <i class="fa-solid fa-wrench text-lg"></i>
+                        <i class="fa-solid fa-users text-lg"></i>
                     </div>
                 </div>
-
-                <!-- Card 4 (Correção do NaN%) -->
-                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between shadow-sm">
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Combustível Médio</p>
-                        <h3 id="fuel-average" class="text-2xl font-bold text-sky-400 mt-1">84%</h3>
+                        <p class="text-xs text-gray-400 font-medium uppercase">Combustível Médio</p>
+                        <h3 class="text-2xl font-bold text-sky-400 mt-1">84%</h3>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
                         <i class="fa-solid fa-gas-pump text-lg"></i>
@@ -163,146 +187,195 @@
                 </div>
             </div>
 
-            <!-- Gráficos e Círculos de Progresso -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Gráfico de Tendência (Chart.js) -->
-                <div class="lg:col-span-2 bg-[#111827] border border-gray-800 p-5 rounded-xl">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-sm font-semibold text-white">Consumo Operacional vs. Rotas (Semanal)</h3>
-                        <span class="text-xs text-gray-400">Luanda, AO</span>
-                    </div>
-                    <div class="h-64">
-                        <canvas id="trendChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Indicadores Circulares SVG -->
-                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex flex-col justify-between">
-                    <h3 class="text-sm font-semibold text-white mb-4">Eficiência de Operações</h3>
-                    
-                    <div class="grid grid-cols-2 gap-4 my-auto text-center">
-                        <!-- Círculo 1 -->
-                        <div class="flex flex-col items-center">
-                            <div class="relative w-24 h-24">
-                                <svg class="w-full h-full" viewBox="0 0 36 36">
-                                    <path class="text-gray-800" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                    <path class="text-emerald-500" stroke-dasharray="92, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                </svg>
-                                <div class="absolute inset-0 flex items-center justify-center font-bold text-sm text-white">92%</div>
-                            </div>
-                            <span class="text-xs text-gray-400 mt-2 font-medium">Pontualidade</span>
-                        </div>
-
-                        <!-- Círculo 2 -->
-                        <div class="flex flex-col items-center">
-                            <div class="relative w-24 h-24">
-                                <svg class="w-full h-full" viewBox="0 0 36 36">
-                                    <path class="text-gray-800" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                    <path class="text-sky-500" stroke-dasharray="88, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                </svg>
-                                <div class="absolute inset-0 flex items-center justify-center font-bold text-sm text-white">88%</div>
-                            </div>
-                            <span class="text-xs text-gray-400 mt-2 font-medium">Conformidade HST</span>
-                        </div>
-                    </div>
-
-                    <p class="text-[11px] text-gray-500 text-center mt-4">Atualizado automaticamente via telemetria GPS</p>
+            <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl">
+                <h3 class="text-sm font-semibold text-white mb-4">Consumo Operacional vs. Projectos Concluídos (Luanda)</h3>
+                <div class="h-64">
+                    <canvas id="mainChart"></canvas>
                 </div>
             </div>
-
-            <!-- Rastreamento de Frota em Tempo Real (Luanda) -->
-            <div class="bg-[#111827] border border-gray-800 rounded-xl p-5">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-map-location-dot text-sky-400"></i>
-                        Monitorização GPS & Rotas Ativas (Luanda)
-                    </h3>
-                    <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">GPS Sincronizado</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Viatura 1 -->
-                    <div class="bg-gray-900/60 border border-gray-800 rounded-lg p-4">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-xs font-mono font-bold text-sky-400">LD-23-76-HU</span>
-                                <h4 class="font-bold text-white text-sm">Toyota Hilux #01</h4>
-                            </div>
-                            <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-medium">Em Rota</span>
-                        </div>
-                        <div class="mt-3 text-xs space-y-1 text-gray-400">
-                            <p><strong class="text-gray-300">Origem:</strong> Base Talatona</p>
-                            <p><strong class="text-gray-300">Destino:</strong> Maianga, Luanda</p>
-                        </div>
-                        <div class="mt-4">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-gray-400">Combustível</span>
-                                <span class="text-emerald-400 font-bold">85%</span>
-                            </div>
-                            <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-                                <div class="bg-emerald-500 h-full rounded-full" style="width: 85%"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Viatura 2 -->
-                    <div class="bg-gray-900/60 border border-gray-800 rounded-lg p-4">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-xs font-mono font-bold text-sky-400">LD-45-12-GX</span>
-                                <h4 class="font-bold text-white text-sm">Mitsubishi Canter #02</h4>
-                            </div>
-                            <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-medium">Em Rota</span>
-                        </div>
-                        <div class="mt-3 text-xs space-y-1 text-gray-400">
-                            <p><strong class="text-gray-300">Origem:</strong> Viana Park</p>
-                            <p><strong class="text-gray-300">Destino:</strong> Porto de Luanda</p>
-                        </div>
-                        <div class="mt-4">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-gray-400">Combustível</span>
-                                <span class="text-emerald-400 font-bold">90%</span>
-                            </div>
-                            <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-                                <div class="bg-emerald-500 h-full rounded-full" style="width: 90%"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Viatura 3 -->
-                    <div class="bg-gray-900/60 border border-gray-800 rounded-lg p-4">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-xs font-mono font-bold text-sky-400">LD-88-90-AA</span>
-                                <h4 class="font-bold text-white text-sm">Nissan Hardbody #03</h4>
-                            </div>
-                            <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-medium">Em Rota</span>
-                        </div>
-                        <div class="mt-3 text-xs space-y-1 text-gray-400">
-                            <p><strong class="text-gray-300">Origem:</strong> Central Kilamba</p>
-                            <p><strong class="text-gray-300">Destino:</strong> Belas Shopping</p>
-                        </div>
-                        <div class="mt-4">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-gray-400">Combustível</span>
-                                <span class="text-amber-400 font-bold">77%</span>
-                            </div>
-                            <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-                                <div class="bg-amber-500 h-full rounded-full" style="width: 77%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
-        <!-- OUTRAS SEÇÕES (ALTERNÁVEIS) -->
-        <div id="content-outros" class="tab-content hidden space-y-6">
+        <!-- ABA 2: DRH - CADASTRO DE COLABORADOR -->
+        <div id="tab-drh" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-rose-400"></i>
+                    Cadastro de Colaborador & Credenciais de Acesso (Pass / Senha)
+                </h3>
+                
+                <form id="form-colaborador" onsubmit="cadastrarColaborador(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div>
+                        <label class="block text-gray-400 mb-1">Nome Completo</label>
+                        <input type="text" id="cad-nome" required placeholder="Ex: António Silva" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">NIF / BI</label>
+                        <input type="text" id="cad-nif" required placeholder="006543210LA042" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Departamento</label>
+                        <select id="cad-dept" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white focus:outline-none focus:border-sky-500">
+                            <option value="DGP">DGP - Gestão de Projectos</option>
+                            <option value="SE">SE - Segurança Eletrónica</option>
+                            <option value="DF">DF - Finanças</option>
+                            <option value="DL">DL - Logística</option>
+                            <option value="DT">DT - Transportes</option>
+                            <option value="DRH">DRH - Recursos Humanos</option>
+                            <option value="Técnico">Técnicos & Serv. Gerais</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Cargo / Função</label>
+                        <input type="text" id="cad-cargo" required placeholder="Ex: Técnico Especialista SE" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Passe / ID de Acesso</label>
+                        <input type="text" id="cad-pass" required placeholder="PASS-2024-001" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white focus:outline-none focus:border-sky-500 font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Palavra-passe Inicial</label>
+                        <input type="password" id="cad-senha" required placeholder="******" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div class="md:col-span-3 flex justify-end mt-2">
+                        <button type="submit" class="bg-rose-600 hover:bg-rose-500 text-white font-medium px-5 py-2.5 rounded-lg transition">
+                            <i class="fa-solid fa-save mr-1"></i> Cadastrar & Gerar Passe Digital
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Lista de Colaboradores -->
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-white mb-4">Quadro de Colaboradores Ativos (DRH)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-400">
+                        <thead class="bg-gray-900 text-gray-300 font-semibold border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">ID / Passe</th>
+                                <th class="p-3">Nome</th>
+                                <th class="p-3">NIF</th>
+                                <th class="p-3">Departamento</th>
+                                <th class="p-3">Cargo</th>
+                                <th class="p-3">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-colaboradores" class="divide-y divide-gray-800">
+                            <tr>
+                                <td class="p-3 font-mono text-sky-400">PASS-HNZ-001</td>
+                                <td class="p-3 text-white font-medium">Omar Jim</td>
+                                <td class="p-3">5417082912</td>
+                                <td class="p-3"><span class="bg-sky-500/10 text-sky-400 px-2 py-0.5 rounded">Direção</span></td>
+                                <td class="p-3">Diretor Operacional</td>
+                                <td class="p-3"><span class="text-emerald-400">● Ativo</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-mono text-sky-400">PASS-HNZ-002</td>
+                                <td class="p-3 text-white font-medium">Manuel Mateus</td>
+                                <td class="p-3">008432112LA031</td>
+                                <td class="p-3"><span class="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded">SE</span></td>
+                                <td class="p-3">Eng. Segurança Eletrónica</td>
+                                <td class="p-3"><span class="text-emerald-400">● Ativo</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 3: FOLHAS DE OBRAS E EVIDÊNCIAS POR IMAGEM -->
+        <div id="tab-folha_obra" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-file-signature text-sky-400"></i>
+                    Emissão de Folha de Obra com Upload de Imagens / Evidências
+                </h3>
+                
+                <form onsubmit="gerarFolhaObra(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div>
+                        <label class="block text-gray-400 mb-1">ID da Obra</label>
+                        <input type="text" required value="OBR-2024-LU-08" readonly class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-sky-400 font-mono font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Cliente / Empresa</label>
+                        <input type="text" id="ob-cliente" required placeholder="Ex: Sonangol EP" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">NIF do Cliente</label>
+                        <input type="text" id="ob-nif" required placeholder="541239908" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Localização (Luanda)</label>
+                        <input type="text" id="ob-local" required placeholder="Ex: Talatona, Edifício Sede" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Técnico Responsável</label>
+                        <input type="text" id="ob-tecnico" required placeholder="Ex: Eng. Manuel Mateus" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Carregar Foto / Evidência de Campo</label>
+                        <input type="file" id="ob-foto" accept="image/*" onchange="previewImagem(event)" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2 text-gray-400">
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="block text-gray-400 mb-1">Descrição dos Trabalhos Efetuados</label>
+                        <textarea id="ob-desc" rows="3" placeholder="Insira os detalhes dos trabalhos de instalação, manutenção ou reparação..." class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white"></textarea>
+                    </div>
+                    
+                    <!-- Pré-visualização da imagem -->
+                    <div id="preview-container" class="md:col-span-3 hidden">
+                        <p class="text-xs text-gray-400 mb-1">Pré-visualização da Evidência:</p>
+                        <img id="img-preview" class="h-40 rounded-lg border border-gray-800 object-cover">
+                    </div>
+
+                    <div class="md:col-span-3 flex justify-end">
+                        <button type="submit" class="bg-sky-600 hover:bg-sky-500 text-white font-medium px-5 py-2.5 rounded-lg transition">
+                            <i class="fa-solid fa-print mr-1"></i> Submeter & Guardar Folha de Obra
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ABA 4: ORGANOGRAMA CORPORATIVO -->
+        <div id="tab-organograma" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-6 text-center">Organograma Estrutural - HANZOLO, LDA</h3>
+                
+                <div class="flex flex-col items-center space-y-6 text-xs">
+                    <div class="bg-sky-900/40 border border-sky-500 p-4 rounded-xl text-center w-64 shadow-lg shadow-sky-500/10">
+                        <p class="text-sky-400 font-bold">Conselho de Administração</p>
+                        <p class="text-white font-bold text-sm mt-1">Direção Geral</p>
+                    </div>
+
+                    <div class="w-0.5 h-6 bg-gray-700"></div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg text-center">
+                            <span class="text-sky-400 font-bold block">DGP</span>
+                            <span class="text-gray-300">Gestão de Projectos</span>
+                        </div>
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg text-center">
+                            <span class="text-emerald-400 font-bold block">SE / HSST</span>
+                            <span class="text-gray-300">Segurança & Qualidade</span>
+                        </div>
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg text-center">
+                            <span class="text-amber-400 font-bold block">DF / DL</span>
+                            <span class="text-gray-300">Finanças & Logística</span>
+                        </div>
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg text-center">
+                            <span class="text-rose-400 font-bold block">DRH / DT</span>
+                            <span class="text-gray-300">Recursos & Transportes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÕES DOS DEPARTAMENTOS -->
+        <div id="tab-generico" class="tab-content hidden space-y-6">
             <div class="bg-[#111827] border border-gray-800 rounded-xl p-8 text-center">
-                <i class="fa-solid fa-folder-open text-4xl text-sky-400 mb-3"></i>
-                <h3 id="other-title" class="text-lg font-bold text-white">Módulo Operacional</h3>
-                <p class="text-sm text-gray-400 mt-1">Dados em sincronização com o banco de dados principal de Angola.</p>
+                <i id="dept-icon" class="fa-solid fa-folder-open text-4xl text-sky-400 mb-3"></i>
+                <h3 id="dept-title" class="text-lg font-bold text-white">Módulo Operacional</h3>
+                <p class="text-xs text-gray-400 mt-2">Dados e relatórios operacionais sincronizados com o servidor central Hanzolo Ops 24/7 (Luanda).</p>
             </div>
         </div>
 
@@ -310,66 +383,110 @@
 
     <!-- JavaScript Integrado -->
     <script>
-        // Sistema de navegação por abas
         function switchTab(tab) {
-            const painel = document.getElementById('content-painel');
-            const outros = document.getElementById('content-outros');
-            const pageTitle = document.getElementById('page-title');
-            const otherTitle = document.getElementById('other-title');
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(t => t.classList.add('hidden'));
 
-            if (tab === 'painel' || tab === 'frota') {
-                painel.classList.remove('hidden');
-                outros.classList.add('hidden');
-                pageTitle.innerText = tab === 'painel' ? "Painel Geral & Operações" : "Gestão de Frota & KPIs";
+            const titles = {
+                painel: "Painel Geral & Operações 24/7",
+                drh: "DRH - Gestão de Recursos Humanos & Passes",
+                folha_obra: "Folhas de Obras & Relatórios de Campo",
+                organograma: "Organograma Estrutural da Empresa",
+                dgp: "DGP - Departamento de Gestão de Projectos",
+                se: "SE - Departamento de Segurança Eletrónica",
+                df: "DF - Departamento Financeiro & Orçamentos",
+                dl: "DL - Departamento de Logística & Stock",
+                dt: "DT - Departamento dos Transportes & Frota",
+                tecnicos: "Técnicos & Serviços Gerais",
+                hsst: "Gestão de Qualidade & HSST"
+            };
+
+            document.getElementById('page-title').innerText = titles[tab] || "Módulo Hanzolo Ops";
+
+            if (document.getElementById('tab-' + tab)) {
+                document.getElementById('tab-' + tab).classList.remove('hidden');
             } else {
-                painel.classList.add('hidden');
-                outros.classList.remove('hidden');
-                
-                const names = {
-                    kanban: 'Kanban de Tarefas Tecnicas',
-                    requisicoes: 'Requisições NRM',
-                    inventario: 'Inventário & Gestão de Stock',
-                    financas: 'Finanças & Orçamentos',
-                    hst: 'Segurança & Normas HST'
-                };
-                
-                pageTitle.innerText = names[tab] || "Módulo Hanzolo";
-                otherTitle.innerText = names[tab] || "Módulo Operacional";
+                const gen = document.getElementById('tab-generico');
+                gen.classList.remove('hidden');
+                document.getElementById('dept-title').innerText = titles[tab] || "Módulo Operacional";
             }
         }
 
-        // Renderização do Gráfico Chart.js
+        function cadastrarColaborador(e) {
+            e.preventDefault();
+            const nome = document.getElementById('cad-nome').value;
+            const nif = document.getElementById('cad-nif').value;
+            const dept = document.getElementById('cad-dept').value;
+            const cargo = document.getElementById('cad-cargo').value;
+            const pass = document.getElementById('cad-pass').value;
+
+            const tbody = document.getElementById('lista-colaboradores');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="p-3 font-mono text-sky-400">${pass}</td>
+                <td class="p-3 text-white font-medium">${nome}</td>
+                <td class="p-3">${nif}</td>
+                <td class="p-3"><span class="bg-sky-500/10 text-sky-400 px-2 py-0.5 rounded">${dept}</span></td>
+                <td class="p-3">${cargo}</td>
+                <td class="p-3"><span class="text-emerald-400">● Ativo</span></td>
+            `;
+            tbody.appendChild(row);
+            alert("Colaborador " + nome + " cadastrado com sucesso!");
+            document.getElementById('form-colaborador').reset();
+        }
+
+        function previewImagem(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('img-preview').src = event.target.result;
+                    document.getElementById('preview-container').classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function gerarFolhaObra(e) {
+            e.preventDefault();
+            alert("Folha de Obra emitida e evidências gravadas com sucesso!");
+            window.print();
+        }
+
+        function exportExcel() {
+            let csv = "ID_Passe,Nome,NIF,Departamento,Cargo\n";
+            csv += "PASS-HNZ-001,Omar Jim,5417082912,Direcao,Diretor Operacional\n";
+            csv += "PASS-HNZ-002,Manuel Mateus,008432112LA031,SE,Eng. Seguranca Eletronica\n";
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'relatorio_hanzolo_ops.csv');
+            a.click();
+        }
+
+        function exportPowerPoint() {
+            alert("Preparando apresentação PPT com evidências do sistema Hanzolo Ops...");
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
-            const ctx = document.getElementById('trendChart').getContext('2d');
+            const ctx = document.getElementById('mainChart').getContext('2d');
             new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
-                    labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                    datasets: [
-                        {
-                            label: 'Consumo Combustível (L)',
-                            data: [120, 190, 150, 170, 140, 90, 60],
-                            borderColor: '#0284c7',
-                            backgroundColor: 'rgba(2, 132, 199, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Rotas Concluídas',
-                            data: [8, 12, 10, 14, 11, 5, 2],
-                            borderColor: '#10b981',
-                            backgroundColor: 'transparent',
-                            borderDash: [5, 5],
-                            tension: 0.4
-                        }
-                    ]
+                    labels: ['DGP Projectos', 'SE Instalações', 'DL Stock', 'DT Rotas', 'HSST Auditorias'],
+                    datasets: [{
+                        label: 'Desempenho Semanal (%)',
+                        data: [95, 88, 92, 84, 98],
+                        backgroundColor: ['#0284c7', '#10b981', '#f59e0b', '#8b5cf6', '#14b8a6'],
+                        borderRadius: 6
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: '#9ca3af' } }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
                         x: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } },
                         y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
