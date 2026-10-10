@@ -34,7 +34,6 @@
     <!-- Header Superior com Logotipo Vetorizado Hanzolo -->
     <header class="bg-cardBg border-b border-borderDark px-6 py-3 flex items-center justify-between shadow-lg relative z-30">
         <div class="flex items-center space-x-4">
-            <!-- Logotipo Vetorizado Hanzolo incorporado em SVG -->
             <div class="flex items-center space-x-3 bg-darkBg/60 px-3 py-1.5 rounded-xl border border-borderDark">
                 <svg viewBox="0 0 1000 250" class="h-9 w-auto" xmlns="http://www.w3.org/2000/svg">
                     <polygon points="0,125 180,0 180,75 250,75 250,175 180,175 180,250" fill="#00b4d8" />
@@ -61,7 +60,7 @@
             <span class="hidden md:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <span class="w-2 h-2 mr-2 bg-emerald-500 rounded-full animate-pulse"></span> Sistema & GPS Ativos (Luanda)
             </span>
-            <button onclick="alert('Notificações:\n- Vistoria CCTV Banco Sol agendada para 2ª feira.\n- 3 Relatórios de Obras pendentes de aprovação pelo DGP.')" class="relative p-2.5 rounded-xl bg-darkBg border border-borderDark text-gray-300 hover:text-white transition-all">
+            <button onclick="alert('Notificações:\n- Vistoria CCTV Banco Sol agendada para 2ª feira.\n- 3 Relatórios de Obras pendentes de aprovação pelo DGP.\n- Manutenção preventiva da Hilux #01 agendada.')" class="relative p-2.5 rounded-xl bg-darkBg border border-borderDark text-gray-300 hover:text-white transition-all">
                 <i class="fa-regular fa-bell text-lg"></i>
                 <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">3</span>
             </button>
@@ -168,7 +167,7 @@
                     </div>
                 </div>
 
-                <!-- Gráficos Avançados: Linhas, Velas Finas e Circular -->
+                <!-- Gráficos Avançados -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="glass-card p-6 rounded-2xl border border-borderDark">
                         <div class="flex justify-between items-center mb-4"><h3 class="text-sm font-bold text-white">Leituras de Linhas Operacionais</h3><span class="text-xs text-cyan-400">Luanda</span></div>
@@ -239,7 +238,7 @@
                         <textarea rows="3" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">Substituição de câmara IP dome exterior, verificação de cablagem estruturada e testes de gravação no NVR central.</textarea>
                     </div>
 
-                    <!-- Importação de Evidências por Vídeo e Imagem -->
+                    <!-- Importação de Evidências -->
                     <div class="pt-2 border-t border-borderDark">
                         <h4 class="text-xs font-bold text-white mb-2"><i class="fa-solid fa-photo-film text-cyan-400 mr-2"></i>Importação de Evidências (Fotos & Vídeos)</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -268,17 +267,34 @@
 
             <!-- TAB 3: DGP -->
             <div id="tab-dgp" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">DGP - Direção Geral & Planeamento</h2><p class="text-xs text-gray-400">Estratégia corporativa e metas globais</p></div>
+                <div><h2 class="text-xl font-bold text-white">DGP - Direção Geral & Planeamento</h2><p class="text-xs text-gray-400">Estratégia corporativa, orçamentos e metas globais</p></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Orçamento Executado (Q4)</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">78.4%</h3><p class="text-[11px] text-gray-400 mt-1">Meta trimestral em cumprimento</p></div>
                     <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Projetos Ativos</p><h3 class="text-2xl font-bold text-white mt-1">14</h3><p class="text-[11px] text-gray-400 mt-1">Luanda e Províncias</p></div>
                     <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Auditoria de Qualidade</p><h3 class="text-2xl font-bold text-cyan-400 mt-1">98/100</h3><p class="text-[11px] text-gray-400 mt-1">Padrão ISO 9001</p></div>
                 </div>
+                
+                <!-- Planeamento Estratégico -->
+                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
+                    <h3 class="text-sm font-bold text-white"><i class="fa-solid fa-bullseye text-cyan-400 mr-2"></i>Plano Director 2026 / 2027</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
+                            <h4 class="font-bold text-white mb-2">Expansão de Infraestrutura e Redes</h4>
+                            <p class="text-gray-400">Implementação da nova sala de monitorização remota de alta frequência na Base de Talatona com capacidade para 120 canais em tempo real.</p>
+                            <span class="inline-block mt-3 px-2 py-1 rounded bg-cyan-500/10 text-cyan-400 text-[10px] font-bold">Progresso: 85%</span>
+                        </div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
+                            <h4 class="font-bold text-white mb-2">Certificação Internacional de Equipa</h4>
+                            <p class="text-gray-400">Treinamento avançado Hikvision e Cisco para a equipa técnica de Segurança Eletrónica até o final do trimestre.</p>
+                            <span class="inline-block mt-3 px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Progresso: 100%</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB 4: SE -->
             <div id="tab-se" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">SE - Segurança Eletrónica</h2><p class="text-xs text-gray-400">Monitorização de centrais de alarme e CCTV</p></div>
+                <div><h2 class="text-xl font-bold text-white">SE - Segurança Eletrónica</h2><p class="text-xs text-gray-400">Monitorização de centrais de alarme e CCTV em tempo real</p></div>
                 <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
                     <h3 class="text-sm font-bold text-white">Sistemas em Operação Contínua (24/7)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -287,9 +303,31 @@
                         <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><span class="text-xs text-emerald-400 font-bold">● Online</span><h4 class="text-sm font-bold text-white mt-1">Alarmes Viana</h4><p class="text-xs text-gray-400 mt-1">Armado com resposta rápida</p></div>
                     </div>
                 </div>
+
+                <!-- Tabela de Sensores e Alarmes -->
+                <div class="glass-card p-6 rounded-2xl border border-borderDark">
+                    <h3 class="text-sm font-bold text-white mb-3">Últimos Eventos de Segurança Registados</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="border-b border-borderDark text-gray-400 uppercase">
+                                    <th class="pb-3">Hora</th><th class="pb-3">Cliente / Ponto</th><th class="pb-3">Evento</th><th class="pb-3">Ação Tomada</th><th class="pb-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-borderDark text-gray-200">
+                                <tr>
+                                    <td class="py-3 font-mono">14:22</td><td>Banco Sol (Sede)</td><td>Detecção de Movimento Noturno</td><td>Verificação CCTV efetuada</td><td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Normalizado</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 font-mono">11:05</td><td>Condomínio Viana</td><td>Corte temporário de energia</td><td>Nobreak ativado automaticamente</td><td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Normalizado</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            <!-- TAB 5: RH & CADASTRO (Com NIF e Senha) -->
+            <!-- TAB 5: RH & CADASTRO -->
             <div id="tab-rh" class="space-y-6 hidden">
                 <div class="flex justify-between items-center flex-wrap gap-4">
                     <div>
@@ -378,77 +416,232 @@
             <div id="tab-frotas" class="space-y-6 hidden">
                 <div><h2 class="text-xl font-bold text-white">Gestão de Frotas & GPS (Luanda)</h2><p class="text-xs text-gray-400">Localização e estado das viaturas operacionais</p></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><span class="font-mono text-xs text-cyan-400 font-bold">LD-23-76-HU</span><h3 class="text-base font-bold text-white mt-1">Toyota Hilux #01</h3><p class="text-xs text-gray-400 mt-1">Local: Talatona (Em Rota) — 48 km/h</p></div>
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><span class="font-mono text-xs text-emerald-400 font-bold">LD-45-90-AA</span><h3 class="text-base font-bold text-white mt-1">Mitsubishi L200 #02</h3><p class="text-xs text-gray-400 mt-1">Local: Base Central (Estacionada)</p></div>
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><span class="font-mono text-xs text-cyan-400 font-bold">LD-12-34-ZX</span><h3 class="text-base font-bold text-white mt-1">Toyota Hiace #03</h3><p class="text-xs text-gray-400 mt-1">Local: Viana (Serviço de Campo)</p></div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark">
+                        <span class="font-mono text-xs text-cyan-400 font-bold">LD-23-76-HU</span>
+                        <h3 class="text-base font-bold text-white mt-1">Toyota Hilux #01</h3>
+                        <p class="text-xs text-gray-400 mt-1">Local: Talatona (Em Rota) — 48 km/h</p>
+                        <p class="text-[10px] text-emerald-400 mt-2"><i class="fa-solid fa-gas-pump mr-1"></i> Combustível: 82% | Próx. Revisão: 125.000 km</p>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark">
+                        <span class="font-mono text-xs text-emerald-400 font-bold">LD-45-90-AA</span>
+                        <h3 class="text-base font-bold text-white mt-1">Mitsubishi L200 #02</h3>
+                        <p class="text-xs text-gray-400 mt-1">Local: Base Central (Estacionada)</p>
+                        <p class="text-[10px] text-emerald-400 mt-2"><i class="fa-solid fa-gas-pump mr-1"></i> Combustível: 95% | Próx. Revisão: 98.000 km</p>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark">
+                        <span class="font-mono text-xs text-cyan-400 font-bold">LD-12-34-ZX</span>
+                        <h3 class="text-base font-bold text-white mt-1">Toyota Hiace #03</h3>
+                        <p class="text-xs text-gray-400 mt-1">Local: Viana (Serviço de Campo)</p>
+                        <p class="text-[10px] text-emerald-400 mt-2"><i class="fa-solid fa-gas-pump mr-1"></i> Combustível: 60% | Próx. Revisão: 210.000 km</p>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl border border-borderDark">
+                    <h3 class="text-sm font-bold text-white mb-3"><i class="fa-solid fa-route text-cyan-400 mr-2"></i>Histórico de Deslocações Hoje</h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="flex justify-between items-center bg-darkBg p-3 rounded-xl border border-borderDark">
+                            <div>
+                                <span class="font-bold text-white">Viatura Hilux #01</span>
+                                <p class="text-gray-400 text-[11px]">Rota: Base Talatona → Banco Sol Agência Talatona</p>
+                            </div>
+                            <span class="text-gray-400 font-mono">08:30 - 09:15</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-darkBg p-3 rounded-xl border border-borderDark">
+                            <div>
+                                <span class="font-bold text-white">Viatura Hiace #03</span>
+                                <p class="text-gray-400 text-[11px]">Rota: Base Talatona → Zona Industrial de Viana</p>
+                            </div>
+                            <span class="text-gray-400 font-mono">10:00 - 11:10</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- TAB 7: GCQ -->
             <div id="tab-gcq" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">GCQ - Gestão de Controle de Qualidade</h2><p class="text-xs text-gray-400">Inspeções e conformidade de processos</p></div>
-                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Taxa de Aprovação em Auditorias</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">99.2%</h3><p class="text-[11px] text-gray-400 mt-1">Nenhuma não conformidade grave registada</p></div>
+                <div><h2 class="text-xl font-bold text-white">GCQ - Gestão de Controle de Qualidade</h2><p class="text-xs text-gray-400">Inspeções e conformidade de processos técnicos</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Taxa de Aprovação em Auditorias</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">99.2%</h3><p class="text-[11px] text-gray-400 mt-1">Nenhuma não conformidade grave registada no mês</p></div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Inspeções Efetuadas</p><h3 class="text-2xl font-bold text-cyan-400 mt-1">28 Este Mês</h3><p class="text-[11px] text-gray-400 mt-1">Todas as obras validadas antes do encerramento</p></div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl border border-borderDark">
+                    <h3 class="text-sm font-bold text-white mb-3">Relatórios de Checklist de Qualidade</h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-darkBg rounded-xl border border-borderDark flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-white">Obra #089 - Banco Sol Talatona</span>
+                                <p class="text-gray-400 text-[11px]">Cablagem identificada, racks arrumados e câmara focada corretamente.</p>
+                            </div>
+                            <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 font-bold rounded">Aprovado ISO</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB 8: HSST -->
             <div id="tab-hsst" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">HSST - Higiene, Segurança e Saúde no Trabalho</h2><p class="text-xs text-gray-400">Controlo de EPIs e segurança em obra</p></div>
-                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Conformidade EPIs & Formação</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">100%</h3><p class="text-[11px] text-gray-400 mt-1">Todos os técnicos devidamente equipados</p></div>
+                <div><h2 class="text-xl font-bold text-white">HSST - Higiene, Segurança e Saúde no Trabalho</h2><p class="text-xs text-gray-400">Controlo de EPIs, acidentes zero e segurança em obra</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Conformidade EPIs</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">100%</h3><p class="text-[11px] text-gray-400 mt-1">Capacetes, arneses e botas inspecionados</p></div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Dias Sem Acidentes</p><h3 class="text-2xl font-bold text-cyan-400 mt-1">480 Dias</h3><p class="text-[11px] text-gray-400 mt-1">Meta de Segurança Cumprida</p></div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Formações de HSST</p><h3 class="text-2xl font-bold text-white mt-1">12 SESSÕES</h3><p class="text-[11px] text-gray-400 mt-1">Trabalho em Altura & Eletricidade</p></div>
+                </div>
             </div>
 
             <!-- TAB 9: SERVIÇOS GERAIS -->
             <div id="tab-servicos-gerais" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">Servícios Gerais & Manutenção de Instalações</h2><p class="text-xs text-gray-400">Infraestruturas e climatização</p></div>
-                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Estado das Instalações</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">Operacional (100%)</h3><p class="text-[11px] text-gray-400 mt-1">Manutenção de geradores e ACs em dia</p></div>
+                <div><h2 class="text-xl font-bold text-white">Serviços Gerais & Manutenção de Instalações</h2><p class="text-xs text-gray-400">Infraestruturas, geradores e climatização</p></div>
+                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
+                    <h3 class="text-sm font-bold text-white">Estado dos Equipamentos da Sede (Talatona)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
+                            <h4 class="font-bold text-white">Gerador Central 150 kVA</h4>
+                            <p class="text-gray-400 mt-1">Nível de Combustível: 88%</p>
+                            <span class="text-emerald-400 text-[10px] font-bold block mt-2">● Manutenção realizada há 12 dias</span>
+                        </div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
+                            <h4 class="font-bold text-white">Sistema de Climatização (AC)</h4>
+                            <p class="text-gray-400 mt-1">Datacenter & Escritórios</p>
+                            <span class="text-emerald-400 text-[10px] font-bold block mt-2">● Temperatura Operacional: 19°C</span>
+                        </div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
+                            <h4 class="font-bold text-white">Sistemas UPS de Backup</h4>
+                            <p class="text-gray-400 mt-1">Capacidade de autonomia: 4h</p>
+                            <span class="text-emerald-400 text-[10px] font-bold block mt-2">● 100% Baterias OK</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB 10: ORGANIGRAMA -->
             <div id="tab-organigrama" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">Organigrama Ramificado da Empresa</h2><p class="text-xs text-gray-400">Estrutura hierárquica Hanzolo, Lda</p></div>
+                <div><h2 class="text-xl font-bold text-white">Organigrama Ramificado da Empresa</h2><p class="text-xs text-gray-400">Estrutura hierárquica e departamentos Hanzolo, Lda</p></div>
                 <div class="glass-card p-8 rounded-2xl border border-borderDark text-center space-y-4">
                     <div class="bg-cyan-600 text-white px-6 py-3 rounded-2xl inline-block font-bold text-xs shadow-lg">Direção Geral & Planeamento (DGP)</div>
                     <div class="flex justify-center"><div class="w-0.5 h-6 bg-cyan-500/50"></div></div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark text-xs font-bold text-cyan-400">Direção Operacional</div>
-                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark text-xs font-bold text-emerald-400">Segurança Eletrónica & IT</div>
-                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark text-xs font-bold text-orange-400">Recursos Humanos & Financeiro</div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
+                            <p class="text-xs font-bold text-cyan-400">Direção Operacional</p>
+                            <p class="text-[10px] text-gray-400 mt-1">Gestão de Obras, Frotas & Técnicos</p>
+                        </div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
+                            <p class="text-xs font-bold text-emerald-400">Segurança Eletrónica & IT</p>
+                            <p class="text-[10px] text-gray-400 mt-1">CCTV, Alarmes, Controlo de Acessos</p>
+                        </div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
+                            <p class="text-xs font-bold text-orange-400">RH, GCQ & HSST</p>
+                            <p class="text-[10px] text-gray-400 mt-1">Recrutamento, Qualidade & Segurança</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- TAB 11: COMPRAS -->
             <div id="tab-compras" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">COMPRAS & Aprovisionamento</h2><p class="text-xs text-gray-400">Ordens de compra e fornecedores</p></div>
-                <div class="glass-card p-5 rounded-2xl border border-borderDark"><h3 class="text-sm font-bold text-white mb-2">Últimas Requisições</h3><p class="text-xs text-gray-400">Requisição de 10 câmaras IP Hikvision — Entregue no Armazém (Talatona).</p></div>
+                <div><h2 class="text-xl font-bold text-white">COMPRAS & Aprovisionamento</h2><p class="text-xs text-gray-400">Gestão de ordens de compra e cotações de fornecedores</p></div>
+                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
+                    <h3 class="text-sm font-bold text-white">Ordens de Compra Recentes</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="border-b border-borderDark text-gray-400 uppercase">
+                                    <th class="pb-3">Nº Ordem</th><th class="pb-3">Fornecedor</th><th class="pb-3">Itens</th><th class="pb-3">Valor Total</th><th class="pb-3">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-borderDark text-gray-200">
+                                <tr>
+                                    <td class="py-3 font-mono">OC-2026-041</td><td>Hikvision Angola</td><td>12x Câmaras IP Dome 4MP</td><td>1.450.000 Kz</td><td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Aprovado</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 font-mono">OC-2026-042</td><td>Telecom Distribuidora</td><td>5x Rolo Cabo UTP Cat6</td><td>380.000 Kz</td><td><span class="px-2 py-0.5 rounded text-[10px] bg-cyan-500/10 text-cyan-400">Em Trânsito</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB 12: LOGÍSTICA -->
             <div id="tab-logistica" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">Logística & Armazém</h2><p class="text-xs text-gray-400">Stock de equipamentos e ferramentas</p></div>
-                <div class="glass-card p-5 rounded-2xl border border-borderDark"><h3 class="text-sm font-bold text-white mb-2">Inventário Principal</h3><p class="text-xs text-gray-400">Câmaras: 45 | NVRs: 8 | Cabos UTP: 12 bobines | Conectores RJ45: 500 un.</p></div>
+                <div><h2 class="text-xl font-bold text-white">Logística & Armazém Central</h2><p class="text-xs text-gray-400">Stock atualizado de equipamentos e materiais em Talatona</p></div>
+                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
+                    <h3 class="text-sm font-bold text-white">Inventário de Equipamentos em Stock</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><p class="text-[11px] text-gray-400">Câmaras IP / Análogas</p><h4 class="text-2xl font-bold text-cyan-400 mt-1">45 Unid.</h4></div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><p class="text-[11px] text-gray-400">Gravadores NVR / DVR</p><h4 class="text-2xl font-bold text-emerald-400 mt-1">8 Unid.</h4></div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><p class="text-[11px] text-gray-400">Bobines Cabo Cat6</p><h4 class="text-2xl font-bold text-white mt-1">12 Caixas</h4></div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><p class="text-[11px] text-gray-400">Conectores RJ45 / BNC</p><h4 class="text-2xl font-bold text-orange-400 mt-1">550 Unid.</h4></div>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB 13: TÉCNICOS -->
             <div id="tab-tecnicos" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">Escala de Técnicos em Campo</h2><p class="text-xs text-gray-400">Equipas de plantão 24/7</p></div>
-                <div class="glass-card p-5 rounded-2xl border border-borderDark"><h3 class="text-sm font-bold text-white mb-2">Equipa de Alarme & CCTV</h3><p class="text-xs text-gray-400">António Manuel & Joaquim Paulo (Plantão ativo em Luanda).</p></div>
+                <div><h2 class="text-xl font-bold text-white">Escala de Técnicos & Equipas de Campo</h2><p class="text-xs text-gray-400">Disponibilidade e atribuição de serviços 24/7</p></div>
+                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
+                    <h3 class="text-sm font-bold text-white">Escala de Plantão (Hoje)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-white">Equipa A - Segurança Eletrónica</h4>
+                                <p class="text-gray-400 text-[11px] mt-1">Técnico Lead: António Manuel | Auxiliar: João Silva</p>
+                                <span class="text-emerald-400 text-[10px] font-bold block mt-2">● Alocados: Banco Sol Talatona</span>
+                            </div>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 font-bold rounded">Em Serviço</span>
+                        </div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-white">Equipa B - Manutenção Prev.</h4>
+                                <p class="text-gray-400 text-[11px] mt-1">Técnico Lead: Joaquim Paulo</p>
+                                <span class="text-cyan-400 text-[10px] font-bold block mt-2">● Em Prontidão na Base</span>
+                            </div>
+                            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 font-bold rounded">Disponível</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB 14: PROJECTOS -->
             <div id="tab-projectos" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">Gestão de Projectos</h2><p class="text-xs text-gray-400">Obras em curso</p></div>
-                <div class="glass-card p-5 rounded-2xl border border-borderDark"><h3 class="text-sm font-bold text-white mb-2">Projeto CCTV & Redes (Banco Sol)</h3><p class="text-xs text-gray-400">Estado: 88% concluído. Previsão de entrega: 15 de Outubro de 2026.</p></div>
+                <div><h2 class="text-xl font-bold text-white">Gestão de Projectos Integrados</h2><p class="text-xs text-gray-400">Acompanhamento e prazos de grandes obras</p></div>
+                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
+                    <h3 class="text-sm font-bold text-white">Projectos em Curso</h3>
+                    <div class="space-y-4 text-xs">
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark space-y-2">
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-bold text-white">Instalação de Rede & CCTV Banco Sol (Agência Talatona)</h4>
+                                <span class="text-cyan-400 font-bold">88% Concluído</span>
+                            </div>
+                            <div class="w-full bg-borderDark rounded-full h-2">
+                                <div class="bg-cyan-500 h-2 rounded-full" style="width: 88%"></div>
+                            </div>
+                            <p class="text-gray-400 text-[11px]">Previsão de Entrega: 15 de Outubro de 2026 | Resp: António Manuel</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB 15: MANUTENÇÕES -->
             <div id="tab-manutencoes" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">Manutenções Preventivas e Corretivas</h2><p class="text-xs text-gray-400">Planos de intervenção</p></div>
-                <div class="glass-card p-5 rounded-2xl border border-borderDark"><h3 class="text-sm font-bold text-white mb-2">Manutenção Preventiva NVRs</h3><p class="text-xs text-gray-400">Todas as unidades verificadas e com backups em nuvem atualizados.</p></div>
+                <div><h2 class="text-xl font-bold text-white">Manutenções Preventivas e Corretivas</h2><p class="text-xs text-gray-400">Planos de intervenção técnica agendados</p></div>
+                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
+                    <h3 class="text-sm font-bold text-white">Calendário de Manutenções</h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="bg-darkBg p-3 rounded-xl border border-borderDark flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-white">Revisão de NVRs e Limpeza de Câmeras</span>
+                                <p class="text-gray-400 text-[11px]">Cliente: Condomínio Kilamba | Tipo: Preventiva</p>
+                            </div>
+                            <span class="text-cyan-400 font-mono font-bold">14 Outubro, 2026</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB 16: RELATÓRIOS -->
             <div id="tab-relatorios" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">Relatórios Interdepartamentais</h2><p class="text-xs text-gray-400">Exportação Excel, PDF & PowerPoint</p></div>
+                <div><h2 class="text-xl font-bold text-white">Relatórios Interdepartamentais</h2><p class="text-xs text-gray-400">Exportação rápida de dados corporativos</p></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="glass-card p-6 rounded-2xl border border-borderDark text-center">
                         <i class="fa-solid fa-file-excel text-3xl text-emerald-400 mb-3"></i>
@@ -471,7 +664,7 @@
         </main>
     </div>
 
-    <!-- Script da Aplicação -->
+    <!-- Scripts de Navegação e Gráficos -->
     <script>
         function switchTab(tabId) {
             const tabs = ['visao-geral', 'folha-obras', 'dgp', 'se', 'rh', 'frotas', 'gcq', 'hsst', 'servicos-gerais', 'organigrama', 'compras', 'logistica', 'tecnicos', 'projectos', 'manutencoes', 'relatorios'];
