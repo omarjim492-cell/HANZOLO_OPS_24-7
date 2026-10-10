@@ -3,427 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HANZOLO OPS 24/7 - Sistema Integrado de Gestão e Relatórios</title>
+    <title>HANZOLO, LDA - OPS 247</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#00a8e8',
-                            600: '#0084ba',
-                            700: '#00628d',
-                            900: '#003a56'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         @media print {
             body * { visibility: hidden; }
-            #printable-area, #printable-area * { visibility: visible; }
-            #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
+            #printable-sheet, #printable-sheet * { visibility: visible; }
+            #printable-sheet { position: absolute; left: 0; top: 0; width: 100%; }
             .no-print { display: none !important; }
         }
     </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-900 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- Top Navigation Bar -->
-    <header class="bg-slate-900 text-white shadow-md no-print sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <!-- Top Bar Original Style -->
+    <header class="bg-sky-500 text-white shadow-md no-print">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
             <div class="flex items-center gap-3">
-                <div class="bg-white p-1 rounded">
-                    <!-- Logo Vector SVG Placeholder / Rendered inline -->
+                <!-- Logotipo Hanzolo Original Vector -->
+                <div class="bg-white p-1 rounded shadow-sm">
                     <svg class="h-8 w-auto text-sky-500" viewBox="0 0 400 100" fill="currentColor">
                         <path d="M 10 50 L 80 10 L 80 30 L 150 30 L 150 70 L 80 70 L 80 90 Z" fill="#00a8e8"/>
                         <text x="160" y="65" font-family="Arial, sans-serif" font-weight="bold" font-size="45" fill="#00a8e8">HANZOLO</text>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg leading-tight text-sky-400">HANZOLO OPS 24/7</h1>
-                    <p class="text-xs text-slate-400">Tecnologia, Sistemas & Segurança, Lda</p>
+                    <h1 class="font-black text-lg tracking-wide">HANZOLO, LDA - OPS 247</h1>
+                    <p class="text-xs text-sky-100">Sincronizado em tempo real | Luanda, Angola (NIF: 5417082912)</p>
                 </div>
             </div>
-            <div class="flex items-center gap-4 text-xs">
-                <span class="bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
-                    <i class="fa-solid fa-location-dot text-red-400 mr-1"></i> Luanda, Angola
-                </span>
-                <span class="bg-sky-900 text-sky-200 font-mono px-2.5 py-1 rounded">
-                    NIF: 5417082912
-                </span>
+            <div class="flex items-center gap-2 text-xs">
+                <span class="bg-sky-600 px-3 py-1 rounded text-white font-bold">ID# 00</span>
+                <span class="bg-white text-sky-700 px-3 py-1 rounded font-mono shadow-sm">OPS-24/7 Portal</span>
             </div>
         </div>
     </header>
 
-    <div class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full flex flex-col md:flex-row gap-6">
+    <!-- Navigation Bar for Modules -->
+    <nav class="bg-white border-b border-gray-200 shadow-sm no-print">
+        <div class="max-w-6xl mx-auto px-4 flex overflow-x-auto space-x-4 py-2 text-sm font-medium text-gray-600">
+            <button onclick="switchView('folha')" id="nav-folha" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-sky-50 text-sky-600 font-bold">Folha de Obras & Evidências</button>
+            <button onclick="switchView('cronograma')" id="nav-cronograma" class="whitespace-nowrap px-3 py-1.5 rounded-lg hover:bg-gray-100">Cronograma DGP</button>
+            <button onclick="switchView('obras')" id="nav-obras" class="whitespace-nowrap px-3 py-1.5 rounded-lg hover:bg-gray-100">Plano Obras SE</button>
+            <button onclick="switchView('qualidade')" id="nav-qualidade" class="whitespace-nowrap px-3 py-1.5 rounded-lg hover:bg-gray-100">Controlo Qualidade DGP</button>
+            <button onclick="switchView('rh')" id="nav-rh" class="whitespace-nowrap px-3 py-1.5 rounded-lg hover:bg-gray-100">RH (Feriados & Aniversários)</button>
+            <button onclick="switchView('termo')" id="nav-termo" class="whitespace-nowrap px-3 py-1.5 rounded-lg hover:bg-gray-100">Termos de Entrega</button>
+        </div>
+    </nav>
 
-        <!-- Sidebar Navigation -->
-        <aside class="w-full md:w-64 bg-white rounded-xl shadow-sm border border-slate-200 p-4 shrink-0 no-print">
-            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-2">Módulos do Sistema</div>
-            <nav class="space-y-1">
-                <button onclick="switchTab('relatorios')" id="btn-relatorios" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg bg-sky-50 text-sky-700">
-                    <i class="fa-solid fa-file-invoice w-5"></i> Relatório & Evidências
-                </button>
-                <button onclick="switchTab('dgp-cronograma')" id="btn-dgp-cronograma" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50">
-                    <i class="fa-solid fa-calendar-days w-5"></i> DGP - Cronograma
-                </button>
-                <button onclick="switchTab('dgp-qualidade')" id="btn-dgp-qualidade" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50">
-                    <i class="fa-solid fa-clipboard-check w-5"></i> DGP - Controlo Qualidade
-                </button>
-                <button onclick="switchTab('se-obras')" id="btn-se-obras" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50">
-                    <i class="fa-solid fa-helmet-safety w-5"></i> SE - Execução de Obras
-                </button>
-                <button onclick="switchTab('rh')" id="btn-rh" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50">
-                    <i class="fa-solid fa-users w-5"></i> RH - Calendário & Equipa
-                </button>
-                <button onclick="switchTab('termo-entrega')" id="btn-termo-entrega" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50">
-                    <i class="fa-solid fa-file-contract w-5"></i> Termos de Entrega
-                </button>
-            </nav>
-            <div class="mt-8 pt-4 border-t border-slate-100">
-                <button onclick="window.print()" class="w-full flex items-center justify-center gap-2 bg-slate-900 text-white py-2 rounded-lg text-sm font-medium hover:bg-slate-800 transition">
-                    <i class="fa-solid fa-print"></i> Imprimir / Exportar PDF
-                </button>
-            </div>
-        </aside>
-
-        <!-- Main Workspace Section -->
-        <main class="flex-1 bg-white rounded-xl shadow-sm border border-slate-200 p-6 overflow-hidden" id="printable-area">
+    <!-- Main Container Sheet -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
+        <div id="printable-sheet" class="bg-white border border-gray-200 rounded-xl p-6 md:p-8 shadow-sm">
             
-            <!-- Standard Header Block for Documents -->
-            <div class="border-b border-slate-200 pb-4 mb-6">
-                <div class="flex justify-between items-start gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="w-16 h-16 bg-sky-50 rounded-lg flex items-center justify-center border border-sky-100 p-2">
-                            <i class="fa-solid fa-microchip text-sky-600 text-2xl"></i>
-                        </div>
+            <!-- VIEW 1: FOLHA DE OBRAS & EVIDÊNCIAS -->
+            <div id="view-folha" class="space-y-6">
+                <!-- Professional Header with ID# 00 and Logo -->
+                <div class="flex flex-col md:flex-row justify-between items-start border-b pb-4 gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded flex items-center justify-center font-black text-xl">H</div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-900 tracking-tight">HANZOLO - TECNOLOGIA, SISTEMAS & SEGURANÇA, LDA</h2>
-                            <p class="text-xs text-slate-500">Sistemas de Monitorização, Segurança Electrónica & Manutenção Hospitalar / Industrial</p>
-                            <p class="text-xs text-slate-400">Luanda, Angola | NIF: 5417082912 | Suporte OPS 24/7</p>
+                            <h2 class="text-base font-bold text-gray-900">HANZOLO, LDA - OPS 247</h2>
+                            <p class="text-xs text-gray-500">Emissão de Folha de Obra com Upload de Imagens / Evidências</p>
                         </div>
                     </div>
-                    <div class="text-right border-l border-slate-200 pl-4">
-                        <span class="inline-block px-3 py-1 bg-sky-100 text-sky-800 text-xs font-bold rounded-md mb-1">ID# 00</span>
-                        <div class="text-xs text-slate-500" id="current-doc-date">Data: --/--/----</div>
-                        <div class="text-xs font-semibold text-slate-700" id="current-doc-ref">REF: HZL-OPS-2026</div>
+                    <div class="text-right">
+                        <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2.5 py-1 rounded">ID# 00</span>
+                        <div class="text-xs text-gray-400 mt-1">Data: 10/10/2026, 00:41</div>
                     </div>
                 </div>
-            </div>
 
-            <!-- TAB 1: RELATÓRIO DIÁRIO DE OCORRÊNCIAS & FOLHA DE OBRAS -->
-            <section id="tab-relatorios" class="tab-content">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-file-signature text-sky-600 mr-2"></i> Relatório Operacional & Folha de Obra</h3>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-medium">Sincronizado em tempo real</span>
-                </div>
-
-                <form class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-sm">
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">ID da Obra / Ocorrência</label>
-                        <input type="text" value="OBR-2026-LU-08" class="w-full p-2 border rounded-md bg-slate-50 focus:ring-1 focus:ring-sky-500">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">ID da Obra</label>
+                        <input type="text" value="OBR-2026-LU-08" class="w-full p-2 border border-gray-300 rounded bg-gray-50 font-mono text-xs">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Cliente / Empresa</label>
-                        <input type="text" value="Hospital Girassol - KM 27" class="w-full p-2 border rounded-md bg-slate-50 focus:ring-1 focus:ring-sky-500">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Cliente / Empresa</label>
+                        <input type="text" value="Hospital Girassol" class="w-full p-2 border border-gray-300 rounded bg-gray-50 text-xs">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">NIF do Cliente</label>
-                        <input type="text" value="5417126708" class="w-full p-2 border rounded-md bg-slate-50 focus:ring-1 focus:ring-sky-500">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">NIF do Cliente</label>
+                        <input type="text" value="5417126708" class="w-full p-2 border border-gray-300 rounded bg-gray-50 text-xs font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Localização (Luanda)</label>
-                        <input type="text" value="Talatona / Viana" class="w-full p-2 border rounded-md bg-slate-50 focus:ring-1 focus:ring-sky-500">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Localização (Luanda)</label>
+                        <input type="text" value="Talatona" class="w-full p-2 border border-gray-300 rounded bg-gray-50 text-xs">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Técnico Responsável / Chefe de Equipa</label>
-                        <input type="text" value="Peterson / Mário Pedro" class="w-full p-2 border rounded-md bg-slate-50 focus:ring-1 focus:ring-sky-500">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Técnico Responsável</label>
+                        <input type="text" value="Peterson" class="w-full p-2 border border-gray-300 rounded bg-gray-50 text-xs">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Regime de Turno</label>
-                        <input type="text" value="Grupo B - Regime 24/7" class="w-full p-2 border rounded-md bg-slate-50 focus:ring-1 focus:ring-sky-500">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Carregar Foto / Evidência</label>
+                        <div class="flex items-center gap-2">
+                            <input type="file" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100">
+                        </div>
                     </div>
                 </form>
 
-                <div class="mb-6">
-                    <h4 class="font-semibold text-sm text-slate-700 mb-2">Descrição dos Trabalhos / Registo de Ocorrências</h4>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                            <span class="text-xs font-bold text-sky-700 block mb-1">Ocorrência #01 - Rendição & Assunção de Posto (06h30)</span>
-                            <p class="text-xs text-slate-600">Assunção de posto efetuada com sucesso. Verificação global do sistema CCTV e rede de monitoramento operacional sem anomalias críticas.</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                            <span class="text-xs font-bold text-sky-700 block mb-1">Ocorrência #02 - Assistência Técnica & Instalação (08h24)</span>
-                            <p class="text-xs text-slate-600">Receção da equipa técnica da Hanzolo para intervenção na calha técnica hospitalar e parametrização do ramal fixo de comunicação (Ramal: 98726).</p>
-                        </div>
-                    </div>
-                </div>
-
                 <div>
-                    <h4 class="font-semibold text-sm text-slate-700 mb-2">Anexo de Evidências Fotográficas</h4>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        <div class="border rounded-lg p-2 bg-slate-50 text-center">
-                            <div class="h-28 bg-slate-200 rounded flex items-center justify-center text-slate-400 mb-1">
-                                <i class="fa-solid fa-camera text-2xl"></i>
-                            </div>
-                            <span class="text-[10px] text-slate-500 block">Inspeção Calha Técnica</span>
-                        </div>
-                        <div class="border rounded-lg p-2 bg-slate-50 text-center">
-                            <div class="h-28 bg-slate-200 rounded flex items-center justify-center text-slate-400 mb-1">
-                                <i class="fa-solid fa-display text-2xl"></i>
-                            </div>
-                            <span class="text-[10px] text-slate-500 block">Painel Sala Monitoramento</span>
-                        </div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Descrição dos Trabalhos Efetuados</label>
+                    <textarea rows="3" class="w-full p-2 border border-gray-300 rounded text-xs">Insira os detalhes dos trabalhos efetuados no sistema hospitalar e calha técnica...</textarea>
+                </div>
+
+                <!-- Evidência Visual Original -->
+                <div>
+                    <span class="text-xs font-bold text-gray-700 block mb-2">Evidência Carregada:</span>
+                    <div class="border border-gray-200 rounded p-3 bg-gray-50 flex items-center justify-between">
+                        <span class="text-xs font-mono text-sky-600">https://omarjim492-cell.github.io/HANZOLO_OPS_24-7/</span>
+                        <span class="text-xs text-gray-500">1/1 Imagens</span>
                     </div>
                 </div>
-            </section>
 
-            <!-- TAB 2: DGP - CRONOGRAMA DE PROJETOS -->
-            <section id="tab-dgp-cronograma" class="tab-content hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-chart-gantt text-sky-600 mr-2"></i> DGP - Cronograma Geral de Projetos</h3>
-                    <span class="text-xs bg-sky-100 text-sky-800 px-2.5 py-1 rounded-full font-medium">Gestão Estratégica DGP</span>
+                <div class="pt-2 flex justify-end">
+                    <button type="button" class="bg-sky-500 text-white px-4 py-2 rounded text-xs font-bold hover:bg-sky-600 transition">Submeter Folha de Obra</button>
                 </div>
+            </div>
 
+            <!-- VIEW 2: CRONOGRAMA PELA DGP -->
+            <div id="view-cronograma" class="space-y-4 hidden">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="text-base font-bold text-gray-900"><i class="fa-solid fa-calendar-days text-sky-500 mr-2"></i> Cronograma de Projetos - DGP</h2>
+                    <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">ID# 00</span>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border-collapse">
                         <thead>
-                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700">
-                                <th class="p-2.5 font-bold">Fase / Atividade</th>
-                                <th class="p-2.5 font-bold">Responsável</th>
-                                <th class="p-2.5 font-bold">Início</th>
-                                <th class="p-2.5 font-bold">Fim Previsto</th>
-                                <th class="p-2.5 font-bold">Status</th>
-                                <th class="p-2.5 font-bold">Progresso</th>
+                            <tr class="bg-gray-100 border-b text-gray-700">
+                                <th class="p-2">Atividade / Projeto</th>
+                                <th class="p-2">Departamento</th>
+                                <th class="p-2">Início</th>
+                                <th class="p-2">Fim</th>
+                                <th class="p-2">Estado</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100">
+                        <tbody class="divide-y">
                             <tr>
-                                <td class="p-2.5 font-medium">Levantamento Técnico & Levantamento de Requisitos</td>
-                                <td class="p-2.5">Eng. Peterson</td>
-                                <td class="p-2.5">01/10/2026</td>
-                                <td class="p-2.5">05/10/2026</td>
-                                <td class="p-2.5"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded">Concluído</span></td>
-                                <td class="p-2.5">100%</td>
+                                <td class="p-2 font-medium">Instalação de Calha Técnica Hospitalar</td>
+                                <td class="p-2">DGP</td>
+                                <td class="p-2">01/10/2026</td>
+                                <td class="p-2">12/10/2026</td>
+                                <td class="p-2"><span class="text-emerald-600 font-bold">Em Execução</span></td>
                             </tr>
                             <tr>
-                                <td class="p-2.5 font-medium">Instalação da Infraestrutura de Cablagem & Calhas</td>
-                                <td class="p-2.5">Equipa SE / Obras</td>
-                                <td class="p-2.5">06/10/2026</td>
-                                <td class="p-2.5">15/10/2026</td>
-                                <td class="p-2.5"><span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded">Em Curso</span></td>
-                                <td class="p-2.5">65%</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2.5 font-medium">Montagem de Consolas e Telefonia Hospitalar (Ramal 98726)</td>
-                                <td class="p-2.5">Téc. Mário Pedro</td>
-                                <td class="p-2.5">12/10/2026</td>
-                                <td class="p-2.5">18/10/2026</td>
-                                <td class="p-2.5"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded">Pendente</span></td>
-                                <td class="p-2.5">20%</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2.5 font-medium">Comissionamento & Teste do Controlo de Qualidade DGP</td>
-                                <td class="p-2.5">Auditoria DGP</td>
-                                <td class="p-2.5">19/10/2026</td>
-                                <td class="p-2.5">22/10/2026</td>
-                                <td class="p-2.5"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded">Pendente</span></td>
-                                <td class="p-2.5">0%</td>
+                                <td class="p-2 font-medium">Configuração de Ramal Telefónico e Rede</td>
+                                <td class="p-2">DGP</td>
+                                <td class="p-2">13/10/2026</td>
+                                <td class="p-2">20/10/2026</td>
+                                <td class="p-2"><span class="text-gray-500 font-bold">Planeado</span></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </div>
 
-            <!-- TAB 3: DGP - CONTROLO DE QUALIDADE -->
-            <section id="tab-dgp-qualidade" class="tab-content hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-list-check text-sky-600 mr-2"></i> DGP - Check-List de Controlo de Qualidade</h3>
-                    <span class="text-xs bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-full font-medium">Padrão de Conformidade Hanzolo</span>
+            <!-- VIEW 3: PLANO DE EXECUÇÃO DE OBRAS PELA SE -->
+            <div id="view-obras" class="space-y-4 hidden">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="text-base font-bold text-gray-900"><i class="fa-solid fa-helmet-safety text-sky-500 mr-2"></i> Plano de Execução de Obras - SE (Supervisão de Engenharia)</h2>
+                    <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">ID# 00</span>
                 </div>
-
-                <div class="space-y-3 text-xs">
-                    <div class="p-3 border rounded-lg flex justify-between items-center bg-slate-50">
-                        <div>
-                            <span class="font-bold text-slate-800 block">01. Fixação e Alinhamento de Calhas e Consolas Técnicas</span>
-                            <span class="text-slate-500">Verificação de travamento, nivelamento e ancoragem mecânica em alvenaria/placa.</span>
-                        </div>
-                        <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded font-bold">CONFORME</span>
-                    </div>
-                    <div class="p-3 border rounded-lg flex justify-between items-center bg-slate-50">
-                        <div>
-                            <span class="font-bold text-slate-800 block">02. Certificação e Etiquetagem dos Pontos de Rede & VOIP</span>
-                            <span class="text-slate-500">Testes de continuidade e teste de carga em rede local para ramais fixos.</span>
-                        </div>
-                        <span class="px-2.5 py-1 bg-amber-100 text-amber-800 rounded font-bold">EM OBSERVAÇÃO</span>
-                    </div>
-                    <div class="p-3 border rounded-lg flex justify-between items-center bg-slate-50">
-                        <div>
-                            <span class="font-bold text-slate-800 block">03. Estabilidade do Sinal de CFTV e Latência NVR/DVR</span>
-                            <span class="text-slate-500">Verificação do tempo de resposta das câmeras e ausência de perda de pacote.</span>
-                        </div>
-                        <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded font-bold">CONFORME</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 4: SE - PLANO DE EXECUÇÃO DE OBRAS -->
-            <section id="tab-se-obras" class="tab-content hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-hard-hat text-sky-600 mr-2"></i> SE - Plano de Execução de Obras</h3>
-                    <span class="text-xs bg-orange-100 text-orange-800 px-2.5 py-1 rounded-full font-medium">Supervisão de Engenharia (SE)</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs mb-4">
-                    <div class="p-3 border rounded-lg bg-slate-50">
-                        <h4 class="font-bold text-slate-800 mb-2">Equipa Alocada no Terreno</h4>
-                        <ul class="space-y-1 text-slate-600">
-                            <li>• 01 Engenheiro de Campo (SE)</li>
-                            <li>• 02 Técnicos Eletrónicos Especialistas</li>
-                            <li>• 01 Auxiliar de Montagem de Calhas</li>
-                        </ul>
-                    </div>
-                    <div class="p-3 border rounded-lg bg-slate-50">
-                        <h4 class="font-bold text-slate-800 mb-2">Medidas de Segurança & EPIs</h4>
-                        <ul class="space-y-1 text-slate-600">
-                            <li>• Uso obrigatório de Capacete, Luvas e Botas Dieletras</li>
-                            <li>• Isolamento de área de trabalho e sinalização hospitalar</li>
+                <div class="text-xs space-y-3 text-gray-700">
+                    <p>O plano de execução de obras supervisionado pela <strong>SE</strong> abrange a alocação de técnicos no terreno, cumprimento das normas técnicas hospitalares e verificação de segurança eletromecânica.</p>
+                    <div class="bg-gray-50 p-3 rounded border">
+                        <span class="font-bold block mb-1">Diretrizes de Campo SE:</span>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li>Inspeção prévia dos pontos de fixação da calha.</li>
+                            <li>Acompanhamento de testes de carga e sinal de CFTV.</li>
                         </ul>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- TAB 5: RH - CALENDÁRIO, PONTES, FORMAÇÕES E CERTIFICAÇÕES -->
-            <section id="tab-rh" class="tab-content hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-users text-sky-600 mr-2"></i> RH - Gestão de Recursos & Formações</h3>
-                    <span class="text-xs bg-purple-100 text-purple-800 px-2.5 py-1 rounded-full font-medium">Recursos Humanos</span>
+            <!-- VIEW 4: CONTROLO DE QUALIDADE PELA DGP -->
+            <div id="view-qualidade" class="space-y-4 hidden">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="text-base font-bold text-gray-900"><i class="fa-solid fa-clipboard-check text-sky-500 mr-2"></i> Controlo de Qualidade - DGP</h2>
+                    <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">ID# 00</span>
                 </div>
+                <div class="space-y-2 text-xs">
+                    <div class="p-2.5 border rounded bg-gray-50 flex justify-between items-center">
+                        <span>Verificação de conformidade de cablagem e terminais</span>
+                        <span class="px-2 py-1 bg-emerald-100 text-emerald-800 font-bold rounded">CONFORME</span>
+                    </div>
+                    <div class="p-2.5 border rounded bg-gray-50 flex justify-between items-center">
+                        <span>Teste de estabilidade de imagem NVR/DVR</span>
+                        <span class="px-2 py-1 bg-emerald-100 text-emerald-800 font-bold rounded">CONFORME</span>
+                    </div>
+                </div>
+            </div>
 
+            <!-- VIEW 5: RH (FERIADOS, PONTES, ANIVERSÁRIOS E FORMAÇÕES) -->
+            <div id="view-rh" class="space-y-4 hidden">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="text-base font-bold text-gray-900"><i class="fa-solid fa-users text-sky-500 mr-2"></i> RH - Feriados, Pontes, Aniversários & Certificações</h2>
+                    <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">ID# 00</span>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div class="p-3 border rounded-lg bg-slate-50">
-                        <h4 class="font-bold text-slate-800 mb-2"><i class="fa-solid fa-cake-candles text-pink-500 mr-1"></i> Aniversários & Eventos da Equipa</h4>
-                        <ul class="space-y-1.5 text-slate-600">
-                            <li class="flex justify-between"><span>Peterson (Técnico)</span> <span class="font-medium text-slate-800">15 de Outubro</span></li>
-                            <li class="flex justify-between"><span>Omar Joaquim (DGP)</span> <span class="font-medium text-slate-800">28 de Novembro</span></li>
+                    <div class="p-3 border rounded bg-gray-50">
+                        <span class="font-bold block mb-2 text-sky-700">Aniversários & Eventos (RH)</span>
+                        <ul class="space-y-1">
+                            <li>• Peterson (Técnico) - 15 de Outubro</li>
+                            <li>• Omar Joaquim (DGP) - 28 de Novembro</li>
                         </ul>
                     </div>
-
-                    <div class="p-3 border rounded-lg bg-slate-50">
-                        <h4 class="font-bold text-slate-800 mb-2"><i class="fa-solid fa-calendar-day text-sky-500 mr-1"></i> Feriados & Pontes (Angola)</h4>
-                        <ul class="space-y-1.5 text-slate-600">
-                            <li class="flex justify-between"><span>Dia da Independência Nacional</span> <span class="font-medium text-slate-800">11 de Novembro</span></li>
-                            <li class="flex justify-between"><span>Dia do Trabalhador</span> <span class="font-medium text-slate-800">01 de Maio</span></li>
+                    <div class="p-3 border rounded bg-gray-50">
+                        <span class="font-bold block mb-2 text-sky-700">Feriados & Pontes (Angola)</span>
+                        <ul class="space-y-1">
+                            <li>• 11 de Novembro - Dia da Independência Nacional</li>
+                            <li>• 25 de Dezembro - Natal</li>
                         </ul>
                     </div>
-
-                    <div class="p-3 border rounded-lg bg-slate-50 md:col-span-2">
-                        <h4 class="font-bold text-slate-800 mb-2"><i class="fa-solid fa-graduation-cap text-indigo-500 mr-1"></i> Plano de Formações & Certificações Técnicas</h4>
-                        <table class="w-full text-left border-collapse">
+                    <div class="p-3 border rounded bg-gray-50 md:col-span-2">
+                        <span class="font-bold block mb-2 text-sky-700">Formações & Certificações</span>
+                        <table class="w-full text-left">
                             <thead>
-                                <tr class="border-b text-slate-700">
+                                <tr class="border-b">
                                     <th class="py-1">Colaborador</th>
-                                    <th class="py-1">Formação / Certificação</th>
-                                    <th class="py-1">Entidade Credenciadora</th>
-                                    <th class="py-1">Status</th>
+                                    <th class="py-1">Formação</th>
+                                    <th class="py-1">Estado</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y">
+                            <tbody>
                                 <tr>
                                     <td class="py-1">Mário Pedro</td>
-                                    <td>Certificação IP-CCTV & NVR Advanced</td>
-                                    <td>Hikvision / Hanzolo Tech</td>
-                                    <td><span class="text-emerald-600 font-bold">Certificado</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1">Edvandro Sebastião</td>
-                                    <td>Segurança Eletrónica e Controlo de Acesso</td>
-                                    <td>Hanzolo Académica</td>
-                                    <td><span class="text-amber-600 font-bold">Em Curso</span></td>
+                                    <td>Certificação IP-CCTV Advanced</td>
+                                    <td><span class="text-emerald-600 font-bold">Concluído</span></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </section>
-
-            <!-- TAB 6: TERMOS DE ENTREGA -->
-            <section id="tab-termo-entrega" class="tab-content hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-file-signature text-sky-600 mr-2"></i> Termo de Entrega e Aceitação de Obra</h3>
-                    <span class="text-xs bg-slate-200 text-slate-800 px-2.5 py-1 rounded-full font-medium">Documento Oficial</span>
-                </div>
-
-                <div class="text-xs leading-relaxed text-slate-700 space-y-4">
-                    <p> Declaramos para os devidos efeitos que a empresa <strong>HANZOLO - TECNOLOGIA, SISTEMAS & SEGURANÇA, LDA</strong> procedeu à entrega formal dos trabalhos técnicos e equipamentos referentes ao projeto discriminado abaixo, em conformidade com as especificações contratadas.</p>
-
-                    <div class="bg-slate-50 p-3 rounded border space-y-1">
-                        <div><strong>Cliente:</strong> Hospital Girassol</div>
-                        <div><strong>Localização:</strong> Talatona / Luanda</div>
-                        <div><strong>Equipamentos / Serviços Entregues:</strong> Instalação de calha técnica hospitalar, configuração de rede local e integração de ramal telefónico (Ramal 98726).</div>
-                    </div>
-
-                    <p>O cliente declara ter inspecionado e testado os sistemas instalados, confirmando a sua plena operacionalidade e conformidade com as normas do Controlo de Qualidade (DGP).</p>
-
-                    <div class="pt-8 grid grid-cols-2 gap-8 text-center">
-                        <div>
-                            <div class="border-b border-slate-400 mb-2 h-8"></div>
-                            <span class="font-bold text-slate-800">Pela HANZOLO, LDA</span><br>
-                            <span class="text-slate-500">Responsável Técnico / DGP</span>
-                        </div>
-                        <div>
-                            <div class="border-b border-slate-400 mb-2 h-8"></div>
-                            <span class="font-bold text-slate-800">Pelo CLIENTE</span><br>
-                            <span class="text-slate-500">Assinatura & Carimbo</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Footer for Printed Documents -->
-            <div class="mt-8 pt-4 border-t border-slate-200 text-center text-[10px] text-slate-400">
-                HANZOLO - TECNOLOGIA, SISTEMAS & SEGURANÇA, LDA • Luanda, Angola • Documento Gerado via Hanzolo OPS 24/7
             </div>
-        </main>
-    </div>
 
-    <!-- JavaScript Navigation -->
+            <!-- VIEW 6: TERMOS DE ENTREGAS -->
+            <div id="view-termo" class="space-y-4 hidden">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="text-base font-bold text-gray-900"><i class="fa-solid fa-file-contract text-sky-500 mr-2"></i> Termos de Entrega de Obra</h2>
+                    <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">ID# 00</span>
+                </div>
+                <div class="text-xs space-y-3 text-gray-700 leading-relaxed">
+                    <p>Declaramos para os devidos efeitos que a <strong>HANZOLO, LDA</strong> efetuou a entrega formal dos equipamentos e trabalhos técnicos realizados no âmbito do projeto OPS 24/7 no Hospital Girassol.</p>
+                    <div class="pt-10 grid grid-cols-2 gap-6 text-center">
+                        <div>
+                            <div class="border-b border-gray-400 mb-2"></div>
+                            <span class="font-bold">Pela Hanzolo, LDA</span>
+                        </div>
+                        <div>
+                            <div class="border-b border-gray-400 mb-2"></div>
+                            <span class="font-bold">Pelo Cliente</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Print Button Footer -->
+        <div class="mt-4 flex justify-end no-print">
+            <button onclick="window.print()" class="bg-gray-800 text-white px-4 py-2 rounded text-xs font-bold hover:bg-gray-900 flex items-center gap-2">
+                <i class="fa-solid fa-print"></i> Imprimir / Gerar PDF
+            </button>
+        </div>
+    </main>
+
+    <!-- Navigation Script -->
     <script>
-        // Set Current Date in Document Header
-        document.getElementById('current-doc-date').innerText = 'Data: ' + new Date().toLocaleDateString('pt-AO');
-
-        function switchTab(tabName) {
-            // Hide all tab contents
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.add('hidden'));
-
-            // Reset all nav button styles
-            const btns = document.querySelectorAll('.nav-btn');
-            btns.forEach(btn => {
-                btn.classList.remove('bg-sky-50', 'text-sky-700');
-                btn.classList.add('text-slate-600');
+        function switchView(viewName) {
+            const views = ['folha', 'cronograma', 'obras', 'qualidade', 'rh', 'termo'];
+            views.forEach(v => {
+                const el = document.getElementById('view-' + v);
+                const btn = document.getElementById('nav-' + v);
+                if (el) el.classList.add('hidden');
+                if (btn) {
+                    btn.classList.remove('bg-sky-50', 'text-sky-600', 'font-bold');
+                    btn.classList.add('hover:bg-gray-100');
+                }
             });
 
-            // Show selected tab
-            const targetTab = document.getElementById('tab-' + tabName);
-            if (targetTab) {
-                targetTab.classList.remove('hidden');
-            }
-
-            // Highlight active button
-            const activeBtn = document.getElementById('btn-' + tabName);
+            const activeEl = document.getElementById('view-' + viewName);
+            const activeBtn = document.getElementById('nav-' + viewName);
+            if (activeEl) activeEl.classList.remove('hidden');
             if (activeBtn) {
-                activeBtn.classList.add('bg-sky-50', 'text-sky-700');
-                activeBtn.classList.remove('text-slate-600');
+                activeBtn.classList.add('bg-sky-50', 'text-sky-600', 'font-bold');
+                activeBtn.classList.remove('hover:bg-gray-100');
             }
         }
     </script>
