@@ -1,297 +1,831 @@
 <!DOCTYPE html>
-<html lang="pt-AO">
+<html lang="pt" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HANZOLO, LDA - OPS 247</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0f19',
+                        cardBg: '#111827',
+                        accentBlue: '#0284c7',
+                        accentGreen: '#10b981',
+                        accentYellow: '#f59e0b',
+                        accentRed: '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
         @media print {
-            body * { visibility: hidden; }
-            #printable-sheet, #printable-sheet * { visibility: visible; }
-            #printable-sheet { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none !important; }
+            aside, header button, .no-print { display: none !important; }
+            main { padding: 0 !important; width: 100% !important; }
+            body { background: #fff !important; color: #000 !important; }
+            .bg-\[\#111827\], .bg-gray-900\/60 { background: #fff !important; border: 1px solid #ccc !important; color: #000 !important; }
+            .text-white, .text-gray-400, .text-gray-300 { color: #000 !important; }
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans antialiased min-h-screen flex flex-col">
+<body class="bg-[#0b0f19] text-gray-100 font-sans min-h-screen flex">
 
-    <!-- Top Bar Original Style -->
-    <header class="bg-sky-500 text-white shadow-md no-print">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
-            <div class="flex items-center gap-3">
-                <!-- Logotipo Hanzolo Original Vector -->
-                <div class="bg-white p-1 rounded shadow-sm">
-                    <svg class="h-8 w-auto text-sky-500" viewBox="0 0 400 100" fill="currentColor">
-                        <path d="M 10 50 L 80 10 L 80 30 L 150 30 L 150 70 L 80 70 L 80 90 Z" fill="#00a8e8"/>
-                        <text x="160" y="65" font-family="Arial, sans-serif" font-weight="bold" font-size="45" fill="#00a8e8">HANZOLO</text>
-                    </svg>
+    <!-- Sidebar Lateral -->
+    <aside class="w-72 bg-[#111827] border-r border-gray-800 flex flex-col justify-between hidden md:flex h-screen sticky top-0">
+        <div class="flex-1 overflow-y-auto">
+            <!-- Header Logo -->
+            <div class="p-5 border-b border-gray-800 flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-sky-600 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-sky-500/20">
+                    H
                 </div>
                 <div>
-                    <h1 class="font-black text-lg tracking-wide">HANZOLO, LDA - OPS 247</h1>
-                    <p class="text-xs text-sky-100">Sincronizado em tempo real | Luanda, Angola (NIF: 5417082912)</p>
+                    <h1 class="font-bold text-sm tracking-wider text-white">HANZOLO, LDA</h1>
+                    <p class="text-xs text-sky-400 font-semibold tracking-wider">OPS 247 HUB</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2 text-xs">
-                <span class="bg-sky-600 px-3 py-1 rounded text-white font-bold">ID# 00</span>
-                <span class="bg-white text-sky-700 px-3 py-1 rounded font-mono shadow-sm">OPS-24/7 Portal</span>
+
+            <!-- Menus e Departamentos -->
+            <nav class="p-3 space-y-1 text-xs" id="sidebar-nav">
+                <p class="px-3 pt-2 pb-1 text-[10px] uppercase font-bold text-gray-500 tracking-wider">Geral & Operações</p>
+                <button onclick="switchTab('painel')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-white bg-sky-600/20 text-sky-400 border border-sky-500/30">
+                    <i class="fa-solid fa-chart-line w-4"></i>
+                    <span>Painel Geral & KPIs</span>
+                </button>
+                <button onclick="switchTab('organograma')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-sitemap w-4"></i>
+                    <span>Organograma da Empresa</span>
+                </button>
+                <button onclick="switchTab('folha_obra')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-file-signature w-4"></i>
+                    <span>Folhas de Obras & Evidências</span>
+                </button>
+
+                <p class="px-3 pt-3 pb-1 text-[10px] uppercase font-bold text-gray-500 tracking-wider">Departamentos</p>
+                <button onclick="switchTab('dgp')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-diagram-project w-4 text-sky-400"></i>
+                    <span>DGP - Gestão Projectos</span>
+                </button>
+                <button onclick="switchTab('se')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-shield-virus w-4 text-emerald-400"></i>
+                    <span>SE - Seg. Eletrónica</span>
+                </button>
+                <button onclick="switchTab('df')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-sack-dollar w-4 text-amber-400"></i>
+                    <span>DF - Finanças</span>
+                </button>
+                <button onclick="switchTab('dl')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-boxes-packing w-4 text-indigo-400"></i>
+                    <span>DL - Logística & Stock</span>
+                </button>
+                <button onclick="switchTab('dt')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-truck-fast w-4 text-purple-400"></i>
+                    <span>DT - Transportes & Frota</span>
+                </button>
+                <button onclick="switchTab('drh')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-id-card w-4 text-rose-400"></i>
+                    <span>DRH - Recursos Humanos</span>
+                </button>
+                <button onclick="switchTab('tecnicos')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-screwdriver-wrench w-4 text-amber-500"></i>
+                    <span>Técnicos & Serv. Gerais</span>
+                </button>
+                <button onclick="switchTab('hsst')" class="nav-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-user-shield w-4 text-teal-400"></i>
+                    <span>Gestão Qualidade & HSST</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Footer Perfil -->
+        <div class="p-4 border-t border-gray-800">
+            <div class="flex items-center space-x-3 bg-gray-900 p-2.5 rounded-lg border border-gray-800">
+                <div class="w-9 h-9 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white text-sm">
+                    OJ
+                </div>
+                <div class="overflow-hidden">
+                    <p class="text-xs font-semibold text-white truncate">Omar Jim</p>
+                    <p class="text-[10px] text-sky-400 truncate">Direção Operacional (NIF: 5417082912)</p>
+                </div>
             </div>
         </div>
-    </header>
+    </aside>
 
-    <!-- Navigation Bar for Modules -->
-    <nav class="bg-white border-b border-gray-200 shadow-sm no-print">
-        <div class="max-w-6xl mx-auto px-4 flex overflow-x-auto space-x-4 py-2 text-sm font-medium text-gray-600">
-            <button onclick="switchView('folha')" id="nav-folha" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-sky-50 text-sky-600 font-bold">Folha de Obras & Evidências</button>
-            <button onclick="switchView('cronograma')" id="nav-cronograma" class="whitespace-nowrap px-3 py-1.5 rounded-lg hover:bg-gray-100">Cronograma DGP</button>
-            <button onclick="switchView('obras')" id="nav-obras" class="whitespace-nowrap px-3 py-1.5 rounded-lg hover:bg-gray-100">Plano Obras SE</button>
-            <button onclick="switchView('qualidade')" id="nav-qualidade" class="whitespace-nowrap px-3 py-1.5 rounded-lg hover:bg-gray-100">Controlo Qualidade DGP</button>
-            <button onclick="switchView('rh')" id="nav-rh" class="whitespace-nowrap px-3 py-1.5 rounded-lg hover:bg-gray-100">RH (Feriados & Aniversários)</button>
-            <button onclick="switchView('termo')" id="nav-termo" class="whitespace-nowrap px-3 py-1.5 rounded-lg hover:bg-gray-100">Termos de Entrega</button>
-        </div>
-    </nav>
-
-    <!-- Main Container Sheet -->
-    <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
-        <div id="printable-sheet" class="bg-white border border-gray-200 rounded-xl p-6 md:p-8 shadow-sm">
+    <!-- Conteúdo Principal -->
+    <main class="flex-1 overflow-y-auto p-4 md:p-8">
+        
+        <!-- Navbar Topo -->
+        <header class="flex flex-wrap justify-between items-center pb-6 border-b border-gray-800 mb-6 gap-4">
+            <div>
+                <h2 id="page-title" class="text-xl font-bold text-white tracking-wide">Painel Geral & Operações 24/7</h2>
+                <p class="text-xs text-gray-400">Sincronizado em tempo real | Luanda, Angola (NIF: 5417082912)</p>
+            </div>
             
-            <!-- VIEW 1: FOLHA DE OBRAS & EVIDÊNCIAS -->
-            <div id="view-folha" class="space-y-6">
-                <!-- Professional Header with ID# 00 and Logo -->
-                <div class="flex flex-col md:flex-row justify-between items-start border-b pb-4 gap-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded flex items-center justify-center font-black text-xl">H</div>
-                        <div>
-                            <h2 class="text-base font-bold text-gray-900">HANZOLO, LDA - OPS 247</h2>
-                            <p class="text-xs text-gray-500">Emissão de Folha de Obra com Upload de Imagens / Evidências</p>
-                        </div>
+            <div class="flex items-center flex-wrap gap-2 no-print">
+                <button onclick="exportExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-lg font-medium flex items-center gap-2 transition">
+                    <i class="fa-solid fa-file-excel"></i> Exportar CSV
+                </button>
+                <button onclick="window.print()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs px-3 py-2 rounded-lg font-medium flex items-center gap-2 transition">
+                    <i class="fa-solid fa-file-pdf"></i> Imprimir / PDF
+                </button>
+            </div>
+        </header>
+
+        <!-- ABA 1: PAINEL GERAL -->
+        <div id="tab-painel" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium uppercase">Total Viaturas (DT)</p>
+                        <h3 class="text-2xl font-bold text-white mt-1">3</h3>
                     </div>
-                    <div class="text-right">
-                        <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2.5 py-1 rounded">ID# 00</span>
-                        <div class="text-xs text-gray-400 mt-1">Data: 10/10/2026, 00:41</div>
+                    <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+                        <i class="fa-solid fa-truck text-lg"></i>
                     </div>
                 </div>
-
-                <form class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between">
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">ID da Obra</label>
-                        <input type="text" value="OBR-2026-LU-08" class="w-full p-2 border border-gray-300 rounded bg-gray-50 font-mono text-xs">
+                        <p class="text-xs text-gray-400 font-medium uppercase">Projectos Ativos (DGP)</p>
+                        <h3 class="text-2xl font-bold text-emerald-400 mt-1">12</h3>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Cliente / Empresa</label>
-                        <input type="text" value="Hospital Girassol" class="w-full p-2 border border-gray-300 rounded bg-gray-50 text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">NIF do Cliente</label>
-                        <input type="text" value="5417126708" class="w-full p-2 border border-gray-300 rounded bg-gray-50 text-xs font-mono">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Localização (Luanda)</label>
-                        <input type="text" value="Talatona" class="w-full p-2 border border-gray-300 rounded bg-gray-50 text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Técnico Responsável</label>
-                        <input type="text" value="Peterson" class="w-full p-2 border border-gray-300 rounded bg-gray-50 text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Carregar Foto / Evidência</label>
-                        <div class="flex items-center gap-2">
-                            <input type="file" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100">
-                        </div>
-                    </div>
-                </form>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Descrição dos Trabalhos Efetuados</label>
-                    <textarea rows="3" class="w-full p-2 border border-gray-300 rounded text-xs">Insira os detalhes dos trabalhos efetuados no sistema hospitalar e calha técnica...</textarea>
-                </div>
-
-                <!-- Evidência Visual Original -->
-                <div>
-                    <span class="text-xs font-bold text-gray-700 block mb-2">Evidência Carregada:</span>
-                    <div class="border border-gray-200 rounded p-3 bg-gray-50 flex items-center justify-between">
-                        <span class="text-xs font-mono text-sky-600">https://omarjim492-cell.github.io/HANZOLO_OPS_24-7/</span>
-                        <span class="text-xs text-gray-500">1/1 Imagens</span>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                        <i class="fa-solid fa-diagram-project text-lg"></i>
                     </div>
                 </div>
-
-                <div class="pt-2 flex justify-end">
-                    <button type="button" class="bg-sky-500 text-white px-4 py-2 rounded text-xs font-bold hover:bg-sky-600 transition">Submeter Folha de Obra</button>
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium uppercase">Equipa Técnica</p>
+                        <h3 class="text-2xl font-bold text-amber-400 mt-1">18</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                        <i class="fa-solid fa-users text-lg"></i>
+                    </div>
+                </div>
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium uppercase">Combustível Médio</p>
+                        <h3 class="text-2xl font-bold text-sky-400 mt-1">84%</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+                        <i class="fa-solid fa-gas-pump text-lg"></i>
+                    </div>
                 </div>
             </div>
 
-            <!-- VIEW 2: CRONOGRAMA PELA DGP -->
-            <div id="view-cronograma" class="space-y-4 hidden">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <h2 class="text-base font-bold text-gray-900"><i class="fa-solid fa-calendar-days text-sky-500 mr-2"></i> Cronograma de Projetos - DGP</h2>
-                    <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">ID# 00</span>
+            <div class="bg-[#111827] border border-gray-800 p-5 rounded-xl">
+                <h3 class="text-sm font-semibold text-white mb-4">Consumo Operacional vs. Projectos Concluídos (Luanda)</h3>
+                <div class="h-64">
+                    <canvas id="mainChart"></canvas>
                 </div>
+            </div>
+        </div>
+
+        <!-- ABA: DGP - GESTÃO DE PROJECTOS -->
+        <div id="tab-dgp" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-diagram-project text-sky-400"></i>
+                    DGP - Novo Registar de Projecto
+                </h3>
+                <form onsubmit="adicionarItemTabela(event, 'tabela-dgp', ['codigo', 'nome', 'cliente', 'status', 'progresso'])" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <input type="text" id="dgp-codigo" placeholder="Código Projecto (Ex: PRJ-2026-01)" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="dgp-nome" placeholder="Nome do Projecto" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="dgp-cliente" placeholder="Cliente" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <select id="dgp-status" class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                        <option value="Em Registo">Em Registo</option>
+                        <option value="Em Execução">Em Execução</option>
+                        <option value="Em Revisão">Em Revisão</option>
+                        <option value="Concluído">Concluído</option>
+                    </select>
+                    <input type="text" id="dgp-progresso" placeholder="Progresso (Ex: 50%)" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <button type="submit" class="bg-sky-600 hover:bg-sky-500 text-white font-medium px-4 py-2 rounded-lg transition">Adicionar Projecto</button>
+                </form>
+            </div>
+
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-white mb-4">Projectos Ativos (Editáveis)</h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-gray-100 border-b text-gray-700">
-                                <th class="p-2">Atividade / Projeto</th>
-                                <th class="p-2">Departamento</th>
-                                <th class="p-2">Início</th>
-                                <th class="p-2">Fim</th>
-                                <th class="p-2">Estado</th>
+                    <table class="w-full text-left text-xs text-gray-400">
+                        <thead class="bg-gray-900 text-gray-300 font-semibold border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">Código</th>
+                                <th class="p-3">Projecto</th>
+                                <th class="p-3">Cliente</th>
+                                <th class="p-3">Estado</th>
+                                <th class="p-3">Progresso</th>
+                                <th class="p-3">Ações</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y">
+                        <tbody id="tabela-dgp" class="divide-y divide-gray-800">
                             <tr>
-                                <td class="p-2 font-medium">Instalação de Calha Técnica Hospitalar</td>
-                                <td class="p-2">DGP</td>
-                                <td class="p-2">01/10/2026</td>
-                                <td class="p-2">12/10/2026</td>
-                                <td class="p-2"><span class="text-emerald-600 font-bold">Em Execução</span></td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 font-medium">Configuração de Ramal Telefónico e Rede</td>
-                                <td class="p-2">DGP</td>
-                                <td class="p-2">13/10/2026</td>
-                                <td class="p-2">20/10/2026</td>
-                                <td class="p-2"><span class="text-gray-500 font-bold">Planeado</span></td>
+                                <td contenteditable="true" class="p-3 font-mono text-sky-400">PRJ-2026-001</td>
+                                <td contenteditable="true" class="p-3 text-white font-medium">Instalação CFTV - Sonangol</td>
+                                <td contenteditable="true" class="p-3">Sonangol E.P.</td>
+                                <td contenteditable="true" class="p-3 text-emerald-400">Em Execução</td>
+                                <td contenteditable="true" class="p-3">75%</td>
+                                <td class="p-3"><button onclick="removerLinha(this)" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            <!-- VIEW 3: PLANO DE EXECUÇÃO DE OBRAS PELA SE -->
-            <div id="view-obras" class="space-y-4 hidden">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <h2 class="text-base font-bold text-gray-900"><i class="fa-solid fa-helmet-safety text-sky-500 mr-2"></i> Plano de Execução de Obras - SE (Supervisão de Engenharia)</h2>
-                    <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">ID# 00</span>
-                </div>
-                <div class="text-xs space-y-3 text-gray-700">
-                    <p>O plano de execução de obras supervisionado pela <strong>SE</strong> abrange a alocação de técnicos no terreno, cumprimento das normas técnicas hospitalares e verificação de segurança eletromecânica.</p>
-                    <div class="bg-gray-50 p-3 rounded border">
-                        <span class="font-bold block mb-1">Diretrizes de Campo SE:</span>
-                        <ul class="list-disc pl-4 space-y-1">
-                            <li>Inspeção prévia dos pontos de fixação da calha.</li>
-                            <li>Acompanhamento de testes de carga e sinal de CFTV.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW 4: CONTROLO DE QUALIDADE PELA DGP -->
-            <div id="view-qualidade" class="space-y-4 hidden">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <h2 class="text-base font-bold text-gray-900"><i class="fa-solid fa-clipboard-check text-sky-500 mr-2"></i> Controlo de Qualidade - DGP</h2>
-                    <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">ID# 00</span>
-                </div>
-                <div class="space-y-2 text-xs">
-                    <div class="p-2.5 border rounded bg-gray-50 flex justify-between items-center">
-                        <span>Verificação de conformidade de cablagem e terminais</span>
-                        <span class="px-2 py-1 bg-emerald-100 text-emerald-800 font-bold rounded">CONFORME</span>
-                    </div>
-                    <div class="p-2.5 border rounded bg-gray-50 flex justify-between items-center">
-                        <span>Teste de estabilidade de imagem NVR/DVR</span>
-                        <span class="px-2 py-1 bg-emerald-100 text-emerald-800 font-bold rounded">CONFORME</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW 5: RH (FERIADOS, PONTES, ANIVERSÁRIOS E FORMAÇÕES) -->
-            <div id="view-rh" class="space-y-4 hidden">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <h2 class="text-base font-bold text-gray-900"><i class="fa-solid fa-users text-sky-500 mr-2"></i> RH - Feriados, Pontes, Aniversários & Certificações</h2>
-                    <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">ID# 00</span>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div class="p-3 border rounded bg-gray-50">
-                        <span class="font-bold block mb-2 text-sky-700">Aniversários & Eventos (RH)</span>
-                        <ul class="space-y-1">
-                            <li>• Peterson (Técnico) - 15 de Outubro</li>
-                            <li>• Omar Joaquim (DGP) - 28 de Novembro</li>
-                        </ul>
-                    </div>
-                    <div class="p-3 border rounded bg-gray-50">
-                        <span class="font-bold block mb-2 text-sky-700">Feriados & Pontes (Angola)</span>
-                        <ul class="space-y-1">
-                            <li>• 11 de Novembro - Dia da Independência Nacional</li>
-                            <li>• 25 de Dezembro - Natal</li>
-                        </ul>
-                    </div>
-                    <div class="p-3 border rounded bg-gray-50 md:col-span-2">
-                        <span class="font-bold block mb-2 text-sky-700">Formações & Certificações</span>
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="border-b">
-                                    <th class="py-1">Colaborador</th>
-                                    <th class="py-1">Formação</th>
-                                    <th class="py-1">Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="py-1">Mário Pedro</td>
-                                    <td>Certificação IP-CCTV Advanced</td>
-                                    <td><span class="text-emerald-600 font-bold">Concluído</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW 6: TERMOS DE ENTREGAS -->
-            <div id="view-termo" class="space-y-4 hidden">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <h2 class="text-base font-bold text-gray-900"><i class="fa-solid fa-file-contract text-sky-500 mr-2"></i> Termos de Entrega de Obra</h2>
-                    <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">ID# 00</span>
-                </div>
-                <div class="text-xs space-y-3 text-gray-700 leading-relaxed">
-                    <p>Declaramos para os devidos efeitos que a <strong>HANZOLO, LDA</strong> efetuou a entrega formal dos equipamentos e trabalhos técnicos realizados no âmbito do projeto OPS 24/7 no Hospital Girassol.</p>
-                    <div class="pt-10 grid grid-cols-2 gap-6 text-center">
-                        <div>
-                            <div class="border-b border-gray-400 mb-2"></div>
-                            <span class="font-bold">Pela Hanzolo, LDA</span>
-                        </div>
-                        <div>
-                            <div class="border-b border-gray-400 mb-2"></div>
-                            <span class="font-bold">Pelo Cliente</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
-        <!-- Print Button Footer -->
-        <div class="mt-4 flex justify-end no-print">
-            <button onclick="window.print()" class="bg-gray-800 text-white px-4 py-2 rounded text-xs font-bold hover:bg-gray-900 flex items-center gap-2">
-                <i class="fa-solid fa-print"></i> Imprimir / Gerar PDF
-            </button>
+        <!-- ABA: SE - SEGURANÇA ELETRÓNICA -->
+        <div id="tab-se" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-shield-virus text-emerald-400"></i>
+                    SE - Registo de Instalações e Alarmes
+                </h3>
+                <form onsubmit="adicionarItemTabela(event, 'tabela-se', ['sistema', 'local', 'tecnico', 'status', 'ultm_manutencion'])" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <input type="text" id="se-sistema" placeholder="Sistema (Ex: Alarme Incêndio)" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="se-local" placeholder="Local / Instalação" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="se-tecnico" placeholder="Técnico Responsável" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <select id="se-status" class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                        <option value="Operacional">Operacional</option>
+                        <option value="Manutenção Requerida">Manutenção Requerida</option>
+                        <option value="Inoperacional">Inoperacional</option>
+                    </select>
+                    <input type="date" id="se-ultm_manutencion" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg transition">Registar Sistema</button>
+                </form>
+            </div>
+
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-white mb-4">Sistemas Monitorizados (Editáveis)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-400">
+                        <thead class="bg-gray-900 text-gray-300 font-semibold border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">Sistema</th>
+                                <th class="p-3">Localização</th>
+                                <th class="p-3">Técnico</th>
+                                <th class="p-3">Estado</th>
+                                <th class="p-3">Última Manutenção</th>
+                                <th class="p-3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-se" class="divide-y divide-gray-800">
+                            <tr>
+                                <td contenteditable="true" class="p-3 text-white font-medium">Controlo de Acessos Biométrico</td>
+                                <td contenteditable="true" class="p-3">Sede Talatona</td>
+                                <td contenteditable="true" class="p-3">Eng. Manuel Mateus</td>
+                                <td contenteditable="true" class="p-3 text-emerald-400">Operacional</td>
+                                <td contenteditable="true" class="p-3">2026-03-10</td>
+                                <td class="p-3"><button onclick="removerLinha(this)" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
+        <!-- ABA: DF - FINANÇAS -->
+        <div id="tab-df" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-sack-dollar text-amber-400"></i>
+                    DF - Registo de Transações / Orçamentos
+                </h3>
+                <form onsubmit="adicionarItemTabela(event, 'tabela-df', ['descricao', 'categoria', 'valor', 'tipo', 'data'])" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <input type="text" id="df-descricao" placeholder="Descrição da Transação" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="df-categoria" placeholder="Categoria (Ex: Equipamentos)" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="df-valor" placeholder="Valor (Kz)" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <select id="df-tipo" class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                        <option value="Receita">Receita</option>
+                        <option value="Despesa">Despesa</option>
+                    </select>
+                    <input type="date" id="df-data" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <button type="submit" class="bg-amber-600 hover:bg-amber-500 text-white font-medium px-4 py-2 rounded-lg transition">Registar Lançamento</button>
+                </form>
+            </div>
+
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-white mb-4">Fluxo de Caixa Operacional (Editável)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-400">
+                        <thead class="bg-gray-900 text-gray-300 font-semibold border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">Descrição</th>
+                                <th class="p-3">Categoria</th>
+                                <th class="p-3">Valor (AOA)</th>
+                                <th class="p-3">Tipo</th>
+                                <th class="p-3">Data</th>
+                                <th class="p-3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-df" class="divide-y divide-gray-800">
+                            <tr>
+                                <td contenteditable="true" class="p-3 text-white font-medium">Fornecimento Material CCTV</td>
+                                <td contenteditable="true" class="p-3">Projetos SE</td>
+                                <td contenteditable="true" class="p-3 font-mono">1.250.000 Kz</td>
+                                <td contenteditable="true" class="p-3 text-emerald-400">Receita</td>
+                                <td contenteditable="true" class="p-3">2026-03-28</td>
+                                <td class="p-3"><button onclick="removerLinha(this)" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: DL - LOGÍSTICA & STOCK -->
+        <div id="tab-dl" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-boxes-packing text-indigo-400"></i>
+                    DL - Entrada/Saída de Material em Armazém
+                </h3>
+                <form onsubmit="adicionarItemTabela(event, 'tabela-dl', ['item', 'quantidade', 'unidade', 'localizacao', 'estado'])" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <input type="text" id="dl-item" placeholder="Item / Equipamento" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="number" id="dl-quantidade" placeholder="Quantidade" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="dl-unidade" placeholder="Unidade (Un, Unid, Mts)" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="dl-localizacao" placeholder="Localização Armazém" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <select id="dl-estado" class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                        <option value="Em Stock">Em Stock</option>
+                        <option value="Stock Baixo">Stock Baixo</option>
+                        <option value="Esgotado">Esgotado</option>
+                    </select>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg transition">Registar Item</button>
+                </form>
+            </div>
+
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-white mb-4">Inventário de Stock (Editável)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-400">
+                        <thead class="bg-gray-900 text-gray-300 font-semibold border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">Artigo / Material</th>
+                                <th class="p-3">Quantidade</th>
+                                <th class="p-3">Unidade</th>
+                                <th class="p-3">Prateleira / Zona</th>
+                                <th class="p-3">Estado Stock</th>
+                                <th class="p-3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-dl" class="divide-y divide-gray-800">
+                            <tr>
+                                <td contenteditable="true" class="p-3 text-white font-medium">Câmara IP DOME 4MP Dahua</td>
+                                <td contenteditable="true" class="p-3 font-mono">42</td>
+                                <td contenteditable="true" class="p-3">Unidades</td>
+                                <td contenteditable="true" class="p-3">Armazém A - Prat. 3</td>
+                                <td contenteditable="true" class="p-3 text-emerald-400">Em Stock</td>
+                                <td class="p-3"><button onclick="removerLinha(this)" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: DT - TRANSPORTES & FROTA -->
+        <div id="tab-dt" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-truck-fast text-purple-400"></i>
+                    DT - Gestão e Alocação da Frota
+                </h3>
+                <form onsubmit="adicionarItemTabela(event, 'tabela-dt', ['matricula', 'veiculo', 'condutor', 'rota', 'combustivel'])" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <input type="text" id="dt-matricula" placeholder="Matrícula (Ex: LD-42-88-GG)" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white font-mono">
+                    <input type="text" id="dt-veiculo" placeholder="Modelo do Veículo" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="dt-condutor" placeholder="Condutor Atribuído" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="dt-rota" placeholder="Rota / Destino Ativo" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="dt-combustivel" placeholder="Nível Combustível (%)" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white font-medium px-4 py-2 rounded-lg transition">Registar Viatura</button>
+                </form>
+            </div>
+
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-white mb-4">Estado da Frota (Editável)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-400">
+                        <thead class="bg-gray-900 text-gray-300 font-semibold border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">Matrícula</th>
+                                <th class="p-3">Modelo / Viatura</th>
+                                <th class="p-3">Condutor</th>
+                                <th class="p-3">Rota Atual</th>
+                                <th class="p-3">Combustível</th>
+                                <th class="p-3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-dt" class="divide-y divide-gray-800">
+                            <tr>
+                                <td contenteditable="true" class="p-3 font-mono text-purple-400">LD-22-90-HX</td>
+                                <td contenteditable="true" class="p-3 text-white font-medium">Toyota Hilux Pick-up</td>
+                                <td contenteditable="true" class="p-3">João Pedro</td>
+                                <td contenteditable="true" class="p-3">Talatona ➔ Viana</td>
+                                <td contenteditable="true" class="p-3">85%</td>
+                                <td class="p-3"><button onclick="removerLinha(this)" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: TÉCNICOS & SERVIÇOS GERAIS -->
+        <div id="tab-tecnicos" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-screwdriver-wrench text-amber-500"></i>
+                    Atribuição de Ordens de Serviço Técnicas
+                </h3>
+                <form onsubmit="adicionarItemTabela(event, 'tabela-tecnicos', ['ordem', 'equipa', 'servico', 'prioridade', 'prazo'])" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <input type="text" id="tecnicos-ordem" placeholder="Ordem Serviço (Ex: OS-902)" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white font-mono">
+                    <input type="text" id="tecnicos-equipa" placeholder="Equipa / Responsável" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="tecnicos-servico" placeholder="Serviço / Intervenção" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <select id="tecnicos-prioridade" class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                        <option value="Alta">Alta</option>
+                        <option value="Média">Média</option>
+                        <option value="Baixa">Baixa</option>
+                    </select>
+                    <input type="date" id="tecnicos-prazo" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <button type="submit" class="bg-amber-600 hover:bg-amber-500 text-white font-medium px-4 py-2 rounded-lg transition">Atribuir Ordem</button>
+                </form>
+            </div>
+
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-white mb-4">Ordens de Serviço em Execução (Editável)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-400">
+                        <thead class="bg-gray-900 text-gray-300 font-semibold border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">OS #</th>
+                                <th class="p-3">Equipa</th>
+                                <th class="p-3">Descrição da Tarefa</th>
+                                <th class="p-3">Prioridade</th>
+                                <th class="p-3">Prazo Limite</th>
+                                <th class="p-3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-tecnicos" class="divide-y divide-gray-800">
+                            <tr>
+                                <td contenteditable="true" class="p-3 font-mono text-amber-400">OS-2026-104</td>
+                                <td contenteditable="true" class="p-3 text-white font-medium">Equipa Alfa (CFTV)</td>
+                                <td contenteditable="true" class="p-3">Passagem de cabos de fibra ótica</td>
+                                <td contenteditable="true" class="p-3 text-rose-400">Alta</td>
+                                <td contenteditable="true" class="p-3">2026-04-02</td>
+                                <td class="p-3"><button onclick="removerLinha(this)" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: QUALIDADE & HSST -->
+        <div id="tab-hsst" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield text-teal-400"></i>
+                    HSST - Inspecções e Gestão de Segurança no Trabalho
+                </h3>
+                <form onsubmit="adicionarItemTabela(event, 'tabela-hsst', ['local', 'inspetor', 'epis', 'conformidade', 'data'])" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <input type="text" id="hsst-local" placeholder="Obra / Local de Inspecção" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="hsst-inspetor" placeholder="Inspetor HSST" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <input type="text" id="hsst-epis" placeholder="Estado EPIs entregues" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <select id="hsst-conformidade" class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                        <option value="Conforme 100%">Conforme 100%</option>
+                        <option value="Não Conformidade Ligeira">Não Conformidade Ligeira</option>
+                        <option value="Risco Crítico">Risco Crítico</option>
+                    </select>
+                    <input type="date" id="hsst-data" required class="bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    <button type="submit" class="bg-teal-600 hover:bg-teal-500 text-white font-medium px-4 py-2 rounded-lg transition">Registar Inspecção</button>
+                </form>
+            </div>
+
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-white mb-4">Relatório de Inspecções HSST (Editável)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-400">
+                        <thead class="bg-gray-900 text-gray-300 font-semibold border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">Local / Posto</th>
+                                <th class="p-3">Inspetor HSST</th>
+                                <th class="p-3">Auditoria EPIs</th>
+                                <th class="p-3">Resultado</th>
+                                <th class="p-3">Data</th>
+                                <th class="p-3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-hsst" class="divide-y divide-gray-800">
+                            <tr>
+                                <td contenteditable="true" class="p-3 text-white font-medium">Obra Banco BAI - Belas</td>
+                                <td contenteditable="true" class="p-3">Eng. Santos HSST</td>
+                                <td contenteditable="true" class="p-3">Capacetes e Arneses Validados</td>
+                                <td contenteditable="true" class="p-3 text-emerald-400">Conforme 100%</td>
+                                <td contenteditable="true" class="p-3">2026-03-15</td>
+                                <td class="p-3"><button onclick="removerLinha(this)" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA DRH: CADASTRO DE COLABORADORES -->
+        <div id="tab-drh" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-rose-400"></i>
+                    Cadastro de Colaborador & Credenciais de Acesso (Pass / Senha)
+                </h3>
+                
+                <form id="form-colaborador" onsubmit="cadastrarColaborador(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div>
+                        <label class="block text-gray-400 mb-1">Nome Completo</label>
+                        <input type="text" id="cad-nome" required placeholder="Ex: António Silva" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">NIF / BI</label>
+                        <input type="text" id="cad-nif" required placeholder="006543210LA042" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Departamento</label>
+                        <select id="cad-dept" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                            <option value="DGP">DGP - Gestão de Projectos</option>
+                            <option value="SE">SE - Segurança Eletrónica</option>
+                            <option value="DF">DF - Finanças</option>
+                            <option value="DL">DL - Logística</option>
+                            <option value="DT">DT - Transportes</option>
+                            <option value="DRH">DRH - Recursos Humanos</option>
+                            <option value="Técnico">Técnicos & Serv. Gerais</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Cargo / Função</label>
+                        <input type="text" id="cad-cargo" required placeholder="Ex: Técnico Especialista SE" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Passe / ID de Acesso</label>
+                        <input type="text" id="cad-pass" required placeholder="PASS-2024-001" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Palavra-passe Inicial</label>
+                        <input type="password" id="cad-senha" required placeholder="******" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div class="md:col-span-3 flex justify-end mt-2">
+                        <button type="submit" class="bg-rose-600 hover:bg-rose-500 text-white font-medium px-5 py-2.5 rounded-lg transition">
+                            <i class="fa-solid fa-save mr-1"></i> Cadastrar Colaborador
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-white mb-4">Quadro de Colaboradores (Editável)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-400">
+                        <thead class="bg-gray-900 text-gray-300 font-semibold border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">ID / Passe</th>
+                                <th class="p-3">Nome</th>
+                                <th class="p-3">NIF</th>
+                                <th class="p-3">Departamento</th>
+                                <th class="p-3">Cargo</th>
+                                <th class="p-3">Estado</th>
+                                <th class="p-3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-colaboradores" class="divide-y divide-gray-800">
+                            <tr>
+                                <td contenteditable="true" class="p-3 font-mono text-sky-400">PASS-HNZ-001</td>
+                                <td contenteditable="true" class="p-3 text-white font-medium">Omar Jim</td>
+                                <td contenteditable="true" class="p-3">5417082912</td>
+                                <td contenteditable="true" class="p-3"><span class="bg-sky-500/10 text-sky-400 px-2 py-0.5 rounded">Direção</span></td>
+                                <td contenteditable="true" class="p-3">Diretor Operacional</td>
+                                <td contenteditable="true" class="p-3"><span class="text-emerald-400">● Ativo</span></td>
+                                <td class="p-3"><button onclick="removerLinha(this)" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA FOLHA DE OBRAS -->
+        <div id="tab-folha_obra" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-file-signature text-sky-400"></i>
+                    Emissão de Folha de Obra com Upload de Imagens / Evidências
+                </h3>
+                
+                <form onsubmit="gerarFolhaObra(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div>
+                        <label class="block text-gray-400 mb-1">ID da Obra</label>
+                        <input type="text" required value="OBR-2026-LU-08" readonly class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-sky-400 font-mono font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Cliente / Empresa</label>
+                        <input type="text" id="ob-cliente" required placeholder="Ex: Sonangol EP" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">NIF do Cliente</label>
+                        <input type="text" id="ob-nif" required placeholder="541239908" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Localização (Luanda)</label>
+                        <input type="text" id="ob-local" required placeholder="Ex: Talatona, Edifício Sede" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Técnico Responsável</label>
+                        <input type="text" id="ob-tecnico" required placeholder="Ex: Eng. Manuel Mateus" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Carregar Foto / Evidência</label>
+                        <input type="file" id="ob-foto" accept="image/*" onchange="previewImagem(event)" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2 text-gray-400">
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="block text-gray-400 mb-1">Descrição dos Trabalhos Efetuados</label>
+                        <textarea id="ob-desc" rows="3" placeholder="Insira os detalhes dos trabalhos..." class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white"></textarea>
+                    </div>
+                    
+                    <div id="preview-container" class="md:col-span-3 hidden">
+                        <p class="text-xs text-gray-400 mb-1">Evidência Carregada:</p>
+                        <img id="img-preview" class="h-40 rounded-lg border border-gray-800 object-cover">
+                    </div>
+
+                    <div class="md:col-span-3 flex justify-end">
+                        <button type="submit" class="bg-sky-600 hover:bg-sky-500 text-white font-medium px-5 py-2.5 rounded-lg transition">
+                            <i class="fa-solid fa-print mr-1"></i> Submeter Folha de Obra
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ABA ORGANOGRAMA -->
+        <div id="tab-organograma" class="tab-content hidden space-y-6">
+            <div class="bg-[#111827] border border-gray-800 rounded-xl p-6 text-center">
+                <h3 class="text-lg font-bold text-white mb-6">Organograma Estrutural - HANZOLO, LDA</h3>
+                <div class="flex flex-col items-center space-y-4 text-xs">
+                    <div class="bg-sky-900/40 border border-sky-500 p-4 rounded-xl w-64">
+                        <p class="text-sky-400 font-bold">Conselho de Administração</p>
+                        <p class="text-white font-bold text-sm mt-1">Direção Geral</p>
+                    </div>
+                    <div class="w-0.5 h-6 bg-gray-700"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg"><span class="text-sky-400 font-bold block">DGP</span><span class="text-gray-300">Gestão de Projectos</span></div>
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg"><span class="text-emerald-400 font-bold block">SE / HSST</span><span class="text-gray-300">Segurança & Qualidade</span></div>
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg"><span class="text-amber-400 font-bold block">DF / DL</span><span class="text-gray-300">Finanças & Logística</span></div>
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg"><span class="text-rose-400 font-bold block">DRH / DT</span><span class="text-gray-300">Recursos & Transportes</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    <!-- Navigation Script -->
+    <!-- JavaScript Integrado -->
     <script>
-        function switchView(viewName) {
-            const views = ['folha', 'cronograma', 'obras', 'qualidade', 'rh', 'termo'];
-            views.forEach(v => {
-                const el = document.getElementById('view-' + v);
-                const btn = document.getElementById('nav-' + v);
-                if (el) el.classList.add('hidden');
-                if (btn) {
-                    btn.classList.remove('bg-sky-50', 'text-sky-600', 'font-bold');
-                    btn.classList.add('hover:bg-gray-100');
-                }
-            });
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(t => t.classList.add('hidden'));
 
-            const activeEl = document.getElementById('view-' + viewName);
-            const activeBtn = document.getElementById('nav-' + viewName);
-            if (activeEl) activeEl.classList.remove('hidden');
-            if (activeBtn) {
-                activeBtn.classList.add('bg-sky-50', 'text-sky-600', 'font-bold');
-                activeBtn.classList.remove('hover:bg-gray-100');
+            const titles = {
+                painel: "Painel Geral & Operações 24/7",
+                dgp: "DGP - Gestão de Projectos",
+                se: "SE - Segurança Eletrónica",
+                df: "DF - Finanças & Orçamentos",
+                dl: "DL - Logística & Stock",
+                dt: "DT - Transportes & Frota",
+                drh: "DRH - Recursos Humanos & Passes",
+                tecnicos: "Técnicos & Serviços Gerais",
+                hsst: "Gestão de Qualidade & HSST",
+                folha_obra: "Folhas de Obras & Evidências",
+                organograma: "Organograma Estrutural da Empresa"
+            };
+
+            document.getElementById('page-title').innerText = titles[tab] || "Módulo Hanzolo Ops";
+
+            if (document.getElementById('tab-' + tab)) {
+                document.getElementById('tab-' + tab).classList.remove('hidden');
             }
         }
+
+        function adicionarItemTabela(event, tabelaId, campos) {
+            event.preventDefault();
+            const tbody = document.getElementById(tabelaId);
+            const tr = document.createElement('tr');
+            
+            campos.forEach((campo, index) => {
+                const val = document.getElementById(tabelaId.split('-')[1] + '-' + campo).value;
+                const td = document.createElement('td');
+                td.contentEditable = "true";
+                td.className = "p-3 text-white";
+                if(index === 0) td.className += " font-medium";
+                td.innerText = val;
+                tr.appendChild(td);
+            });
+
+            const tdAcoes = document.createElement('td');
+            tdAcoes.className = "p-3";
+            tdAcoes.innerHTML = '<button onclick="removerLinha(this)" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>';
+            tr.appendChild(tdAcoes);
+
+            tbody.appendChild(tr);
+            event.target.reset();
+        }
+
+        function removerLinha(btn) {
+            btn.closest('tr').remove();
+        }
+
+        function cadastrarColaborador(e) {
+            e.preventDefault();
+            const nome = document.getElementById('cad-nome').value;
+            const nif = document.getElementById('cad-nif').value;
+            const dept = document.getElementById('cad-dept').value;
+            const cargo = document.getElementById('cad-cargo').value;
+            const pass = document.getElementById('cad-pass').value;
+
+            const tbody = document.getElementById('lista-colaboradores');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td contenteditable="true" class="p-3 font-mono text-sky-400">${pass}</td>
+                <td contenteditable="true" class="p-3 text-white font-medium">${nome}</td>
+                <td contenteditable="true" class="p-3">${nif}</td>
+                <td contenteditable="true" class="p-3"><span class="bg-sky-500/10 text-sky-400 px-2 py-0.5 rounded">${dept}</span></td>
+                <td contenteditable="true" class="p-3">${cargo}</td>
+                <td contenteditable="true" class="p-3"><span class="text-emerald-400">● Ativo</span></td>
+                <td class="p-3"><button onclick="removerLinha(this)" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
+            `;
+            tbody.appendChild(row);
+            alert("Colaborador " + nome + " registado com sucesso!");
+            document.getElementById('form-colaborador').reset();
+        }
+
+        function previewImagem(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('img-preview').src = event.target.result;
+                    document.getElementById('preview-container').classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function gerarFolhaObra(e) {
+            e.preventDefault();
+            alert("Folha de Obra gravada com sucesso!");
+            window.print();
+        }
+
+        function exportExcel() {
+            let csv = "Departamento,Item,Estado\n";
+            csv += "DGP,Instalação CFTV Sonangol,Em Execução\n";
+            csv += "SE,Controlo Acessos,Operacional\n";
+            csv += "DL,Câmara IP DOME,Em Stock\n";
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'relatorio_hanzolo_ops.csv');
+            a.click();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['DGP Projectos', 'SE Instalações', 'DL Stock', 'DT Rotas', 'HSST Auditorias'],
+                    datasets: [{
+                        label: 'Desempenho Semanal (%)',
+                        data: [95, 88, 92, 84, 98],
+                        backgroundColor: ['#0284c7', '#10b981', '#f59e0b', '#8b5cf6', '#14b8a6'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } },
+                        y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>
