@@ -16,101 +16,74 @@
                         darkBg: '#0b0f19',
                         cardBg: '#111827',
                         borderDark: '#1f293d',
-                        brandBlue: '#2563eb'
+                        brandBlue: '#00b4d8'
                     }
                 }
             }
         }
     </script>
     <style>
-        .glass-card { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-card { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #0b0f19; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #1f293d; border-radius: 4px; }
-        .org-line { position: absolute; border-color: #374151; }
     </style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- Header Superior -->
-    <header class="bg-cardBg border-b border-borderDark px-6 py-3.5 flex items-center justify-between shadow-md relative z-30">
-        <div class="flex items-center space-x-3">
-            <div class="bg-blue-600 text-white p-2.5 rounded-xl font-bold tracking-wider shadow-lg shadow-blue-600/30">HZ</div>
-            <div>
-                <h1 class="text-sm font-bold tracking-wider text-white">HANZOLO, ops 24-7</h1>
-                <p class="text-[11px] text-gray-400">Tecnologia Sistemas & Segurança LDA — Luanda</p>
+    <!-- Header Superior com Logotipo Vetorizado Hanzolo -->
+    <header class="bg-cardBg border-b border-borderDark px-6 py-3 flex items-center justify-between shadow-lg relative z-30">
+        <div class="flex items-center space-x-4">
+            <!-- Logotipo Vetorizado Hanzolo incorporado em SVG -->
+            <div class="flex items-center space-x-3 bg-darkBg/60 px-3 py-1.5 rounded-xl border border-borderDark">
+                <svg viewBox="0 0 1000 250" class="h-9 w-auto" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Seta/Ponta Esquerda -->
+                    <polygon points="0,125 180,0 180,75 250,75 250,175 180,175 180,250" fill="#00b4d8" />
+                    <!-- Circulo Central -->
+                    <circle cx="130" cy="125" r="30" fill="#ffffff" />
+                    <circle cx="130" cy="125" r="16" fill="#0077b6" />
+                    <circle cx="130" cy="125" r="6" fill="#03045e" />
+                    <circle cx="160" cy="95" r="6" fill="#ffffff" />
+                    <circle cx="160" cy="155" r="6" fill="#ffffff" />
+                    <!-- Letras HANZOLO -->
+                    <path d="M280,200 L280,50 L315,50 L315,115 L375,115 L375,50 L410,50 L410,200 L375,200 L375,145 L315,145 L315,200 Z" fill="#00b4d8"/>
+                    <path d="M430,200 L470,50 L505,50 L545,200 L510,200 L500,160 L475,160 L465,200 Z M480,135 L495,85 L495,85 L510,135 Z" fill="#00b4d8"/>
+                    <path d="M565,200 L565,50 L645,170 L645,50 L675,50 L675,200 L595,80 L595,200 Z" fill="#00b4d8"/>
+                    <path d="M695,200 L695,50 L730,50 L730,170 L785,170 L785,200 Z" fill="#00b4d8"/>
+                    <path d="M810,125 C810,75 845,50 875,50 C905,50 940,75 940,125 C940,175 905,200 875,200 C845,200 810,175 810,125 Z M845,125 C845,155 860,175 875,175 C890,175 905,155 905,125 C905,95 890,75 875,75 C860,75 845,95 845,125 Z" fill="#00b4d8"/>
+                    <path d="M960,200 L960,50 L995,50 L995,170 L1045,170 L1045,200 Z" fill="#00b4d8"/>
+                </svg>
+                <div class="border-l border-borderDark pl-3">
+                    <h1 class="text-xs font-bold tracking-wider text-white">HANZOLO, ops 24-7</h1>
+                    <p class="text-[10px] text-gray-400">Tecnologia Sistemas & Segurança LDA — Luanda</p>
+                </div>
             </div>
         </div>
 
         <div class="flex items-center space-x-4">
-            <!-- Indicador Online -->
             <span class="hidden md:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <span class="w-2 h-2 mr-2 bg-emerald-500 rounded-full animate-pulse"></span> Sistema & GPS Ativos (Luanda)
+                <span class="w-2 h-2 mr-2 bg-emerald-500 rounded-full animate-pulse"></span> Sistema Ativo (Luanda)
             </span>
-
-            <!-- Botão de Notificações -->
             <div class="relative">
-                <button onclick="toggleNotifications()" class="relative p-2.5 rounded-xl bg-darkBg border border-borderDark text-gray-300 hover:text-white hover:border-blue-500/50 transition-all focus:outline-none">
+                <button onclick="toggleNotifications()" class="relative p-2.5 rounded-xl bg-darkBg border border-borderDark text-gray-300 hover:text-white transition-all">
                     <i class="fa-regular fa-bell text-lg"></i>
                     <span id="notif-badge" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">6</span>
                 </button>
-
-                <!-- Panel Dropdown Notificações Alargado -->
-                <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-80 sm:w-96 glass-card rounded-2xl shadow-2xl border border-borderDark py-3 z-50">
-                    <div class="px-4 py-2 border-b border-borderDark flex justify-between items-center">
-                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Centro de Alertas & Notificações</h4>
-                        <span class="text-[10px] bg-blue-600/20 text-blue-400 px-2 py-0.5 rounded-full font-semibold">6 Pendentes</span>
-                    </div>
-                    <div class="divide-y divide-borderDark max-h-80 overflow-y-auto custom-scrollbar">
-                        <div class="p-3 hover:bg-white/5 transition-colors flex space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center shrink-0 text-xs"><i class="fa-solid fa-cake-candles"></i></div>
-                            <div>
-                                <p class="text-xs font-semibold text-white">Aniversário de Colaborador</p>
-                                <p class="text-[11px] text-gray-400">Domingos Pedro (Técnico de Campo) faz anos amanhã.</p>
-                                <span class="text-[9px] text-gray-500 mt-0.5 block">RH • Luanda</span>
-                            </div>
-                        </div>
-                        <div class="p-3 hover:bg-white/5 transition-colors flex space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0 text-xs"><i class="fa-solid fa-calendar-day"></i></div>
-                            <div>
-                                <p class="text-xs font-semibold text-white">Próximo Feriado Nacional / Ponte</p>
-                                <p class="text-[11px] text-gray-400">Dia do Fundador da Nação & Herois Nacionais (Ponte aprovada).</p>
-                                <span class="text-[9px] text-gray-500 mt-0.5 block">Calendário Nacional AO</span>
-                            </div>
-                        </div>
-                        <div class="p-3 hover:bg-white/5 transition-colors flex space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 text-xs"><i class="fa-solid fa-users"></i></div>
-                            <div>
-                                <p class="text-xs font-semibold text-white">Reunião Operacional Semanal</p>
-                                <p class="text-[11px] text-gray-400">Segunda-feira às 08:30 na Sala de Reuniões Principal.</p>
-                                <span class="text-[9px] text-gray-500 mt-0.5 block">DGP • 10 Out 2026</span>
-                            </div>
-                        </div>
-                        <div class="p-3 hover:bg-white/5 transition-colors flex space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0 text-xs"><i class="fa-solid fa-graduation-cap"></i></div>
-                            <div>
-                                <p class="text-xs font-semibold text-white">Formação & Certificação HST</p>
-                                <p class="text-[11px] text-gray-400">Reciclagem obrigatória em segurança eletrônica avançada.</p>
-                                <span class="text-[9px] text-gray-500 mt-0.5 block">HSST • 15 Out</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="px-4 pt-2 border-t border-borderDark text-center">
-                        <button onclick="clearNotifications()" class="text-[11px] text-blue-400 hover:text-blue-300 font-medium">Marcar todas como lidas</button>
-                    </div>
-                </div>
             </div>
         </div>
     </header>
 
-    <!-- Layout Central -->
+    <!-- Layout Principal -->
     <div class="flex flex-1 overflow-hidden relative">
         
         <!-- Sidebar Esquerda -->
         <aside class="w-72 bg-cardBg border-r border-borderDark flex flex-col justify-between p-4 shrink-0 overflow-y-auto custom-scrollbar">
             <nav class="space-y-1">
-                <button onclick="switchTab('visao-geral')" id="btn-visao-geral" class="sidebar-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+                <button onclick="switchTab('visao-geral')" id="btn-visao-geral" class="sidebar-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all bg-cyan-600 text-white shadow-lg shadow-cyan-600/20">
                     <i class="fa-solid fa-chart-pie w-4"></i><span>Visão geral</span>
+                </button>
+                <button onclick="switchTab('folha-obras')" id="btn-folha-obras" class="sidebar-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
+                    <i class="fa-solid fa-file-invoice w-4 text-cyan-400"></i><span>Folha de Obras & Evidências</span>
                 </button>
                 <button onclick="switchTab('dgp')" id="btn-dgp" class="sidebar-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                     <i class="fa-solid fa-building-user w-4"></i><span>DGP</span>
@@ -119,7 +92,7 @@
                     <i class="fa-solid fa-video w-4"></i><span>SE (Segurança Eletrónica)</span>
                 </button>
                 <button onclick="switchTab('rh')" id="btn-rh" class="sidebar-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
-                    <i class="fa-solid fa-users-gear w-4"></i><span>RH & Cadastro</span>
+                    <i class="fa-solid fa-users-gear w-4"></i><span>RH & Cadastro de Colaborador</span>
                 </button>
                 <button onclick="switchTab('frotas')" id="btn-frotas" class="sidebar-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                     <i class="fa-solid fa-truck-fast w-4"></i><span>Gestão de Frotas & GPS</span>
@@ -134,7 +107,7 @@
                     <i class="fa-solid fa-building-shield w-4"></i><span>Serviços Gerais</span>
                 </button>
                 <button onclick="switchTab('organigrama')" id="btn-organigrama" class="sidebar-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
-                    <i class="fa-solid fa-sitemap w-4"></i><span>Organigrama Ramificado</span>
+                    <i class="fa-solid fa-sitemap w-4"></i><span>Organigrama Ramificada</span>
                 </button>
                 <button onclick="switchTab('compras')" id="btn-compras" class="sidebar-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                     <i class="fa-solid fa-cart-shopping w-4"></i><span>COMPRAS</span>
@@ -156,9 +129,8 @@
                 </button>
             </nav>
 
-            <!-- Rodapé Utilizador -->
             <div class="pt-4 border-t border-borderDark flex items-center space-x-3 px-1 mt-4">
-                <div class="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center border border-emerald-500/30 shrink-0">OJ</div>
+                <div class="w-9 h-9 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center border border-cyan-500/30 shrink-0">OJ</div>
                 <div class="overflow-hidden">
                     <p class="text-xs font-bold text-gray-200 truncate">Omar Jim</p>
                     <p class="text-[10px] text-gray-400 truncate">Direção Operacional</p>
@@ -169,30 +141,31 @@
         <!-- Conteúdo Principal -->
         <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 custom-scrollbar">
 
-            <!-- TAB 1: VISÃO GERAL -->
+            <!-- TAB 1: VISÃO GERAL (Com gráficos de velas/candlestick, linhas e circulares) -->
             <div id="tab-visao-geral" class="space-y-6">
                 <div class="flex justify-between items-center flex-wrap gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-white">Painel Geral & Operações Hanzolo</h2>
-                        <p class="text-xs text-gray-400">Monitorização unificada em tempo real (Base Talatona & Luanda)</p>
+                        <p class="text-xs text-gray-400">Monitorização unificada (Base Talatona & Luanda)</p>
                     </div>
-                    <button onclick="switchTab('relatorios')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-blue-600/20 flex items-center space-x-2">
+                    <button onclick="switchTab('relatorios')" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-cyan-600/20 flex items-center space-x-2">
                         <i class="fa-solid fa-file-arrow-down"></i><span>Extrair Relatório Executivo</span>
                     </button>
                 </div>
 
+                <!-- Cards Principais -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="glass-card p-5 rounded-2xl border border-borderDark flex justify-between items-center">
                         <div><p class="text-[11px] font-bold text-gray-400 uppercase">FROTA ATIVA</p><h3 class="text-3xl font-extrabold text-white mt-1">3 Viaturas</h3></div>
-                        <div class="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-500 flex items-center justify-center text-xl"><i class="fa-solid fa-car-side"></i></div>
+                        <div class="w-12 h-12 rounded-xl bg-cyan-600/10 text-cyan-400 flex items-center justify-center text-xl"><i class="fa-solid fa-car-side"></i></div>
                     </div>
                     <div class="glass-card p-5 rounded-2xl border border-borderDark flex justify-between items-center">
                         <div><p class="text-[11px] font-bold text-gray-400 uppercase">AUDITORIAS GCQ</p><h3 class="text-3xl font-extrabold text-emerald-400 mt-1">100%</h3></div>
                         <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xl"><i class="fa-solid fa-shield-halved"></i></div>
                     </div>
                     <div class="glass-card p-5 rounded-2xl border border-borderDark flex justify-between items-center">
-                        <div><p class="text-[11px] font-bold text-gray-400 uppercase">COLABORADORES</p><h3 class="text-3xl font-extrabold text-blue-400 mt-1">42</h3></div>
-                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl"><i class="fa-solid fa-users"></i></div>
+                        <div><p class="text-[11px] font-bold text-gray-400 uppercase">COLABORADORES</p><h3 class="text-3xl font-extrabold text-cyan-400 mt-1">42</h3></div>
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl"><i class="fa-solid fa-users"></i></div>
                     </div>
                     <div class="glass-card p-5 rounded-2xl border border-borderDark flex justify-between items-center">
                         <div><p class="text-[11px] font-bold text-gray-400 uppercase">CONFORMIDADE HSST</p><h3 class="text-3xl font-extrabold text-emerald-400 mt-1">98.5%</h3></div>
@@ -200,108 +173,159 @@
                     </div>
                 </div>
 
+                <!-- Gráficos Avançados solicitados: Linhas, Velas Finas e Circular -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 glass-card p-6 rounded-2xl border border-borderDark">
-                        <div class="flex justify-between items-center mb-4"><h3 class="text-sm font-bold text-white">Desempenho Operacional & Serviços</h3><span class="text-xs text-gray-400">Luanda, AO</span></div>
-                        <div class="h-64"><canvas id="graficoOperacoes"></canvas></div>
+                    <!-- Gráfico de Linhas (Leituras de Operações) -->
+                    <div class="glass-card p-6 rounded-2xl border border-borderDark">
+                        <div class="flex justify-between items-center mb-4"><h3 class="text-sm font-bold text-white">Leituras de Linhas Operacionais</h3><span class="text-xs text-cyan-400">Luanda</span></div>
+                        <div class="h-56"><canvas id="graficoLinhas"></canvas></div>
                     </div>
-                    <div class="glass-card p-6 rounded-2xl border border-borderDark flex flex-col justify-between">
-                        <h3 class="text-sm font-bold text-white mb-2">Indicadores Principais</h3>
-                        <div class="space-y-4 my-auto">
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-300 mb-1"><span>Projetos CCTV & Redes</span><span>88%</span></div>
-                                <div class="w-full bg-gray-800 rounded-full h-2"><div class="bg-blue-600 h-2 rounded-full" style="width: 88%"></div></div>
+
+                    <!-- Gráfico de Velas Finas (Candlestick Simulado por Barras Finas) -->
+                    <div class="glass-card p-6 rounded-2xl border border-borderDark">
+                        <div class="flex justify-between items-center mb-4"><h3 class="text-sm font-bold text-white">Velas Finas (Variação Diária)</h3><span class="text-xs text-emerald-400">Eficiência</span></div>
+                        <div class="h-56"><canvas id="graficoVelasFinas"></canvas></div>
+                    </div>
+
+                    <!-- Gráfico Circular (Distribuição Departamental) -->
+                    <div class="glass-card p-6 rounded-2xl border border-borderDark">
+                        <div class="flex justify-between items-center mb-4"><h3 class="text-sm font-bold text-white">Leituras Circulares</h3><span class="text-xs text-gray-400">Setores</span></div>
+                        <div class="h-56 flex items-center justify-center"><canvas id="graficoCircular"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: FOLHA DE OBRAS & EVIDÊNCIAS -->
+            <div id="tab-folha-obras" class="space-y-6 hidden">
+                <div class="flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Folha de Obras & Registo de Evidências</h2>
+                        <p class="text-xs text-gray-400">Relatórios de intervenções em campo com ID# unificado e upload multimédia</p>
+                    </div>
+                    <span id="novo-id-badge" class="px-3 py-1 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-xl text-xs font-mono font-bold">ID#: HZ-OBRA-2026-089</span>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-5">
+                    <h3 class="text-sm font-bold text-white border-b border-borderDark pb-3"><i class="fa-solid fa-file-pen text-cyan-400 mr-2"></i>Estruturação do Cabeçalho e Dados da Obra</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">ID# do Relatório / Obra</label>
+                            <input type="text" id="obra-id" value="HZ-OBRA-2026-089" readonly class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-cyan-400 font-mono font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">Cliente / Local</label>
+                            <input type="text" id="obra-cliente" placeholder="Ex: Banco Sol - Agência Talatona" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">Técnico Responsável</label>
+                            <input type="text" id="obra-tecnico" placeholder="Ex: António Manuel" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">Tipo de Intervenção</label>
+                            <select class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                <option>Instalação de Sistema CCTV</option>
+                                <option>Manutenção Preventiva NVR</option>
+                                <option>Reparação de Redes e Fibra</option>
+                                <option>Controlo de Acessos & Alarmes</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">Data da Obra</label>
+                            <input type="date" value="2026-10-10" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">Estado de Execução</label>
+                            <select class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                <option>Concluído com Sucesso</option>
+                                <option>Em Andamento</option>
+                                <option>Pendente de Material</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] text-gray-400 mb-1">Descrição Técnica dos Trabalhos</label>
+                        <textarea rows="3" placeholder="Descreva os trabalhos efetuados em campo..." class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"></textarea>
+                    </div>
+
+                    <!-- Campo para importar Evidências por Vídeo e Imagem -->
+                    <div class="pt-2 border-t border-borderDark">
+                        <h4 class="text-xs font-bold text-white mb-2"><i class="fa-solid fa-photo-film text-cyan-400 mr-2"></i>Importação de Evidências (Fotos & Vídeos)</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="border-2 border-dashed border-borderDark hover:border-cyan-500 rounded-2xl p-4 text-center bg-darkBg/50 cursor-pointer transition-all">
+                                <i class="fa-solid fa-images text-2xl text-cyan-400 mb-2"></i>
+                                <p class="text-xs font-bold text-white">Carregar Fotografias da Obra</p>
+                                <p class="text-[10px] text-gray-400 mt-1">Formatos: JPG, PNG (Múltiplas imagens)</p>
+                                <input type="file" accept="image/*" multiple class="hidden" id="upload-img">
+                                <button onclick="document.getElementById('upload-img').click()" class="mt-3 px-3 py-1.5 bg-darkBg border border-borderDark rounded-xl text-[11px] text-cyan-400 hover:bg-cyan-600/10">Selecionar Imagens</button>
                             </div>
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-300 mb-1"><span>Manutenções Concluídas</span><span>94%</span></div>
-                                <div class="w-full bg-gray-800 rounded-full h-2"><div class="bg-emerald-500 h-2 rounded-full" style="width: 94%"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-300 mb-1"><span>Satisfação de Clientes</span><span>99%</span></div>
-                                <div class="w-full bg-gray-800 rounded-full h-2"><div class="bg-blue-400 h-2 rounded-full" style="width: 99%"></div></div>
+                            <div class="border-2 border-dashed border-borderDark hover:border-cyan-500 rounded-2xl p-4 text-center bg-darkBg/50 cursor-pointer transition-all">
+                                <i class="fa-solid fa-video text-2xl text-emerald-400 mb-2"></i>
+                                <p class="text-xs font-bold text-white">Carregar Vídeos de Evidência</p>
+                                <p class="text-[10px] text-gray-400 mt-1">Formatos: MP4, MOV (Registo em campo)</p>
+                                <input type="file" accept="video/*" multiple class="hidden" id="upload-vid">
+                                <button onclick="document.getElementById('upload-vid').click()" class="mt-3 px-3 py-1.5 bg-darkBg border border-borderDark rounded-xl text-[11px] text-emerald-400 hover:bg-emerald-600/10">Selecionar Vídeos</button>
                             </div>
                         </div>
-                        <p class="text-[10px] text-gray-500 text-center mt-2">Dados atualizados pelo Servidor Hanzolo Ops</p>
+                    </div>
+
+                    <div class="flex justify-end pt-3">
+                        <button onclick="alert('Folha de Obras ID# HZ-OBRA-2026-089 submetida com sucesso e guardada no servidor Hanzolo Ops!')" class="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold shadow-lg">Submeter Folha de Obras</button>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 2: DGP -->
+            <!-- TAB 3: DGP -->
             <div id="tab-dgp" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">DGP - Direção Geral & Planeamento</h2>
-                    <p class="text-xs text-gray-400">Estratégia corporativa, metas e orçamentos globais</p>
-                </div>
+                <div><h2 class="text-xl font-bold text-white">DGP - Direção Geral & Planeamento</h2><p class="text-xs text-gray-400">Estratégia corporativa e metas globais</p></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark">
-                        <p class="text-xs text-gray-400 uppercase font-semibold">Orçamento Executado (Q4)</p>
-                        <h3 class="text-2xl font-bold text-emerald-400 mt-1">78.4%</h3>
-                        <p class="text-[11px] text-gray-500 mt-2">Conforme planeamento financeiro</p>
-                    </div>
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark">
-                        <p class="text-xs text-gray-400 uppercase font-semibold">Projetos Ativos</p>
-                        <h3 class="text-2xl font-bold text-white mt-1">14</h3>
-                        <p class="text-[11px] text-gray-500 mt-2">Em Luanda e províncias</p>
-                    </div>
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark">
-                        <p class="text-xs text-gray-400 uppercase font-semibold">Auditoria de Qualidade</p>
-                        <h3 class="text-2xl font-bold text-blue-400 mt-1">98/100</h3>
-                        <p class="text-[11px] text-gray-500 mt-2">Padrão ISO 9001</p>
-                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Orçamento Executado (Q4)</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">78.4%</h3></div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Projetos Ativos</p><h3 class="text-2xl font-bold text-white mt-1">14</h3></div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Auditoria de Qualidade</p><h3 class="text-2xl font-bold text-cyan-400 mt-1">98/100</h3></div>
                 </div>
             </div>
 
-            <!-- TAB 3: SE -->
+            <!-- TAB 4: SE -->
             <div id="tab-se" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">SE - Segurança Eletrónica</h2>
-                    <p class="text-xs text-gray-400">Monitorização de centrais de alarme, CCTV e controlo de acessos</p>
-                </div>
+                <div><h2 class="text-xl font-bold text-white">SE - Segurança Eletrónica</h2><p class="text-xs text-gray-400">Monitorização de centrais de alarme e CCTV</p></div>
                 <div class="glass-card p-6 rounded-2xl border border-borderDark">
                     <h3 class="text-sm font-bold text-white mb-4">Sistemas em Operação</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
-                            <span class="text-xs text-emerald-400 font-bold"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Online</span>
-                            <h4 class="text-sm font-bold text-white mt-1">CCTV Banco Sol</h4>
-                            <p class="text-[11px] text-gray-400 mt-1">64 Câmaras PTZ 4K Ativas</p>
-                        </div>
-                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
-                            <span class="text-xs text-emerald-400 font-bold"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Online</span>
-                            <h4 class="text-sm font-bold text-white mt-1">Controlo de Acessos Kilamba</h4>
-                            <p class="text-[11px] text-gray-400 mt-1">Biometria & Catracas</p>
-                        </div>
-                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark">
-                            <span class="text-xs text-emerald-400 font-bold"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Online</span>
-                            <h4 class="text-sm font-bold text-white mt-1">Alarmes Perimetrais Viana</h4>
-                            <p class="text-[11px] text-gray-400 mt-1">Sensores Infravermelhos</p>
-                        </div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><span class="text-xs text-emerald-400 font-bold">Online</span><h4 class="text-sm font-bold text-white mt-1">CCTV Banco Sol</h4></div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><span class="text-xs text-emerald-400 font-bold">Online</span><h4 class="text-sm font-bold text-white mt-1">Controlo Acessos Kilamba</h4></div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><span class="text-xs text-emerald-400 font-bold">Online</span><h4 class="text-sm font-bold text-white mt-1">Alarmes Viana</h4></div>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 4: RH & CADASTRO DE COLABORADOR -->
+            <!-- TAB 5: RH & CADASTRO DE COLABORADOR (Com SENHA e NIF) -->
             <div id="tab-rh" class="space-y-6 hidden">
                 <div class="flex justify-between items-center flex-wrap gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-white">RH & Cadastro de Colaborador</h2>
-                        <p class="text-xs text-gray-400">Registo de pessoal, contratos, funções e base de dados operacional</p>
+                        <h2 class="text-xl font-bold text-white">RH & Cadastro de Colaborador (Com NIF e Senha)</h2>
+                        <p class="text-xs text-gray-400">Registo de credenciais, NIF e dados contratuais na base de dados</p>
                     </div>
-                    <button onclick="alert('Formulário de cadastro aberto com sucesso!')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold shadow-lg">
-                        <i class="fa-solid fa-user-plus mr-2"></i>Novo Cadastro de Colaborador
-                    </button>
                 </div>
 
-                <!-- Formulário Inline de Cadastro -->
                 <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
-                    <h3 class="text-sm font-bold text-white"><i class="fa-solid fa-id-card text-blue-500 mr-2"></i>Registar Novo Colaborador</h3>
+                    <h3 class="text-sm font-bold text-white"><i class="fa-solid fa-user-lock text-cyan-400 mr-2"></i>Registo com Credenciais de Acesso e NIF</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-[11px] text-gray-400 mb-1">Nome Completo</label>
-                            <input type="text" placeholder="Ex: Manuel Agostinho" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                            <input type="text" placeholder="Ex: Manuel Agostinho" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">NIF (Número de Identificação Fiscal)</label>
+                            <input type="text" placeholder="Ex: 5001234567" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">Palavra-passe (Password)</label>
+                            <input type="password" placeholder="••••••••" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
                         </div>
                         <div>
                             <label class="block text-[11px] text-gray-400 mb-1">Departamento</label>
-                            <select class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                            <select class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
                                 <option>Segurança Eletrónica (SE)</option>
                                 <option>Técnicos de Campo</option>
                                 <option>Logística & Armazém</option>
@@ -311,60 +335,41 @@
                         </div>
                         <div>
                             <label class="block text-[11px] text-gray-400 mb-1">Cargo / Função</label>
-                            <input type="text" placeholder="Ex: Técnico Especialista CCTV" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                            <input type="text" placeholder="Ex: Técnico Especialista CCTV" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
                         </div>
                         <div>
                             <label class="block text-[11px] text-gray-400 mb-1">Nº Bilhete de Identidade (BI)</label>
-                            <input type="text" placeholder="Ex: 004589234LA042" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] text-gray-400 mb-1">Contacto Telefónico</label>
-                            <input type="text" placeholder="+244 923 000 000" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] text-gray-400 mb-1">Certificação HST</label>
-                            <select class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
-                                <option>Certificado Válido</option>
-                                <option>Pendente de Reciclagem</option>
-                            </select>
+                            <input type="text" placeholder="Ex: 004589234LA042" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
                         </div>
                     </div>
                     <div class="flex justify-end pt-2">
-                        <button onclick="alert('Colaborador registado com sucesso na base Hanzolo Ops!')" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg">Salvar Colaborador</button>
+                        <button onclick="alert('Colaborador registado com NIF e Palavra-passe com sucesso!')" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg">Salvar Colaborador</button>
                     </div>
                 </div>
 
-                <!-- Lista de Colaboradores Ativos -->
                 <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
-                    <h3 class="text-sm font-bold text-white">Colaboradores Registados Recentes</h3>
+                    <h3 class="text-sm font-bold text-white">Colaboradores Registados</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs">
                             <thead>
                                 <tr class="border-b border-borderDark text-gray-400 uppercase">
-                                    <th class="pb-3">Nome</th><th class="pb-3">Departamento</th><th class="pb-3">Função</th><th class="pb-3">Estado HST</th><th class="pb-3">Ação</th>
+                                    <th class="pb-3">Nome</th><th class="pb-3">NIF</th><th class="pb-3">Departamento</th><th class="pb-3">Função</th><th class="pb-3">Estado Acesso</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-borderDark text-gray-200">
                                 <tr>
                                     <td class="py-3 font-bold text-white">António Manuel</td>
+                                    <td class="font-mono text-cyan-400">5009876543</td>
                                     <td>SE</td>
-                                    <td>Técnico Principal CCTV</td>
-                                    <td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Válido</span></td>
-                                    <td><button class="text-blue-400 hover:underline">Ver Ficha</button></td>
+                                    <td>Técnico Principal</td>
+                                    <td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Ativo</span></td>
                                 </tr>
                                 <tr>
                                     <td class="py-3 font-bold text-white">Joaquim Paulo</td>
+                                    <td class="font-mono text-cyan-400">5001122334</td>
                                     <td>Técnicos</td>
                                     <td>Especialista de Redes</td>
-                                    <td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Válido</span></td>
-                                    <td><button class="text-blue-400 hover:underline">Ver Ficha</button></td>
-                                </tr>
-                                <tr>
-                                    <td class="py-3 font-bold text-white">Domingos Pedro</td>
-                                    <td>Técnicos</td>
-                                    <td>Técnico de Alarmes</td>
-                                    <td><span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-400">Renovação Pendente</span></td>
-                                    <td><button class="text-blue-400 hover:underline">Ver Ficha</button></td>
+                                    <td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Ativo</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -372,290 +377,97 @@
                 </div>
             </div>
 
-            <!-- TAB 5: GESTÃO DE FROTAS & GOOGLE MAP -->
+            <!-- TAB 6: GESTÃO DE FROTAS & MAPA -->
             <div id="tab-frotas" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Gestão de Frotas & Mapa Interativo (Google Maps / GPS Luanda)</h2>
-                    <p class="text-xs text-gray-400">Localização em tempo real das viaturas em rota nas ruas de Luanda</p>
-                </div>
-
+                <div><h2 class="text-xl font-bold text-white">Gestão de Frotas & Mapa Interativo (Luanda)</h2><p class="text-xs text-gray-400">Localização em tempo real das viaturas em rota</p></div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Lista de Viaturas -->
                     <div class="space-y-4">
-                        <div class="glass-card p-4 rounded-2xl border border-borderDark cursor-pointer hover:border-blue-500/50 transition-all">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-mono text-xs font-bold text-blue-400">LD-23-76-HU</span>
-                                <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Em Rota (Talatona)</span>
-                            </div>
-                            <h4 class="font-bold text-sm text-white">Toyota Hilux #01</h4>
-                            <p class="text-xs text-gray-400 mt-1">Condutor: António Manuel<br>Velocidade: 48 km/h</p>
-                        </div>
-                        <div class="glass-card p-4 rounded-2xl border border-borderDark cursor-pointer hover:border-blue-500/50 transition-all">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-mono text-xs font-bold text-blue-400">LD-45-12-GX</span>
-                                <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Em Rota (Porto)</span>
-                            </div>
-                            <h4 class="font-bold text-sm text-white">Mitsubishi Canter #02</h4>
-                            <p class="text-xs text-gray-400 mt-1">Condutor: Joaquim Paulo<br>Velocidade: 32 km/h</p>
-                        </div>
-                        <div class="glass-card p-4 rounded-2xl border border-borderDark cursor-pointer hover:border-blue-500/50 transition-all">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-mono text-xs font-bold text-blue-400">LD-88-90-AA</span>
-                                <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Em Rota (Kilamba)</span>
-                            </div>
-                            <h4 class="font-bold text-sm text-white">Nissan Hardbody #03</h4>
-                            <p class="text-xs text-gray-400 mt-1">Condutor: Domingos Pedro<br>Velocidade: 55 km/h</p>
+                        <div class="glass-card p-4 rounded-2xl border border-borderDark">
+                            <span class="font-mono text-xs font-bold text-cyan-400">LD-23-76-HU</span>
+                            <h4 class="font-bold text-sm text-white mt-1">Toyota Hilux #01 (Talatona)</h4>
+                            <p class="text-xs text-gray-400 mt-1">Condutor: António Manuel | 48 km/h</p>
                         </div>
                     </div>
-
-                    <!-- Simulação do Google Maps em Luanda -->
-                    <div class="lg:col-span-2 glass-card p-4 rounded-2xl border border-borderDark relative overflow-hidden flex flex-col h-96">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-bold text-white"><i class="fa-solid fa-map-location-dot text-blue-500 mr-2"></i>Google Maps — Luanda, Angola (Live GPS)</span>
-                            <span class="text-[10px] bg-blue-600/20 text-blue-400 px-2.5 py-1 rounded-full font-semibold">Sincronizado Via Satélite</span>
-                        </div>
-                        <div class="flex-1 bg-darkBg rounded-xl border border-borderDark relative flex items-center justify-center overflow-hidden">
-                            <!-- Background Map Mock / Grid Style -->
-                            <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#2563eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                            
-                            <!-- Simulação de pins no mapa de Luanda -->
-                            <div class="absolute top-1/4 left-1/3 flex flex-col items-center animate-bounce">
-                                <div class="bg-blue-600 text-white p-2 rounded-full shadow-lg shadow-blue-500/50 text-xs"><i class="fa-solid fa-car"></i></div>
-                                <span class="bg-cardBg px-2 py-0.5 rounded text-[9px] text-white border border-borderDark mt-1">LD-23-76-HU (Talatona)</span>
-                            </div>
-
-                            <div class="absolute bottom-1/3 right-1/4 flex flex-col items-center">
-                                <div class="bg-emerald-600 text-white p-2 rounded-full shadow-lg shadow-emerald-500/50 text-xs"><i class="fa-solid fa-truck"></i></div>
-                                <span class="bg-cardBg px-2 py-0.5 rounded text-[9px] text-white border border-borderDark mt-1">LD-45-12-GX (Porto)</span>
-                            </div>
-
-                            <div class="absolute top-1/2 right-1/3 flex flex-col items-center">
-                                <div class="bg-amber-600 text-white p-2 rounded-full shadow-lg text-xs"><i class="fa-solid fa-car-side"></i></div>
-                                <span class="bg-cardBg px-2 py-0.5 rounded text-[9px] text-white border border-borderDark mt-1">LD-88-90-AA (Kilamba)</span>
-                            </div>
-
-                            <div class="absolute bottom-3 left-3 bg-cardBg/90 backdrop-blur px-3 py-2 rounded-xl border border-borderDark text-[10px] text-gray-300">
-                                <p class="font-bold text-white">Central Hanzolo GPS</p>
-                                <p class="text-gray-400">Lat: -8.839988, Lng: 13.289437 (Luanda)</p>
-                            </div>
-                        </div>
+                    <div class="lg:col-span-2 glass-card p-4 rounded-2xl border border-borderDark h-80 flex items-center justify-center relative bg-darkBg">
+                        <p class="text-xs text-cyan-400 font-mono"><i class="fa-solid fa-map-location-dot mr-2"></i>Mapa GPS Satélite Ativo — Luanda / Talatona</p>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 6: GCQ (GESTÃO DE CONTROLE DE QUALIDADE) -->
+            <!-- TAB 7: GCQ -->
             <div id="tab-gcq" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">GCQ - Gestão de Controle de Qualidade</h2>
-                    <p class="text-xs text-gray-400">Inspeções, relatórios de conformidade e auditorias de instalações</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark">
-                        <p class="text-xs text-gray-400 uppercase font-semibold">Taxa de Aprovação</p>
-                        <h3 class="text-2xl font-bold text-emerald-400 mt-1">99.2%</h3>
-                        <p class="text-[11px] text-gray-500 mt-2">Em auditorias técnicas</p>
-                    </div>
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark">
-                        <p class="text-xs text-gray-400 uppercase font-semibold">Inspeções Realizadas</p>
-                        <h3 class="text-2xl font-bold text-white mt-1">48</h3>
-                        <p class="text-[11px] text-gray-500 mt-2">Neste trimestre</p>
-                    </div>
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark">
-                        <p class="text-xs text-gray-400 uppercase font-semibold">Não Conformidades</p>
-                        <h3 class="text-2xl font-bold text-amber-400 mt-1">0</h3>
-                        <p class="text-[11px] text-gray-500 mt-2">Resolvidas de imediato</p>
-                    </div>
-                </div>
+                <div><h2 class="text-xl font-bold text-white">GCQ - Gestão de Controle de Qualidade</h2><p class="text-xs text-gray-400">Inspeções e conformidade ISO</p></div>
+                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Taxa de Aprovação</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">99.2%</h3></div>
             </div>
 
-            <!-- TAB 7: HSST -->
+            <!-- TAB 8: HSST -->
             <div id="tab-hsst" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">HSST - Higiene, Segurança e Saúde no Trabalho</h2>
-                    <p class="text-xs text-gray-400">Controlo de EPIs, formações de segurança e prevenção de acidentes em campo</p>
-                </div>
-                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
-                    <h3 class="text-sm font-bold text-white">Equipamentos de Proteção Individual (EPIs) Atribuídos</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark text-center">
-                            <i class="fa-solid fa-helmet-safety text-3xl text-amber-400 mb-2"></i>
-                            <h4 class="text-xs font-bold text-white">Capacetes e Óculos</h4>
-                            <p class="text-[11px] text-emerald-400 mt-1">100% Cobertura</p>
-                        </div>
-                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark text-center">
-                            <i class="fa-solid fa-vest text-3xl text-blue-400 mb-2"></i>
-                            <h4 class="text-xs font-bold text-white">Coletes Refletores</h4>
-                            <p class="text-[11px] text-emerald-400 mt-1">100% Cobertura</p>
-                        </div>
-                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark text-center">
-                            <i class="fa-solid fa-shoe-prints text-3xl text-emerald-400 mb-2"></i>
-                            <h4 class="text-xs font-bold text-white">Botas com Biqueira de Aço</h4>
-                            <p class="text-[11px] text-emerald-400 mt-1">100% Cobertura</p>
-                        </div>
-                    </div>
-                </div>
+                <div><h2 class="text-xl font-bold text-white">HSST - Higiene, Segurança e Saúde no Trabalho</h2><p class="text-xs text-gray-400">Controlo de EPIs e segurança</p></div>
+                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Conformidade EPIs</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">100%</h3></div>
             </div>
 
-            <!-- TAB 8: SERVIÇOS GERAIS -->
+            <!-- TAB 9: SERVIÇOS GERAIS -->
             <div id="tab-servicos-gerais" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Servícios Gerais & Manutenção de Instalações</h2>
-                    <p class="text-xs text-gray-400">Gestão de infraestruturas da empresa, limpeza, eletricidade e climatização</p>
-                </div>
-                <div class="glass-card p-6 rounded-2xl border border-borderDark">
-                    <h3 class="text-sm font-bold text-white mb-4">Estado das Instalações (Base Talatona)</h3>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-darkBg rounded-xl border border-borderDark flex justify-between items-center">
-                            <div><p class="text-xs font-bold text-white">Sistema de Climatização (Ar Condicionado Central)</p><p class="text-[10px] text-gray-400">Manutenção preventiva realizada</p></div>
-                            <span class="px-2.5 py-1 rounded-full text-[10px] bg-emerald-500/10 text-emerald-400">Operacional</span>
-                        </div>
-                        <div class="p-3 bg-darkBg rounded-xl border border-borderDark flex justify-between items-center">
-                            <div><p class="text-xs font-bold text-white">Gerador Principal & Backup de Energia</p><p class="text-[10px] text-gray-400">Nível de gasóleo: 85%</p></div>
-                            <span class="px-2.5 py-1 rounded-full text-[10px] bg-emerald-500/10 text-emerald-400">Operacional</span>
-                        </div>
-                    </div>
-                </div>
+                <div><h2 class="text-xl font-bold text-white">Servícios Gerais & Manutenção de Instalações</h2><p class="text-xs text-gray-400">Infraestruturas e climatização</p></div>
+                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Estado Instalações</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">Operacional</h3></div>
             </div>
 
-            <!-- TAB 9: ORGANIGRAMA RAMIFICADA -->
+            <!-- TAB 10: ORGANIGRAMA -->
             <div id="tab-organigrama" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Organigrama Ramificado da Empresa</h2>
-                    <p class="text-xs text-gray-400">Estrutura hierárquica e departamental Hanzolo, Lda</p>
-                </div>
-                <div class="glass-card p-8 rounded-2xl border border-borderDark flex flex-col items-center overflow-x-auto">
-                    <!-- Nível 1: Administração / DGP -->
-                    <div class="bg-blue-600 text-white px-6 py-3 rounded-2xl text-center shadow-lg font-bold text-xs mb-8">
-                        <i class="fa-solid fa-crown mr-2"></i>Direção Geral & Planeamento (DGP) / Administração
-                    </div>
-
-                    <!-- Linha Conectora -->
-                    <div class="w-0.5 h-8 bg-gray-600 mb-8"></div>
-
-                    <!-- Nível 2: Departamentos -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
-                        <div class="bg-darkBg border border-borderDark p-4 rounded-xl text-center shadow">
-                            <i class="fa-solid fa-video text-blue-400 mb-2"></i>
-                            <h4 class="text-xs font-bold text-white">Segurança Eletrónica (SE)</h4>
-                        </div>
-                        <div class="bg-darkBg border border-borderDark p-4 rounded-xl text-center shadow">
-                            <i class="fa-solid fa-users-gear text-emerald-400 mb-2"></i>
-                            <h4 class="text-xs font-bold text-white">Recursos Humanos (RH)</h4>
-                        </div>
-                        <div class="bg-darkBg border border-borderDark p-4 rounded-xl text-center shadow">
-                            <i class="fa-solid fa-truck-fast text-amber-400 mb-2"></i>
-                            <h4 class="text-xs font-bold text-white">Logística & Frotas</h4>
-                        </div>
-                        <div class="bg-darkBg border border-borderDark p-4 rounded-xl text-center shadow">
-                            <i class="fa-solid fa-helmet-safety text-purple-400 mb-2"></i>
-                            <h4 class="text-xs font-bold text-white">HSST & Qualidade (GCQ)</h4>
-                        </div>
-                    </div>
+                <div><h2 class="text-xl font-bold text-white">Organigrama Ramificado da Empresa</h2><p class="text-xs text-gray-400">Estrutura hierárquica Hanzolo, Lda</p></div>
+                <div class="glass-card p-8 rounded-2xl border border-borderDark text-center">
+                    <div class="bg-cyan-600 text-white px-6 py-3 rounded-2xl inline-block font-bold text-xs mb-6 shadow-lg">Direção Geral & Planeamento (DGP)</div>
                 </div>
             </div>
 
-            <!-- TAB 10: COMPRAS -->
+            <!-- TAB 11: COMPRAS -->
             <div id="tab-compras" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">COMPRAS & Aprovisionamento</h2>
-                    <p class="text-xs text-gray-400">Gestão de ordens de compra e fornecedores</p>
-                </div>
-                <div class="glass-card p-6 rounded-2xl border border-borderDark">
-                    <h3 class="text-sm font-bold text-white mb-4">Ordens de Compra Ativas</h3>
-                    <p class="text-xs text-gray-400">Todas as requisições de material eletrónico e frotas encontram-se atualizadas.</p>
-                </div>
+                <div><h2 class="text-xl font-bold text-white">COMPRAS & Aprovisionamento</h2><p class="text-xs text-gray-400">Ordens de compra</p></div>
+                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400">Sem pendências atuais.</p></div>
             </div>
 
-            <!-- TAB 11: LOGÍSTICA -->
+            <!-- TAB 12: LOGÍSTICA -->
             <div id="tab-logistica" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Logística & Armazém</h2>
-                    <p class="text-xs text-gray-400">Controlo de stock e expedição de ferramentas</p>
-                </div>
-                <div class="glass-card p-6 rounded-2xl border border-borderDark">
-                    <h3 class="text-sm font-bold text-white mb-4">Inventário Geral</h3>
-                    <p class="text-xs text-gray-400">Gestão centralizada de equipamentos em armazém em Luanda.</p>
-                </div>
+                <div><h2 class="text-xl font-bold text-white">Logística & Armazém</h2><p class="text-xs text-gray-400">Stock e inventário</p></div>
+                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400">Inventário atualizado.</p></div>
             </div>
 
-            <!-- TAB 12: TÉCNICOS -->
+            <!-- TAB 13: TÉCNICOS -->
             <div id="tab-tecnicos" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Escala de Técnicos</h2>
-                    <p class="text-xs text-gray-400">Equipas de campo em Luanda</p>
-                </div>
-                <div class="glass-card p-6 rounded-2xl border border-borderDark">
-                    <h3 class="text-sm font-bold text-white mb-4">Escala Diária</h3>
-                    <p class="text-xs text-gray-400">Atribuições ativas para intervenções técnicas.</p>
-                </div>
+                <div><h2 class="text-xl font-bold text-white">Escala de Técnicos</h2><p class="text-xs text-gray-400">Equipas em campo</p></div>
+                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400">Escala diária ativa.</p></div>
             </div>
 
-            <!-- TAB 13: PROJECTOS -->
+            <!-- TAB 14: PROJECTOS -->
             <div id="tab-projectos" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Gestão de Projectos</h2>
-                    <p class="text-xs text-gray-400">Acompanhamento de obras e infraestruturas</p>
-                </div>
-                <div class="glass-card p-6 rounded-2xl border border-borderDark">
-                    <h3 class="text-sm font-bold text-white mb-4">Projetos em Execução</h3>
-                    <p class="text-xs text-gray-400">CCTV Banco Sol, Redes Centrais Kilamba e alarmes condomínios.</p>
-                </div>
+                <div><h2 class="text-xl font-bold text-white">Gestão de Projectos</h2><p class="text-xs text-gray-400">Obras em curso</p></div>
+                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400">14 Projetos ativos em Luanda.</p></div>
             </div>
 
-            <!-- TAB 14: MANUTENÇÕES -->
+            <!-- TAB 15: MANUTENÇÕES -->
             <div id="tab-manutencoes" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Manutenções Preventivas e Corretivas</h2>
-                    <p class="text-xs text-gray-400">Planos de intervenção técnica</p>
-                </div>
-                <div class="glass-card p-6 rounded-2xl border border-borderDark">
-                    <h3 class="text-sm font-bold text-white mb-4">Agendamentos Recentes</h3>
-                    <p class="text-xs text-gray-400">Revisão de servidores NVR e sensores perimetrais.</p>
-                </div>
+                <div><h2 class="text-xl font-bold text-white">Manutenções Preventivas e Corretivas</h2><p class="text-xs text-gray-400">Planos de intervenção</p></div>
+                <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400">Sem ocorrências pendentes.</p></div>
             </div>
 
-            <!-- TAB 15: RELATÓRIOS INTERDEPARTAMENTAIS (EXCEL, PDF, PPT) -->
+            <!-- TAB 16: RELATÓRIOS -->
             <div id="tab-relatorios" class="space-y-6 hidden">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Relatórios Interdepartamentais (Exportação Excel, PDF & PowerPoint)</h2>
-                    <p class="text-xs text-gray-400">Geração e extração de relatórios consolidados de todas as áreas operacionais</p>
-                </div>
-
+                <div><h2 class="text-xl font-bold text-white">Relatórios Interdepartamentais</h2><p class="text-xs text-gray-400">Exportação Excel, PDF & PowerPoint</p></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Excel Card -->
-                    <div class="glass-card p-6 rounded-2xl border border-borderDark flex flex-col justify-between space-y-4">
-                        <div>
-                            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-file-excel"></i></div>
-                            <h3 class="text-sm font-bold text-white">Relatório Consolidado (Excel)</h3>
-                            <p class="text-xs text-gray-400 mt-1">Exportar dados financeiros, inventário de logística, horas de técnicos e consumo de frotas em formato .xlsx.</p>
-                        </div>
-                        <button onclick="alert('Download do Relatório Excel (.xlsx) iniciado com sucesso!')" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg flex items-center justify-center space-x-2">
-                            <i class="fa-solid fa-download"></i><span>Baixar Excel</span>
-                        </button>
+                    <div class="glass-card p-6 rounded-2xl border border-borderDark text-center">
+                        <i class="fa-solid fa-file-excel text-3xl text-emerald-400 mb-3"></i>
+                        <h3 class="text-sm font-bold text-white mb-3">Excel (.xlsx)</h3>
+                        <button onclick="alert('Relatório Excel exportado com sucesso!')" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold w-full">Baixar Excel</button>
                     </div>
-
-                    <!-- PDF Card -->
-                    <div class="glass-card p-6 rounded-2xl border border-borderDark flex flex-col justify-between space-y-4">
-                        <div>
-                            <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-file-pdf"></i></div>
-                            <h3 class="text-sm font-bold text-white">Relatório Executivo (PDF)</h3>
-                            <p class="text-xs text-gray-400 mt-1">Gerar documento oficial em PDF com pareceres da DGP, HSST, GCQ e mapas de rota.</p>
-                        </div>
-                        <button onclick="alert('Download do Relatório Executivo (.pdf) gerado com sucesso!')" class="w-full py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold shadow-lg flex items-center justify-center space-x-2">
-                            <i class="fa-solid fa-download"></i><span>Baixar PDF</span>
-                        </button>
+                    <div class="glass-card p-6 rounded-2xl border border-borderDark text-center">
+                        <i class="fa-solid fa-file-pdf text-3xl text-red-400 mb-3"></i>
+                        <h3 class="text-sm font-bold text-white mb-3">PDF Executivo</h3>
+                        <button onclick="alert('Relatório PDF exportado com sucesso!')" class="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold w-full">Baixar PDF</button>
                     </div>
-
-                    <!-- PowerPoint Card -->
-                    <div class="glass-card p-6 rounded-2xl border border-borderDark flex flex-col justify-between space-y-4">
-                        <div>
-                            <div class="w-12 h-12 rounded-xl bg-orange-500/10 text-orange-400 flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-file-powerpoint"></i></div>
-                            <h3 class="text-sm font-bold text-white">Apresentação de Resultados (PPT)</h3>
-                            <p class="text-xs text-gray-400 mt-1">Descarregar slides executivos formatados para reuniões da administração e parceiros.</p>
-                        </div>
-                        <button onclick="alert('Download da Apresentação PowerPoint (.pptx) concluído!')" class="w-full py-2.5 bg-orange-600 hover:bg-orange-500 text-white rounded-xl text-xs font-bold shadow-lg flex items-center justify-center space-x-2">
-                            <i class="fa-solid fa-download"></i><span>Baixar PowerPoint</span>
-                        </button>
+                    <div class="glass-card p-6 rounded-2xl border border-borderDark text-center">
+                        <i class="fa-solid fa-file-powerpoint text-3xl text-orange-400 mb-3"></i>
+                        <h3 class="text-sm font-bold text-white mb-3">PowerPoint (.pptx)</h3>
+                        <button onclick="alert('Apresentação PowerPoint exportada com sucesso!')" class="px-4 py-2 bg-orange-600 text-white rounded-xl text-xs font-bold w-full">Baixar PPT</button>
                     </div>
                 </div>
             </div>
@@ -666,7 +478,7 @@
     <!-- Script da Aplicação -->
     <script>
         function switchTab(tabId) {
-            const tabs = ['visao-geral', 'dgp', 'se', 'rh', 'frotas', 'gcq', 'hsst', 'servicos-gerais', 'organigrama', 'compras', 'logistica', 'tecnicos', 'projectos', 'manutencoes', 'relatorios'];
+            const tabs = ['visao-geral', 'folha-obras', 'dgp', 'se', 'rh', 'frotas', 'gcq', 'hsst', 'servicos-gerais', 'organigrama', 'compras', 'logistica', 'tecnicos', 'projectos', 'manutencoes', 'relatorios'];
             
             tabs.forEach(t => {
                 const element = document.getElementById('tab-' + t);
@@ -682,32 +494,24 @@
 
             if (activeElement) activeElement.classList.remove('hidden');
             if (activeBtn) {
-                activeBtn.className = "sidebar-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all bg-blue-600 text-white shadow-lg shadow-blue-600/20";
+                activeBtn.className = "sidebar-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all bg-cyan-600 text-white shadow-lg shadow-cyan-600/20";
             }
         }
 
         function toggleNotifications() {
-            const dropdown = document.getElementById('notif-dropdown');
-            dropdown.classList.toggle('hidden');
+            alert('Centro de Notificações Hanzolo: Aniversários, Feriados Nacionais de Angola, Formações e Reuniões atualizados.');
         }
 
-        function clearNotifications() {
-            const badge = document.getElementById('notif-badge');
-            if (badge) badge.classList.add('hidden');
-            toggleNotifications();
-        }
-
-        // Gráfico Principal
-        const ctx = document.getElementById('graficoOperacoes').getContext('2d');
-        new Chart(ctx, {
+        // Gráfico de Linhas
+        new Chart(document.getElementById('graficoLinhas').getContext('2d'), {
             type: 'line',
             data: {
                 labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
                 datasets: [{
                     label: 'Operações Ativas',
                     data: [18, 24, 21, 26, 22, 15, 12],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                    borderColor: '#00b4d8',
+                    backgroundColor: 'rgba(0, 180, 216, 0.15)',
                     borderWidth: 2.5,
                     fill: true,
                     tension: 0.4
@@ -718,9 +522,51 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    x: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#9ca3af' } },
-                    y: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#9ca3af' } }
+                    x: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#9ca3af', font: { size: 10 } } }
                 }
+            }
+        });
+
+        // Gráfico de Velas Finas (Candlestick simulado por barras verticais finas)
+        new Chart(document.getElementById('graficoVelasFinas').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
+                datasets: [{
+                    label: 'Variação de Desempenho',
+                    data: [65, 59, 80, 81, 56, 55, 40, 72, 85, 92],
+                    backgroundColor: '#10b981',
+                    borderRadius: 2,
+                    barThickness: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#9ca3af', font: { size: 10 } } }
+                }
+            }
+        });
+
+        // Gráfico Circular
+        new Chart(document.getElementById('graficoCircular').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['SE', 'Técnicos', 'Logística', 'RH'],
+                datasets: [{
+                    data: [40, 25, 20, 15],
+                    backgroundColor: ['#00b4d8', '#10b981', '#f59e0b', '#8b5cf6'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', boxWidth: 10, font: { size: 10 } } } }
             }
         });
     </script>
