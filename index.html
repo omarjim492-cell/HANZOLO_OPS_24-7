@@ -73,7 +73,7 @@
                 </button>
             </nav>
 
-            <!-- Perfil do Utilizador no Rodapé da Sidebar -->
+            <!-- Perfil do Utilizador -->
             <div class="pt-4 border-t border-borderDark flex items-center space-x-3 px-2">
                 <div class="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center border border-emerald-500/30">OJ</div>
                 <div>
@@ -83,127 +83,146 @@
             </div>
         </aside>
 
-        <!-- Conteúdo Principal Dinâmico -->
+        <!-- Conteúdo Principal -->
         <main class="flex-1 overflow-y-auto p-8 space-y-6">
 
-            <!-- TAB: PAINEL GERAL -->
+            <!-- TAB 1: PAINEL GERAL -->
             <div id="tab-geral" class="space-y-6">
                 <div>
                     <h2 class="text-xl font-bold text-white">Painel Geral & Operações</h2>
                     <p class="text-xs text-gray-400">Monitorização em tempo real das equipas técnicas (Luanda, Angola)</p>
                 </div>
 
-                <!-- 4 Cards Superiores -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="glass-card p-5 rounded-2xl border border-borderDark flex justify-between items-center">
-                        <div>
-                            <p class="text-[11px] font-bold text-gray-400 uppercase">TOTAL VIATURAS</p>
-                            <h3 class="text-3xl font-extrabold text-white mt-1">3</h3>
-                        </div>
+                        <div><p class="text-[11px] font-bold text-gray-400 uppercase">TOTAL VIATURAS</p><h3 class="text-3xl font-extrabold text-white mt-1">3</h3></div>
                         <div class="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-500 flex items-center justify-center text-xl"><i class="fa-solid fa-truck"></i></div>
                     </div>
                     <div class="glass-card p-5 rounded-2xl border border-borderDark flex justify-between items-center">
-                        <div>
-                            <p class="text-[11px] font-bold text-gray-400 uppercase">EM ROTA / ATIVAS</p>
-                            <h3 class="text-3xl font-extrabold text-emerald-400 mt-1">3</h3>
-                        </div>
+                        <div><p class="text-[11px] font-bold text-gray-400 uppercase">EM ROTA / ATIVAS</p><h3 class="text-3xl font-extrabold text-emerald-400 mt-1">3</h3></div>
                         <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xl"><i class="fa-solid fa-location-arrow"></i></div>
                     </div>
                     <div class="glass-card p-5 rounded-2xl border border-borderDark flex justify-between items-center">
-                        <div>
-                            <p class="text-[11px] font-bold text-gray-400 uppercase">EM MANUTENÇÃO</p>
-                            <h3 class="text-3xl font-extrabold text-amber-400 mt-1">0</h3>
-                        </div>
+                        <div><p class="text-[11px] font-bold text-gray-400 uppercase">EM MANUTENÇÃO</p><h3 class="text-3xl font-extrabold text-amber-400 mt-1">0</h3></div>
                         <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-xl"><i class="fa-solid fa-wrench"></i></div>
                     </div>
                     <div class="glass-card p-5 rounded-2xl border border-borderDark flex justify-between items-center">
-                        <div>
-                            <p class="text-[11px] font-bold text-gray-400 uppercase">COMBUSTÍVEL MÉDIO</p>
-                            <h3 class="text-3xl font-extrabold text-blue-400 mt-1">84%</h3>
-                        </div>
+                        <div><p class="text-[11px] font-bold text-gray-400 uppercase">COMBUSTÍVEL MÉDIO</p><h3 class="text-3xl font-extrabold text-blue-400 mt-1">84%</h3></div>
                         <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl"><i class="fa-solid fa-gas-pump"></i></div>
                     </div>
                 </div>
 
-                <!-- Gráfico e Eficiência -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="lg:col-span-2 glass-card p-6 rounded-2xl border border-borderDark">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-sm font-bold text-white">Consumo Operacional vs. Rotas (Semanal)</h3>
-                            <span class="text-xs text-gray-400">Luanda, AO</span>
-                        </div>
+                        <div class="flex justify-between items-center mb-4"><h3 class="text-sm font-bold text-white">Consumo Operacional vs. Rotas (Semanal)</h3><span class="text-xs text-gray-400">Luanda, AO</span></div>
                         <div class="h-64"><canvas id="graficoOperacoes"></canvas></div>
                     </div>
                     <div class="glass-card p-6 rounded-2xl border border-borderDark flex flex-col justify-between">
                         <h3 class="text-sm font-bold text-white mb-2">Eficiência de Operações</h3>
                         <div class="flex justify-around items-center my-auto">
-                            <div class="text-center">
-                                <div class="w-20 h-20 rounded-full border-4 border-emerald-500 flex items-center justify-center text-lg font-bold text-emerald-400 mx-auto">92%</div>
-                                <p class="text-xs text-gray-400 mt-2">Pontualidade</p>
-                            </div>
-                            <div class="text-center">
-                                <div class="w-20 h-20 rounded-full border-4 border-blue-500 flex items-center justify-center text-lg font-bold text-blue-400 mx-auto">88%</div>
-                                <p class="text-xs text-gray-400 mt-2">Conformidade HST</p>
-                            </div>
+                            <div class="text-center"><div class="w-20 h-20 rounded-full border-4 border-emerald-500 flex items-center justify-center text-lg font-bold text-emerald-400 mx-auto">92%</div><p class="text-xs text-gray-400 mt-2">Pontualidade</p></div>
+                            <div class="text-center"><div class="w-20 h-20 rounded-full border-4 border-blue-500 flex items-center justify-center text-lg font-bold text-blue-400 mx-auto">88%</div><p class="text-xs text-gray-400 mt-2">Conformidade HST</p></div>
                         </div>
                         <p class="text-[10px] text-gray-500 text-center mt-4">Atualizado automaticamente via telemetria GPS</p>
                     </div>
                 </div>
+            </div>
 
-                <!-- Monitorização GPS & Rotas Ativas -->
+            <!-- TAB 2: FROTA & KPIS -->
+            <div id="tab-frota" class="space-y-6 hidden">
+                <div><h2 class="text-xl font-bold text-white">Frota & KPIs de Veículos</h2><p class="text-xs text-gray-400">Gestão integrada da frota automóvel da HANZOLO em Luanda</p></div>
                 <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-sm font-bold text-white"><i class="fa-solid fa-satellite-dish text-blue-500 mr-2"></i>Monitorização GPS & Rotas Ativas (Luanda)</h3>
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">GPS Sincronizado</span>
+                    <h3 class="text-sm font-bold text-white">Estado Atual da Frota</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="border-b border-borderDark text-xs text-gray-400 uppercase">
+                                    <th class="pb-3">Matrícula</th><th class="pb-3">Modelo</th><th class="pb-3">Motorista Atribuído</th><th class="pb-3">Estado</th><th class="pb-3">Combustível</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-borderDark text-gray-200">
+                                <tr><td class="py-3 font-mono text-blue-400">LD-23-76-HU</td><td>Toyota Hilux #01</td><td>António Manuel</td><td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Em Rota</span></td><td>85%</td></tr>
+                                <tr><td class="py-3 font-mono text-blue-400">LD-45-12-GX</td><td>Mitsubishi Canter #02</td><td>Joaquim Paulo</td><td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Em Rota</span></td><td>90%</td></tr>
+                                <tr><td class="py-3 font-mono text-blue-400">LD-88-90-AA</td><td>Nissan Hardbody #03</td><td>Domingos Pedro</td><td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Em Rota</span></td><td>77%</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-darkBg/60 p-4 rounded-xl border border-borderDark">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-mono text-xs font-bold text-blue-400">LD-23-76-HU</span>
-                                <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Em Rota</span>
-                            </div>
-                            <h4 class="font-bold text-sm text-white">Toyota Hilux #01</h4>
-                            <p class="text-xs text-gray-400 mt-1">Origem: Base Talatona<br>Destino: Maianga, Luanda</p>
-                            <div class="mt-3">
-                                <div class="flex justify-between text-[11px] text-gray-400 mb-1"><span>Combustível</span><span>85%</span></div>
-                                <div class="w-full bg-gray-800 rounded-full h-1.5"><div class="bg-emerald-500 h-1.5 rounded-full" style="width: 85%"></div></div>
-                            </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: KANBAN DE TAREFAS -->
+            <div id="tab-kanban" class="space-y-6 hidden">
+                <div><h2 class="text-xl font-bold text-white">Kanban de Tarefas Operacionais</h2><p class="text-xs text-gray-400">Acompanhamento de projectos de segurança eletrónica e redes</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark space-y-3">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase">A Fazer (Backlog)</h3>
+                        <div class="bg-darkBg p-3 rounded-xl border border-borderDark"><p class="text-xs font-bold text-white">Instalação CCTV - Banco Sol (Talatona)</p><p class="text-[10px] text-gray-400 mt-1">Responsável: Eng. Mário</p></div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark space-y-3">
+                        <h3 class="text-xs font-bold text-blue-400 uppercase">Em Execução</h3>
+                        <div class="bg-darkBg p-3 rounded-xl border border-borderDark"><p class="text-xs font-bold text-white">Redes Estruturadas - Kilamba</p><p class="text-[10px] text-gray-400 mt-1">Responsável: Ana Costa</p></div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark space-y-3">
+                        <h3 class="text-xs font-bold text-emerald-400 uppercase">Concluído</h3>
+                        <div class="bg-darkBg p-3 rounded-xl border border-borderDark"><p class="text-xs font-bold text-white">Manutenção Preventiva - Viana</p><p class="text-[10px] text-gray-400 mt-1">Responsável: Equipas Campo</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: REQUISIÇÕES NRM -->
+            <div id="tab-requisicoes" class="space-y-6 hidden">
+                <div><h2 class="text-xl font-bold text-white">Requisições NRM</h2><p class="text-xs text-gray-400">Notas de Requisição de Materiais para intervenções em campo</p></div>
+                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
+                    <h3 class="text-sm font-bold text-white">Últimas Requisições Emitidas</h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-darkBg rounded-xl border border-borderDark flex justify-between items-center">
+                            <div><p class="text-xs font-bold text-white">NRM #2026-042: Bobines de Cabo UPT Cat6 (x5)</p><p class="text-[10px] text-gray-400">Solicitado por: Depto Técnico</p></div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] bg-emerald-500/10 text-emerald-400">Aprovado</span>
                         </div>
-                        <div class="bg-darkBg/60 p-4 rounded-xl border border-borderDark">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-mono text-xs font-bold text-blue-400">LD-45-12-GX</span>
-                                <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Em Rota</span>
-                            </div>
-                            <h4 class="font-bold text-sm text-white">Mitsubishi Canter #02</h4>
-                            <p class="text-xs text-gray-400 mt-1">Origem: Viana Park<br>Destino: Porto de Luanda</p>
-                            <div class="mt-3">
-                                <div class="flex justify-between text-[11px] text-gray-400 mb-1"><span>Combustível</span><span>90%</span></div>
-                                <div class="w-full bg-gray-800 rounded-full h-1.5"><div class="bg-emerald-500 h-1.5 rounded-full" style="width: 90%"></div></div>
-                            </div>
-                        </div>
-                        <div class="bg-darkBg/60 p-4 rounded-xl border border-borderDark">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-mono text-xs font-bold text-blue-400">LD-88-90-AA</span>
-                                <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Em Rota</span>
-                            </div>
-                            <h4 class="font-bold text-sm text-white">Nissan Hardbody #03</h4>
-                            <p class="text-xs text-gray-400 mt-1">Origem: Central Kilamba<br>Destino: Belas Shopping</p>
-                            <div class="mt-3">
-                                <div class="flex justify-between text-[11px] text-gray-400 mb-1"><span>Combustível</span><span>77%</span></div>
-                                <div class="w-full bg-gray-800 rounded-full h-1.5"><div class="bg-amber-500 h-1.5 rounded-full" style="width: 77%"></div></div>
-                            </div>
+                        <div class="p-3 bg-darkBg rounded-xl border border-borderDark flex justify-between items-center">
+                            <div><p class="text-xs font-bold text-white">NRM #2026-043: Câmaras IP Hikvision (x12)</p><p class="text-[10px] text-gray-400">Solicitado por: Gestão de Projectos</p></div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] bg-amber-500/10 text-amber-400">Em Análise</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Outras Abas Operacionais (Serão ativadas por script) -->
-            <div id="tab-frota" class="space-y-6 hidden"><h2 class="text-xl font-bold text-white">Gestão de Frota & KPIs</h2><p class="text-gray-400">Controlo detalhado de viaturas, manutenções corretivas e preventivas.</p></div>
-            <div id="tab-kanban" class="space-y-6 hidden"><h2 class="text-xl font-bold text-white">Kanban de Tarefas Operacionais</h2><p class="text-gray-400">Gestão de projectos e ordens de serviço em curso.</p></div>
-            <div id="tab-requisicoes" class="space-y-6 hidden"><h2 class="text-xl font-bold text-white">Requisições NRM</h2><p class="text-gray-400">Gestão e aprovação de materiais e requisições correntes.</p></div>
-            <div id="tab-inventario" class="space-y-6 hidden"><h2 class="text-xl font-bold text-white">Inventário & Stock</h2><p class="text-gray-400">Controlo de equipamentos CCTV, redes e ferramentas.</p></div>
-            <div id="tab-financas" class="space-y-6 hidden"><h2 class="text-xl font-bold text-white">Finanças & Orçamentos</h2><p class="text-gray-400">Fluxos de tesouraria, custos operacionais e fecturação.</p></div>
-            <div id="tab-seguranca" class="space-y-6 hidden"><h2 class="text-xl font-bold text-white">Segurança & HST</h2><p class="text-gray-400">Normas de segurança, relatórios de campo e conformidade.</p></div>
+            <!-- TAB 5: INVENTÁRIO & STOCK -->
+            <div id="tab-inventario" class="space-y-6 hidden">
+                <div><h2 class="text-xl font-bold text-white">Inventário & Stock</h2><p class="text-xs text-gray-400">Controlo de armazém central HANZOLO em Luanda</p></div>
+                <div class="glass-card p-6 rounded-2xl border border-borderDark">
+                    <h3 class="text-sm font-bold text-white mb-4">Stock Atual em Armazém</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><p class="text-xs text-gray-400">Câmaras de Segurança</p><h4 class="text-xl font-bold text-white mt-1">45 Unidades</h4></div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><p class="text-xs text-gray-400">Cabos de Rede (Caixas)</p><h4 class="text-xl font-bold text-white mt-1">18 Caixas</h4></div>
+                        <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><p class="text-xs text-gray-400">Kits de Ferramentas</p><h4 class="text-xl font-bold text-white mt-1">8 Equipados</h4></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: FINANÇAS & ORÇAMENTOS -->
+            <div id="tab-financas" class="space-y-6 hidden">
+                <div><h2 class="text-xl font-bold text-white">Finanças & Orçamentos</h2><p class="text-xs text-gray-400">Resumo financeiro e fluxo de caixa operacional</p></div>
+                <div class="glass-card p-6 rounded-2xl border border-borderDark">
+                    <h3 class="text-sm font-bold text-white mb-4">Resumo Mensal (Kwanza - AOA)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-darkBg rounded-xl border border-borderDark"><p class="text-xs text-gray-400">Orçamentos Aprovados (Mês)</p><h4 class="text-2xl font-bold text-emerald-400 mt-1">14.500.000 Kz</h4></div>
+                        <div class="p-4 bg-darkBg rounded-xl border border-borderDark"><p class="text-xs text-gray-400">Custos Operacionais Correntes</p><h4 class="text-2xl font-bold text-blue-400 mt-1">4.200.000 Kz</h4></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 7: SEGURANÇA & HST -->
+            <div id="tab-seguranca" class="space-y-6 hidden">
+                <div><h2 class="text-xl font-bold text-white">Segurança & HST</h2><p class="text-xs text-gray-400">Higiene, Saúde e Segurança no Trabalho</p></div>
+                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
+                    <h3 class="text-sm font-bold text-white">Indicadores de Conformidade HST</h3>
+                    <div class="p-4 bg-darkBg rounded-xl border border-borderDark flex justify-between items-center">
+                        <div><p class="text-xs font-bold text-white">Inspeção de EPIs de Campo</p><p class="text-[10px] text-gray-400">Última verificação: Esta semana</p></div>
+                        <span class="px-3 py-1 rounded-full text-xs bg-emerald-500/10 text-emerald-400">100% Conforme</span>
+                    </div>
+                </div>
+            </div>
 
         </main>
     </div>
@@ -225,7 +244,6 @@
             }
         }
 
-        // Gráfico
         const ctx = document.getElementById('graficoOperacoes').getContext('2d');
         new Chart(ctx, {
             type: 'line',
