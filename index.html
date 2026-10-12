@@ -60,7 +60,7 @@
             <span class="hidden md:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <span class="w-2 h-2 mr-2 bg-emerald-500 rounded-full animate-pulse"></span> Sistema & GPS Ativos (Luanda)
             </span>
-            <button onclick="alert('Notificações:\n- Vistoria CCTV Banco Sol agendada para 2ª feira.\n- 3 Relatórios de Obras pendentes de aprovação pelo DGP.\n- Manutenção preventiva da Hilux #01 agendada.')" class="relative p-2.5 rounded-xl bg-darkBg border border-borderDark text-gray-300 hover:text-white transition-all">
+            <button onclick="toggleNotifications()" class="relative p-2.5 rounded-xl bg-darkBg border border-borderDark text-gray-300 hover:text-white transition-all">
                 <i class="fa-regular fa-bell text-lg"></i>
                 <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">3</span>
             </button>
@@ -147,7 +147,6 @@
                     </button>
                 </div>
 
-                <!-- Cards Principais -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="glass-card p-5 rounded-2xl border border-borderDark flex justify-between items-center">
                         <div><p class="text-[11px] font-bold text-gray-400 uppercase">FROTA ATIVA</p><h3 class="text-3xl font-extrabold text-white mt-1">3 Viaturas</h3></div>
@@ -167,7 +166,6 @@
                     </div>
                 </div>
 
-                <!-- Gráficos Avançados -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="glass-card p-6 rounded-2xl border border-borderDark">
                         <div class="flex justify-between items-center mb-4"><h3 class="text-sm font-bold text-white">Leituras de Linhas Operacionais</h3><span class="text-xs text-cyan-400">Luanda</span></div>
@@ -184,7 +182,7 @@
                 </div>
             </div>
 
-            <!-- TAB 2: FOLHA DE OBRAS & EVIDÊNCIAS -->
+            <!-- TAB 2: FOLHA DE OBRAS -->
             <div id="tab-folha-obras" class="space-y-6 hidden">
                 <div class="flex justify-between items-center flex-wrap gap-4">
                     <div>
@@ -221,7 +219,7 @@
                         </div>
                         <div>
                             <label class="block text-[11px] text-gray-400 mb-1">Data da Obra</label>
-                            <input type="date" value="2026-10-10" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                            <input type="date" value="2026-10-12" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
                         </div>
                         <div>
                             <label class="block text-[11px] text-gray-400 mb-1">Estado de Execução</label>
@@ -238,7 +236,6 @@
                         <textarea rows="3" class="w-full bg-darkBg border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">Substituição de câmara IP dome exterior, verificação de cablagem estruturada e testes de gravação no NVR central.</textarea>
                     </div>
 
-                    <!-- Importação de Evidências -->
                     <div class="pt-2 border-t border-borderDark">
                         <h4 class="text-xs font-bold text-white mb-2"><i class="fa-solid fa-photo-film text-cyan-400 mr-2"></i>Importação de Evidências (Fotos & Vídeos)</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -260,7 +257,7 @@
                     </div>
 
                     <div class="flex justify-end pt-3">
-                        <button onclick="alert('Folha de Obras ID# HZ-OBRA-2026-089 submetida com sucesso com todas as evidências multimédia!')" class="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold shadow-lg">Submeter Folha de Obras</button>
+                        <button onclick="showAlert('Folha de Obras ID# HZ-OBRA-2026-089 submetida com sucesso!')" class="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold shadow-lg">Submeter Folha de Obras</button>
                     </div>
                 </div>
             </div>
@@ -274,7 +271,6 @@
                     <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Auditoria de Qualidade</p><h3 class="text-2xl font-bold text-cyan-400 mt-1">98/100</h3><p class="text-[11px] text-gray-400 mt-1">Padrão ISO 9001</p></div>
                 </div>
                 
-                <!-- Planeamento Estratégico -->
                 <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
                     <h3 class="text-sm font-bold text-white"><i class="fa-solid fa-bullseye text-cyan-400 mr-2"></i>Plano Director 2026 / 2027</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
@@ -303,31 +299,9 @@
                         <div class="bg-darkBg p-4 rounded-xl border border-borderDark"><span class="text-xs text-emerald-400 font-bold">● Online</span><h4 class="text-sm font-bold text-white mt-1">Alarmes Viana</h4><p class="text-xs text-gray-400 mt-1">Armado com resposta rápida</p></div>
                     </div>
                 </div>
-
-                <!-- Tabela de Sensores e Alarmes -->
-                <div class="glass-card p-6 rounded-2xl border border-borderDark">
-                    <h3 class="text-sm font-bold text-white mb-3">Últimos Eventos de Segurança Registados</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead>
-                                <tr class="border-b border-borderDark text-gray-400 uppercase">
-                                    <th class="pb-3">Hora</th><th class="pb-3">Cliente / Ponto</th><th class="pb-3">Evento</th><th class="pb-3">Ação Tomada</th><th class="pb-3">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-borderDark text-gray-200">
-                                <tr>
-                                    <td class="py-3 font-mono">14:22</td><td>Banco Sol (Sede)</td><td>Detecção de Movimento Noturno</td><td>Verificação CCTV efetuada</td><td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Normalizado</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="py-3 font-mono">11:05</td><td>Condomínio Viana</td><td>Corte temporário de energia</td><td>Nobreak ativado automaticamente</td><td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Normalizado</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
 
-            <!-- TAB 5: RH & CADASTRO -->
+            <!-- TAB 5: RH -->
             <div id="tab-rh" class="space-y-6 hidden">
                 <div class="flex justify-between items-center flex-wrap gap-4">
                     <div>
@@ -371,48 +345,12 @@
                         </div>
                     </div>
                     <div class="flex justify-end pt-2">
-                        <button onclick="alert('Colaborador registado com NIF e Palavra-passe com sucesso no sistema Hanzolo Ops!')" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg">Salvar Colaborador</button>
-                    </div>
-                </div>
-
-                <div class="glass-card p-6 rounded-2xl border border-borderDark space-y-4">
-                    <h3 class="text-sm font-bold text-white">Colaboradores Registados (Base de Dados)</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead>
-                                <tr class="border-b border-borderDark text-gray-400 uppercase">
-                                    <th class="pb-3">Nome</th><th class="pb-3">NIF</th><th class="pb-3">Departamento</th><th class="pb-3">Função</th><th class="pb-3">Estado Acesso</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-borderDark text-gray-200">
-                                <tr>
-                                    <td class="py-3 font-bold text-white">António Manuel</td>
-                                    <td class="font-mono text-cyan-400">5009876543</td>
-                                    <td>SE</td>
-                                    <td>Técnico Principal</td>
-                                    <td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Ativo</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="py-3 font-bold text-white">Joaquim Paulo</td>
-                                    <td class="font-mono text-cyan-400">5001122334</td>
-                                    <td>Técnicos</td>
-                                    <td>Especialista de Redes</td>
-                                    <td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Ativo</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="py-3 font-bold text-white">Mariana Costa</td>
-                                    <td class="font-mono text-cyan-400">5004455667</td>
-                                    <td>RH</td>
-                                    <td>Gestora de Recursos Humanos</td>
-                                    <td><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400">Ativo</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <button onclick="showAlert('Colaborador registado com NIF e Palavra-passe com sucesso!')" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg">Salvar Colaborador</button>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 6: GESTÃO DE FROTAS -->
+            <!-- TAB 6: FROTAS -->
             <div id="tab-frotas" class="space-y-6 hidden">
                 <div><h2 class="text-xl font-bold text-white">Gestão de Frotas & GPS (Luanda)</h2><p class="text-xs text-gray-400">Localização e estado das viaturas operacionais</p></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -435,47 +373,14 @@
                         <p class="text-[10px] text-emerald-400 mt-2"><i class="fa-solid fa-gas-pump mr-1"></i> Combustível: 60% | Próx. Revisão: 210.000 km</p>
                     </div>
                 </div>
-
-                <div class="glass-card p-6 rounded-2xl border border-borderDark">
-                    <h3 class="text-sm font-bold text-white mb-3"><i class="fa-solid fa-route text-cyan-400 mr-2"></i>Histórico de Deslocações Hoje</h3>
-                    <div class="space-y-3 text-xs">
-                        <div class="flex justify-between items-center bg-darkBg p-3 rounded-xl border border-borderDark">
-                            <div>
-                                <span class="font-bold text-white">Viatura Hilux #01</span>
-                                <p class="text-gray-400 text-[11px]">Rota: Base Talatona → Banco Sol Agência Talatona</p>
-                            </div>
-                            <span class="text-gray-400 font-mono">08:30 - 09:15</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-darkBg p-3 rounded-xl border border-borderDark">
-                            <div>
-                                <span class="font-bold text-white">Viatura Hiace #03</span>
-                                <p class="text-gray-400 text-[11px]">Rota: Base Talatona → Zona Industrial de Viana</p>
-                            </div>
-                            <span class="text-gray-400 font-mono">10:00 - 11:10</span>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- TAB 7: GCQ -->
             <div id="tab-gcq" class="space-y-6 hidden">
                 <div><h2 class="text-xl font-bold text-white">GCQ - Gestão de Controle de Qualidade</h2><p class="text-xs text-gray-400">Inspeções e conformidade de processos técnicos</p></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Taxa de Aprovação em Auditorias</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">99.2%</h3><p class="text-[11px] text-gray-400 mt-1">Nenhuma não conformidade grave registada no mês</p></div>
-                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Inspeções Efetuadas</p><h3 class="text-2xl font-bold text-cyan-400 mt-1">28 Este Mês</h3><p class="text-[11px] text-gray-400 mt-1">Todas as obras validadas antes do encerramento</p></div>
-                </div>
-
-                <div class="glass-card p-6 rounded-2xl border border-borderDark">
-                    <h3 class="text-sm font-bold text-white mb-3">Relatórios de Checklist de Qualidade</h3>
-                    <div class="space-y-3 text-xs">
-                        <div class="p-3 bg-darkBg rounded-xl border border-borderDark flex justify-between items-center">
-                            <div>
-                                <span class="font-bold text-white">Obra #089 - Banco Sol Talatona</span>
-                                <p class="text-gray-400 text-[11px]">Cablagem identificada, racks arrumados e câmara focada corretamente.</p>
-                            </div>
-                            <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 font-bold rounded">Aprovado ISO</span>
-                        </div>
-                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Taxa de Aprovação em Auditorias</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">99.2%</h3><p class="text-[11px] text-gray-400 mt-1">Nenhuma não conformidade grave registada</p></div>
+                    <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Inspeções Efetuadas</p><h3 class="text-2xl font-bold text-cyan-400 mt-1">28 Este Mês</h3><p class="text-[11px] text-gray-400 mt-1">Todas as obras validadas</p></div>
                 </div>
             </div>
 
@@ -646,17 +551,17 @@
                     <div class="glass-card p-6 rounded-2xl border border-borderDark text-center">
                         <i class="fa-solid fa-file-excel text-3xl text-emerald-400 mb-3"></i>
                         <h3 class="text-sm font-bold text-white mb-3">Excel (.xlsx)</h3>
-                        <button onclick="alert('Relatório Excel interdepartamental descarregado com sucesso!')" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold w-full">Baixar Excel</button>
+                        <button onclick="showAlert('Relatório Excel interdepartamental descarregado com sucesso!')" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold w-full">Baixar Excel</button>
                     </div>
                     <div class="glass-card p-6 rounded-2xl border border-borderDark text-center">
                         <i class="fa-solid fa-file-pdf text-3xl text-red-400 mb-3"></i>
                         <h3 class="text-sm font-bold text-white mb-3">PDF Executivo</h3>
-                        <button onclick="alert('Relatório PDF executivo descarregado com sucesso!')" class="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold w-full">Baixar PDF</button>
+                        <button onclick="showAlert('Relatório PDF executivo descarregado com sucesso!')" class="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold w-full">Baixar PDF</button>
                     </div>
                     <div class="glass-card p-6 rounded-2xl border border-borderDark text-center">
                         <i class="fa-solid fa-file-powerpoint text-3xl text-orange-400 mb-3"></i>
                         <h3 class="text-sm font-bold text-white mb-3">PowerPoint (.pptx)</h3>
-                        <button onclick="alert('Apresentação PowerPoint descarregada com sucesso!')" class="px-4 py-2 bg-orange-600 text-white rounded-xl text-xs font-bold w-full">Baixar PPT</button>
+                        <button onclick="showAlert('Apresentação PowerPoint descarregada com sucesso!')" class="px-4 py-2 bg-orange-600 text-white rounded-xl text-xs font-bold w-full">Baixar PPT</button>
                     </div>
                 </div>
             </div>
@@ -664,7 +569,19 @@
         </main>
     </div>
 
-    <!-- Scripts de Navegação e Gráficos -->
+    <!-- Modal de Alerta Dinâmico Integrado -->
+    <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="glass-card p-6 rounded-2xl border border-borderDark w-96 max-w-full text-center space-y-4 shadow-2xl">
+            <div class="w-12 h-12 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center mx-auto text-xl border border-cyan-500/30">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h3 class="text-base font-bold text-white">Notificação Operacional Hanzolo</h3>
+            <p id="modal-msg" class="text-xs text-gray-300 leading-relaxed"></p>
+            <button onclick="closeModal()" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold transition-all">OK / Entendido</button>
+        </div>
+    </div>
+
+    <!-- Scripts de Navegação e Interatividade -->
     <script>
         function switchTab(tabId) {
             const tabs = ['visao-geral', 'folha-obras', 'dgp', 'se', 'rh', 'frotas', 'gcq', 'hsst', 'servicos-gerais', 'organigrama', 'compras', 'logistica', 'tecnicos', 'projectos', 'manutencoes', 'relatorios'];
@@ -685,6 +602,19 @@
             if (activeBtn) {
                 activeBtn.className = "sidebar-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all bg-cyan-600 text-white shadow-lg shadow-cyan-600/20";
             }
+        }
+
+        function showAlert(msg) {
+            document.getElementById('modal-msg').innerText = msg;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        function toggleNotifications() {
+            showAlert("Notificações:\n- Vistoria CCTV Banco Sol agendada para 2ª feira.\n- 3 Relatórios de Obras pendentes de aprovação pelo DGP.\n- Manutenção preventiva da Hilux #01 agendada.");
         }
 
         // Gráfico de Linhas
