@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HANZOLO, ops 24-7 | Plataforma de Gestão de Operações</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS (Framework CSS Modular) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,14 +18,15 @@
             }
         }
     </script>
-    <!-- FontAwesome -->
+    <!-- FontAwesome para Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
+    <!-- Chart.js (Lógica de Gráficos em JavaScript) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Estilos CSS Personalizados para Impressão e PDF -->
     <style>
         @media print {
             body { background: white !important; color: black !important; }
-            no-print { display: none !important; }
+            .no-print { display: none !important; }
         }
     </style>
 </head>
@@ -40,7 +41,7 @@
             <div>
                 <div class="flex items-center space-x-2">
                     <h1 class="text-base font-extrabold tracking-wide uppercase text-white">HANZOLO, ops 24-7</h1>
-                    <span class="bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px] px-2 py-0.5 rounded font-mono">ENTERPRISE v3.4</span>
+                    <span class="bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px] px-2 py-0.5 rounded font-mono">ENTERPRISE v3.5</span>
                 </div>
                 <p class="text-xs text-gray-400">Tecnologia, Sistemas & Segurança LDA — Base Talatona, Luanda</p>
             </div>
@@ -49,7 +50,7 @@
         <div class="flex items-center space-x-3">
             <div class="hidden lg:flex items-center space-x-2 bg-gray-950 px-3 py-1.5 rounded-lg border border-gray-800 text-xs">
                 <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
-                <span class="text-gray-300 font-medium">Telemetria & GPS: <strong class="text-emerald-400">Sincronizado</strong></span>
+                <span class="text-gray-300 font-medium">HTML/CSS/JS: <strong class="text-emerald-400">Ativo</strong></span>
             </div>
             
             <!-- Menu Dropdown de Exportação Global -->
@@ -89,6 +90,9 @@
             </button>
             <button id="btn-dse" onclick="switchTab('dse')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
                 <i class="fas fa-video w-4 text-center"></i><span>DSE (Segurança Eletrónica)</span>
+            </button>
+            <button id="btn-dl" onclick="switchTab('dl')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
+                <i class="fas fa-network-wired w-4 text-center"></i><span>DL (Departamento Lógico)</span>
             </button>
             <button id="btn-rh" onclick="switchTab('rh')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
                 <i class="fas fa-users-gear w-4 text-center"></i><span>RH & Cadastro Operacional</span>
@@ -290,7 +294,49 @@
                 </div>
             </div>
 
-            <!-- 5. RH & Cadastro Operacional -->
+            <!-- 5. DL (Departamento Lógico) - NOVO MODULO -->
+            <div id="tab-dl" class="tab-content hidden space-y-6">
+                <div class="border-b border-gray-900 pb-4">
+                    <h2 class="text-xl font-bold tracking-tight text-white">Departamento Lógico (DL)</h2>
+                    <p class="text-xs text-gray-400">Gestão de infraestrutura de redes, lógica de programação de sistemas e roteamento de dados.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-xs text-white">Servidor Central Node.js</span>
+                            <i class="fas fa-server text-cyan-400"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-400">Uso de CPU: <strong>24%</strong> • RAM: <strong>4.2GB</strong></p>
+                        <p class="text-[10px] text-emerald-400 mt-2 bg-emerald-950/40 p-1.5 rounded">Status: <strong>Estável / Sem Perda de Pacotes</strong></p>
+                    </div>
+                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-xs text-white">APIs de Telemetria (REST/JSON)</span>
+                            <i class="fas fa-code text-cyan-400"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-400">Endpoints Ativos: <strong>18/18</strong></p>
+                        <p class="text-[10px] text-emerald-400 mt-2 bg-emerald-950/40 p-1.5 rounded">Latência Média: <strong>11ms</strong></p>
+                    </div>
+                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-xs text-white">Firewall & Regras Lógicas</span>
+                            <i class="fas fa-shield-halved text-cyan-400"></i>
+                        </div>
+                        <p class="text-[11px] text-gray-400">Bloqueios Automáticos (Hoje): <strong>0</strong></p>
+                        <p class="text-[10px] text-emerald-400 mt-2 bg-emerald-950/40 p-1.5 rounded">Criptografia: <strong>SSL/TLS Ativo</strong></p>
+                    </div>
+                </div>
+                <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
+                    <h3 class="text-xs font-bold text-gray-300 uppercase mb-3">Logs de Rotinas Lógicas Ativas</h3>
+                    <div class="bg-gray-950 p-3 rounded font-mono text-[11px] text-cyan-300 space-y-1">
+                        <p>[23:30:02] [DL-SYS] Verificação automática de integridade de base de dados efetuada com sucesso.</p>
+                        <p>[23:25:10] [DL-NET] Sincronização de pacotes GPS entre Talatona e Luanda Sul validada.</p>
+                        <p>[23:20:00] [DL-API] Resposta de handshakes de segurança eletrónica normalizada (11ms).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. RH & Cadastro Operacional -->
             <div id="tab-rh" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">RH & Cadastro Operacional</h2>
@@ -318,7 +364,7 @@
                 </div>
             </div>
 
-            <!-- 6. Gestão de Frotas & GPS -->
+            <!-- 7. Gestão de Frotas & GPS -->
             <div id="tab-frotas" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Gestão de Frotas & GPS</h2>
@@ -343,7 +389,7 @@
                 </div>
             </div>
 
-            <!-- 7. GCQ (Qualidade) -->
+            <!-- 8. GCQ (Qualidade) -->
             <div id="tab-gcq" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Garantia e Controlo de Qualidade (GCQ)</h2>
@@ -355,7 +401,7 @@
                 </div>
             </div>
 
-            <!-- 8. HSST (Segurança no Trabalho) -->
+            <!-- 9. HSST (Segurança no Trabalho) -->
             <div id="tab-hsst" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Higiene, Saúde e Segurança no Trabalho (HSST)</h2>
@@ -367,7 +413,7 @@
                 </div>
             </div>
 
-            <!-- 9. Compras & Suprimentos -->
+            <!-- 10. Compras & Suprimentos -->
             <div id="tab-compras" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Departamento de Compras & Suprimentos</h2>
@@ -379,7 +425,7 @@
                 </div>
             </div>
 
-            <!-- 10. Logística & Armazém -->
+            <!-- 11. Logística & Armazém -->
             <div id="tab-logistica" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Logística & Armazém Central</h2>
@@ -394,7 +440,7 @@
         </main>
     </div>
 
-    <!-- Script de Gestão Executiva e Exportação -->
+    <!-- Script de Gestão Executiva e Exportação (JavaScript) -->
     <script>
         let currentActiveTab = 'visao-geral';
 
@@ -434,22 +480,19 @@
             const tabNome = currentActiveTab.toUpperCase();
 
             if (formato === 'pdf') {
-                // Prepara a página para impressão/PDF limpo
                 window.print();
             } else if (formato === 'excel') {
-                // Exportação em formato CSV limpo compatível com Excel
                 let csvContent = "data:text/csv;charset=utf-8,Plataforma HANZOLO ops 24-7\n";
                 csvContent += "Modulo: " + tabNome + "\nData: " + new Date().toLocaleDateString() + "\n\n";
                 
-                if (currentActiveTab === 'folha-obras') {
-                    csvContent += "Referencia,Cliente,Servico,Tecnico,Estado\n";
-                    csvContent += "#OBR-24-089,Banco BAI - Talatona,Manutencao CFTV,Mateus Silva,Concluido\n";
-                    csvContent += "#OBR-24-090,Condominio Marbelo,Cerca Eletrica,Antonio Banza,Em Execucao\n";
+                if (currentActiveTab === 'dl') {
+                    csvContent += "Sistema,Uso,Status\n";
+                    csvContent += "Servidor Node.js,24% CPU,Estavel\n";
+                    csvContent += "APIs REST,18 Endpoints,11ms\n";
                 } else {
                     csvContent += "Indicador,Valor\n";
                     csvContent += "Frota Ativa,3 Viaturas\n";
                     csvContent += "Auditorias GCQ,100%\n";
-                    csvContent += "Efetivo,42 Colaboradores\n";
                 }
 
                 const encodedUri = encodeURI(csvContent);
@@ -460,8 +503,7 @@
                 link.click();
                 document.body.removeChild(link);
             } else if (formato === 'ppt') {
-                // Exportação simulada de sumário executivo em PowerPoint (formato texto estruturado)
-                let pptText = `HANZOLO, ops 24-7 - SUMÁRIO EXECUTIVO PPT\nMódulo: ${tabNome}\nGerado em: ${new Date().toLocaleString()}\n\n[Slide 1: Status da Operação]\n- Monitorização em Luanda ativa\n- Conformidade Geral: Excelente\n\n[Slide 2: Métricas Principais]\n- Frotas e GPS a operar sem anomalias\n- Cobertura total dos departamentos operacionais (DGP, DSE, RH, HSST, GCQ)`;
+                let pptText = `HANZOLO, ops 24-7 - SUMÁRIO EXECUTIVO PPT\nMódulo: ${tabNome}\nGerado em: ${new Date().toLocaleString()}\n\n[Slide 1: Status Operacional]\n- Monitorização em Luanda ativa\n- Departamento Lógico sincronizado`;
                 
                 const blob = new Blob([pptText], { type: 'text/plain;charset=utf-8' });
                 const url = URL.createObjectURL(blob);
@@ -471,7 +513,7 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                alert('Sumário executivo gerado com sucesso para arquivo de apresentação.');
+                alert('Sumário executivo gerado com sucesso.');
             }
         }
 
@@ -486,7 +528,7 @@
             if(clockEl) clockEl.innerText = now.toLocaleTimeString();
         }, 1000);
 
-        // Inicialização de Gráficos Chart.js Profissionais
+        // Inicialização de Gráficos Chart.js
         window.addEventListener('DOMContentLoaded', () => {
             try {
                 const ctxLinhas = document.getElementById('graficoLinhas');
