@@ -472,6 +472,65 @@
     <script>
         let currentActiveTab = 'visao-geral';
 
+        let fotoBase64Temp = '';
+
+function abrirModalColaborador() {
+    document.getElementById('modal-colaborador').classList.remove('hidden');
+}
+
+function fecharModalColaborador() {
+    document.getElementById('modal-colaborador').classList.add('hidden');
+    document.getElementById('form-colaborador').reset();
+    document.getElementById('img-preview').classList.add('hidden');
+    document.getElementById('img-preview').src = '';
+    fotoBase64Temp = '';
+}
+
+function preVisualizarFoto(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            fotoBase64Temp = e.target.result;
+            const imgEl = document.getElementById('img-preview');
+            imgEl.src = fotoBase64Temp;
+            imgEl.classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+function salvarColaborador(event) {
+    event.preventDefault();
+    
+    const nome = document.getElementById('colig-nome').value;
+    const email = document.getElementById('colig-email').value;
+    const nif = document.getElementById('colig-nif').value;
+    const cargo = document.getElementById('colig-cargo').value;
+
+    const tbody = document.getElementById('tabela-colaboradores-corpo');
+    
+    const avatarHtml = fotoBase64Temp 
+        ? `<img src="${fotoBase64Temp}" class="w-full h-full object-cover">`
+        : `<i class="fas fa-user text-gray-400 text-xs"></i>`;
+
+    const novaLinha = document.createElement('tr');
+    novaLinha.innerHTML = `
+        <td class="p-3">
+            <div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
+                ${avatarHtml}
+            </div>
+        </td>
+        <td class="p-3 font-medium text-white">${nome}</td>
+        <td class="p-3 text-cyan-400">${email}</td>
+        <td class="p-3 font-mono">${nif}</td>
+        <td class="p-3 text-gray-400">${cargo}</td>
+    `;
+
+    tbody.prepend(novaLinha);
+    fecharModalColaborador();
+    alert('Colaborador cadastrado com sucesso no sistema Hanzolo!');
+}
         function switchTab(tabId) {
             currentActiveTab = tabId;
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
