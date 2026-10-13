@@ -1,10 +1,12 @@
+// HANZOLO OPS 24-7 - Lógica JavaScript Principal
+
 function switchTab(tabId) {
     const tabs = [
-        'visao-geral', 'folha-obras', 'dgp', 'se', 'rh', 'frotas', 
-        'gcq', 'hsst', 'servicos-gerais', 'organigrama', 'compras', 
+        'visao-geral', 'folha-obras', 'dgp', 'se', 'rh', 'frotas',
+        'gcq', 'hsst', 'servicos-gerais', 'organigrama', 'compras',
         'logistica', 'tecnicos', 'projectos', 'manutencoes', 'relatorios'
     ];
-    
+
     tabs.forEach(id => {
         const el = document.getElementById(`tab-${id}`);
         const btn = document.getElementById(`btn-${id}`);
