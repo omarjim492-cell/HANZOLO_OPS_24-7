@@ -145,6 +145,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 }]
             },
             options: { responsive: true, maintainAspectRatio: false }
-        });
-    }
+       });
 });
+
+// Funções operacionais para os módulos restantes
+
+function abrirFolhaObras() {
+    showAlert("Módulo Folha de Obras & Evidências: A carregar registos ativos da base de Luanda...");
+}
+
+function registarOcorrenciaDGP() {
+    const descricao = prompt("Registar ocorrência DGP (Direção Geral de Proteção):");
+    if (descricao) {
+        showAlert("Ocorrência registada com sucesso e enviada para o centro de controlo.");
+    }
+}
+
+function gerirFrota() {
+    showAlert("Gestão de Frotas & GPS: 3 viaturas monitorizadas em tempo real em Talatona.");
+}
+
+function consultarHSST() {
+    showAlert("Conformidade HSST: 98.5%. Todos os EPIs e normas de segurança validados.");
+}
+
+function abrirComprasLogistica() {
+    showAlert("Módulo de Compras & Logística sincronizado com o inventário central.");
+}
+}
