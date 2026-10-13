@@ -685,5 +685,35 @@
             }
         });
     </script>
+    <script type="module">
+  // Importar o Firebase SDK (versão compatível com CDN web)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // Configuração do Firebase do seu projeto HANZOLO
+  const firebaseConfig = {
+    // Insira aqui os dados do seu projeto Firebase (se já não estiverem configurados acima)
+    projectId: "hanzolo-ops-247"
+  };
+
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Exemplo: Função para guardar uma Folha de Obra ou Stock no Firebase
+  window.registarNoFirebase = async function(colecao, dados) {
+    try {
+      const docRef = await addDoc(collection(db, colecao), {
+        ...dados,
+        criadoEm: new Date()
+      });
+      console.log("Documento gravado com ID: ", docRef.id);
+      alert("Registo guardado com sucesso na nuvem!");
+    } catch (e) {
+      console.error("Erro ao adicionar documento: ", e);
+      alert("Erro ao guardar dados.");
+    }
+  };
+</script>
 </body>
 </html>
