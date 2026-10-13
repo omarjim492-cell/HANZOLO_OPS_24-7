@@ -34,8 +34,69 @@ function toggleNotifications() {
     alert("Notificações Hanzolo: 3 alertas operacionais recentes em Luanda.");
 }
 
-// Inicialização dos Gráficos com Chart.js
+// Função robusta para extrair/descarregar relatório em PC e Telemóvel
+function extrairRelatorioExecutivo() {
+    const dataAtual = new Date().toISOString().split('T')[0];
+    const conteudoRelatorio = `========================================
+HANZOLO OPS 24-7 - RELATÓRIO EXECUTIVO
+Data: ${dataAtual}
+Localização: Talatona & Luanda, Angola
+
+1. RESUMO OPERACIONAL:
+- Frota Ativa: 3 Viaturas operacionais
+- Auditorias GCQ: 100% de conformidade
+- Colaboradores em Serviço: 42
+- Conformidade HSST: 98.5%
+
+2. MÉTRICAS DIÁRIAS (SETORES):
+- Setor A: 85% Eficiência
+- Setor B: 92% Eficiência
+- Setor C: 78% Eficiência
+- Setor D: 96% Eficiência
+
+3. DISTRIBUIÇÃO DE SISTEMAS (CCTV / REDES):
+- CCTV: 45%
+- Redes: 25%
+- Alarmes: 20%
+- Outros: 10%
+
+Status do Sistema: Operacional e Sincronizado.
+Documento gerado automaticamente pelo Hanzolo Ops 24-7.
+`;
+
+    const blob = new Blob([conteudoRelatorio], { type: 'text/plain;charset=utf-8' });
+    const nomeFicheiro = `Hanzolo_Relatorio_Executivo_${dataAtual}.txt`;
+
+    // Verifica se suporta partilha nativa (ideal para telemóveis)
+    if (navigator.canShare && navigator.canShare({ files: [new File([blob], nomeFicheiro, { type: 'text/plain' })] })) {
+        const file = new File([blob], nomeFicheiro, { type: 'text/plain' });
+        navigator.share({
+            title: 'Relatório Executivo Hanzolo',
+            text: 'Segue em anexo o relatório executivo operacional da Hanzolo Ops 24-7.',
+            files: [file]
+        }).catch(error => console.log('Erro ao partilhar:', error));
+    } else {
+        // Download direto para Computadores / PC
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = nomeFicheiro;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+}
+
+// Inicialização dos Gráficos e Eventos ao carregar a página
 document.addEventListener('DOMContentLoaded', function() {
+    // Atribuir a função de relatório a qualquer botão que tenha "Relatório" ou "Extrair" no texto
+    document.querySelectorAll('button').forEach(btn => {
+        if (btn.innerText.includes('Relatório') || btn.innerText.includes('Extrair')) {
+            btn.onclick = extrairRelatorioExecutivo;
+        }
+    });
+
     const ctxLinhas = document.getElementById('graficoLinhas');
     if (ctxLinhas) {
         new Chart(ctxLinhas, {
