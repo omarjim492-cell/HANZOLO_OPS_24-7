@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HANZOLO, ops 24-7 | Plataforma de Gestão de Operações</title>
-    <!-- Tailwind CSS (Framework CSS Modular) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,11 +18,10 @@
             }
         }
     </script>
-    <!-- FontAwesome para Ícones -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js (Lógica de Gráficos em JavaScript) -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Estilos CSS Personalizados para Impressão e PDF -->
     <style>
         @media print {
             body { background: white !important; color: black !important; }
@@ -41,7 +40,7 @@
             <div>
                 <div class="flex items-center space-x-2">
                     <h1 class="text-base font-extrabold tracking-wide uppercase text-white">HANZOLO, ops 24-7</h1>
-                    <span class="bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px] px-2 py-0.5 rounded font-mono">ENTERPRISE v3.5</span>
+                    <span class="bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px] px-2 py-0.5 rounded font-mono">ENTERPRISE v3.6</span>
                 </div>
                 <p class="text-xs text-gray-400">Tecnologia, Sistemas & Segurança LDA — Base Talatona, Luanda</p>
             </div>
@@ -50,7 +49,7 @@
         <div class="flex items-center space-x-3">
             <div class="hidden lg:flex items-center space-x-2 bg-gray-950 px-3 py-1.5 rounded-lg border border-gray-800 text-xs">
                 <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
-                <span class="text-gray-300 font-medium">HTML/CSS/JS: <strong class="text-emerald-400">Ativo</strong></span>
+                <span class="text-gray-300 font-medium">Stack (HTML/CSS/JS): <strong class="text-emerald-400">Ativo</strong></span>
             </div>
             
             <!-- Menu Dropdown de Exportação Global -->
@@ -294,7 +293,7 @@
                 </div>
             </div>
 
-            <!-- 5. DL (Departamento Lógico) - NOVO MODULO -->
+            <!-- 5. DL (Departamento Lógico) -->
             <div id="tab-dl" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Departamento Lógico (DL)</h2>
@@ -440,7 +439,7 @@
         </main>
     </div>
 
-    <!-- Script de Gestão Executiva e Exportação (JavaScript) -->
+    <!-- Script de Gestão Executiva e Exportação -->
     <script>
         let currentActiveTab = 'visao-geral';
 
@@ -467,14 +466,12 @@
             menu.classList.toggle('hidden');
         }
 
-        // Fechar dropdown ao clicar fora
         window.addEventListener('click', function(e) {
             if (!e.target.closest('button[onclick="toggleExportMenu()"]') && !e.target.closest('#export-dropdown')) {
                 document.getElementById('export-dropdown').classList.add('hidden');
             }
         });
 
-        // Motor Real de Exportação
         function exportarRelatorio(formato) {
             toggleExportMenu();
             const tabNome = currentActiveTab.toUpperCase();
@@ -521,14 +518,12 @@
             alert('Central de Alertas Hanzolo: Nenhum incidente crítico reportado nas últimas 24 horas.');
         }
 
-        // Relógio Dinâmico
         setInterval(() => {
             const now = new Date();
             const clockEl = document.getElementById('live-clock');
             if(clockEl) clockEl.innerText = now.toLocaleTimeString();
         }, 1000);
 
-        // Inicialização de Gráficos Chart.js
         window.addEventListener('DOMContentLoaded', () => {
             try {
                 const ctxLinhas = document.getElementById('graficoLinhas');
