@@ -30,19 +30,19 @@
                 <span class="w-2 h-2 mr-2 bg-emerald-500 rounded-full animate-pulse"></span>
                 Sistema & GPS Ativos (Luanda)
             </span>
-            <button onclick="alert('Sem novas notificações pendentes.')" class="relative p-2 bg-gray-800 hover:bg-gray-700 rounded-full text-gray-300 transition-colors">
+            <button onclick="alert('Sem notificações críticas pendentes.')" class="relative p-2 bg-gray-800 hover:bg-gray-700 rounded-full text-gray-300 transition-colors">
                 <i class="fas fa-bell"></i>
                 <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
         </div>
     </header>
 
-    <!-- Corpo Principal com Menu Lateral e Área de Conteúdo -->
+    <!-- Corpo Principal -->
     <div class="flex flex-1 overflow-hidden">
         
-        <!-- Menu Lateral (Sidebar) -->
+        <!-- Menu Lateral -->
         <aside class="w-64 bg-gray-900/90 border-r border-gray-800 p-4 space-y-1 overflow-y-auto hidden md:block">
-            <button id="btn-visao-geral" onclick="switchTab('visao-geral')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium bg-cyan-600 text-white shadow-lg shadow-cyan-600/20 transition-all">
+            <button id="btn-visao-geral" onclick="switchTab('visao-geral')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium bg-cyan-600 text-white shadow-lg transition-all">
                 <i class="fas fa-chart-pie w-5"></i><span>Visão geral</span>
             </button>
             <button id="btn-folha-obras" onclick="switchTab('folha-obras')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
@@ -74,22 +74,21 @@
             </button>
         </aside>
 
-        <!-- Área de Conteúdo Dinâmico -->
+        <!-- Conteúdo Dinâmico -->
         <main class="flex-1 p-6 overflow-y-auto bg-gray-950">
             
-            <!-- Tab: Visão Geral -->
+            <!-- Visão Geral -->
             <div id="tab-visao-geral" class="tab-content space-y-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h2 class="text-2xl font-bold">Painel Geral & Operações Hanzolo</h2>
                         <p class="text-sm text-gray-400">Monitorização unificada em tempo real (Base Talatona & Luanda)</p>
                     </div>
-                    <button onclick="alert('Relatório executivo gerado com sucesso para a base de Luanda.')" class="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg font-medium shadow-lg shadow-cyan-600/20 flex items-center justify-center transition-all">
+                    <button onclick="alert('Relatório executivo gerado com sucesso.')" class="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg font-medium shadow-lg flex items-center justify-center transition-all">
                         <i class="fas fa-file-download mr-2"></i> Extrair Relatório Executivo
                     </button>
                 </div>
 
-                <!-- Cards de Métricas -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md">
                         <p class="text-xs text-gray-400 font-semibold uppercase">Frota Ativa</p>
@@ -108,7 +107,7 @@
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md">
                         <p class="text-xs text-gray-400 font-semibold uppercase">Colaboradores</p>
                         <div class="flex items-center justify-between mt-2">
-                            <h3 class="text-2xl font-extrabold text-blue-400">42</h3>
+                            <h3 class="text-2xl font-extrabold text-blue-400">42 Efetivos</h3>
                             <i class="fas fa-users text-blue-600 text-2xl"></i>
                         </div>
                     </div>
@@ -121,92 +120,198 @@
                     </div>
                 </div>
 
-                <!-- Gráficos -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md lg:col-span-1">
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md">
                         <h3 class="text-sm font-bold text-gray-300 mb-4">Leituras de Linhas Operacionais</h3>
-                        <div class="h-64 relative"><canvas id="graficoLinhas"></canvas></div>
+                        <div class="h-64"><canvas id="graficoLinhas"></canvas></div>
                     </div>
-                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md lg:col-span-1">
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md">
                         <h3 class="text-sm font-bold text-gray-300 mb-4">Variação Diária</h3>
-                        <div class="h-64 relative"><canvas id="graficoVelasFinas"></canvas></div>
+                        <div class="h-64"><canvas id="graficoVelasFinas"></canvas></div>
                     </div>
-                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md lg:col-span-1">
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md">
                         <h3 class="text-sm font-bold text-gray-300 mb-4">Leituras Circulares (Sistemas)</h3>
-                        <div class="h-64 relative"><canvas id="graficoCircular"></canvas></div>
+                        <div class="h-64"><canvas id="graficoCircular"></canvas></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Abas Adicionais -->
-            <div id="tab-folha-obras" class="tab-content hidden space-y-4">
-                <h2 class="text-2xl font-bold">Folha de Obras & Evidências</h2>
-                <p class="text-gray-400">Registo diário de intervenções técnicas na província de Luanda.</p>
+            <!-- Folha de Obras & Evidências -->
+            <div id="tab-folha-obras" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">Folha de Obras & Evidências Técnicas</h2>
+                    <button onclick="alert('Formulário de Nova Intervenção Aberto!')" class="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg text-sm"><i class="fas fa-plus mr-2"></i>Nova Intervenção</button>
+                </div>
+                <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-gray-800 text-gray-400 uppercase text-xs">
+                            <tr>
+                                <th class="p-3">ID / Data</th>
+                                <th class="p-3">Cliente / Local</th>
+                                <th class="p-3">Tipo de Serviço</th>
+                                <th class="p-3">Técnico Responsável</th>
+                                <th class="p-3">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800">
+                            <tr>
+                                <td class="p-3 font-semibold text-cyan-400">#OBR-2024-089</td>
+                                <td class="p-3">Banco BAI - Talatona</td>
+                                <td class="p-3">Manutenção de Alarme & CFTV</td>
+                                <td class="p-3">Mateus Silva</td>
+                                <td class="p-3"><span class="bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-1 rounded-full text-xs">Concluído</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-cyan-400">#OBR-2024-090</td>
+                                <td class="p-3">Condomínio Marbelo - Luanda Sul</td>
+                                <td class="p-3">Instalação de Cerca Elétrica</td>
+                                <td class="p-3">António Banza</td>
+                                <td class="p-3"><span class="bg-amber-950 text-amber-400 border border-amber-800 px-2 py-1 rounded-full text-xs">Em Progresso</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div id="tab-dgp" class="tab-content hidden space-y-4">
+
+            <!-- DGP -->
+            <div id="tab-dgp" class="tab-content hidden space-y-6">
                 <h2 class="text-2xl font-bold">Direção Geral de Proteção (DGP)</h2>
-                <p class="text-gray-400">Controlo de postos de segurança e rondas efetuadas.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+                        <h4 class="text-xs font-semibold text-gray-400 uppercase">Postos Ativos</h4>
+                        <p class="text-3xl font-extrabold text-cyan-400 mt-2">18 Postos</p>
+                    </div>
+                    <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+                        <h4 class="text-xs font-semibold text-gray-400 uppercase">Rondas Efetuadas (Hoje)</h4>
+                        <p class="text-3xl font-extrabold text-emerald-400 mt-2">142 Rondas</p>
+                    </div>
+                    <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+                        <h4 class="text-xs font-semibold text-gray-400 uppercase">Ocorrências</h4>
+                        <p class="text-3xl font-extrabold text-amber-400 mt-2">0 Críticas</p>
+                    </div>
+                </div>
             </div>
-            <div id="tab-se" class="tab-content hidden space-y-4">
+
+            <!-- Segurança Eletrónica -->
+            <div id="tab-se" class="tab-content hidden space-y-6">
                 <h2 class="text-2xl font-bold">Segurança Eletrónica (SE)</h2>
-                <p class="text-gray-400">Monitorização de centrais de alarme e CCTV remoto.</p>
+                <p class="text-gray-400">Estado de Monitorização e Centrais de Alarme (CCTV & Sensores)</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex items-center justify-between">
+                        <div>
+                            <p class="font-bold">Central Central de Alarme Talatona</p>
+                            <p class="text-xs text-gray-400">32 Câmeras operacionais • Latência 12ms</p>
+                        </div>
+                        <span class="bg-emerald-950 text-emerald-400 border border-emerald-800 px-3 py-1 rounded-full text-xs">ONLINE</span>
+                    </div>
+                    <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex items-center justify-between">
+                        <div>
+                            <p class="font-bold">Central Base Operacional Viana</p>
+                            <p class="text-xs text-gray-400">16 Câmeras operacionais • Latência 18ms</p>
+                        </div>
+                        <span class="bg-emerald-950 text-emerald-400 border border-emerald-800 px-3 py-1 rounded-full text-xs">ONLINE</span>
+                    </div>
+                </div>
             </div>
-            <div id="tab-rh" class="tab-content hidden space-y-4">
-                <h2 class="text-2xl font-bold">Recursos Humanos & Cadastro</h2>
-                <p class="text-gray-400">Gestão de efetivos operacionais e escalas de serviço.</p>
+
+            <!-- RH -->
+            <div id="tab-rh" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-bold">RH & Cadastro de Colaboradores</h2>
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-gray-200">Quadro de Efetivos Operacionais</h3>
+                        <span class="text-xs bg-cyan-950 text-cyan-400 border border-cyan-800 px-3 py-1 rounded-full">Total: 42 Operacionais</span>
+                    </div>
+                    <ul class="divide-y divide-gray-800 text-sm">
+                        <li class="py-3 flex justify-between"><span>João Manuel Pedro</span><span class="text-gray-400">Supervisão de Turno (Talatona)</span></li>
+                        <li class="py-3 flex justify-between"><span>Carlos Eduardo Benguela</span><span class="text-gray-400">Técnico de Segurança Eletrónica</span></li>
+                        <li class="py-3 flex justify-between"><span>Mário André Santos</span><span class="text-gray-400">Operador de Telemetria GPS</span></li>
+                    </ul>
+                </div>
             </div>
-            <div id="tab-frotas" class="tab-content hidden space-y-4">
-                <h2 class="text-2xl font-bold">Gestão de Frotas & GPS</h2>
-                <p class="text-gray-400">Telemetria e localização de viaturas operacionais.</p>
+
+            <!-- Frotas -->
+            <div id="tab-frotas" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-bold">Gestão de Frotas & GPS (Luanda)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+                        <p class="font-bold text-cyan-400">Viatura Hanzolo - 01</p>
+                        <p class="text-xs text-gray-400">Toyota Hilux • Matrícula LD-88-21-GX</p>
+                        <p class="text-xs text-emerald-400 mt-2"><i class="fas fa-location-dot mr-1"></i> Em Movimento: Talatona - Via S8</p>
+                    </div>
+                    <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+                        <p class="font-bold text-cyan-400">Viatura Hanzolo - 02</p>
+                        <p class="text-xs text-gray-400">Nissan Hardbody • Matrícula LD-12-44-HY</p>
+                        <p class="text-xs text-emerald-400 mt-2"><i class="fas fa-location-dot mr-1"></i> Parado: Base Talatona</p>
+                    </div>
+                    <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+                        <p class="font-bold text-cyan-400">Viatura Hanzolo - 03</p>
+                        <p class="text-xs text-gray-400">Suzuki Jimny • Matrícula LD-55-90-ET</p>
+                        <p class="text-xs text-emerald-400 mt-2"><i class="fas fa-location-dot mr-1"></i> Em Ronda: Central Viana</p>
+                    </div>
+                </div>
             </div>
-            <div id="tab-gcq" class="tab-content hidden space-y-4">
+
+            <!-- GCQ -->
+            <div id="tab-gcq" class="tab-content hidden space-y-6">
                 <h2 class="text-2xl font-bold">Garantia e Controlo de Qualidade (GCQ)</h2>
-                <p class="text-gray-400">Auditorias internas e conformidade de processos.</p>
+                <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl space-y-3">
+                    <p class="font-bold text-emerald-400"><i class="fas fa-check-circle mr-2"></i>Auditoria Mensal Concluída</p>
+                    <p class="text-sm text-gray-300">Todas as rotinas operacionais de resposta rápida em Luanda cumpriram com os padrões de conformidade 100% ISO-9001 internos.</p>
+                </div>
             </div>
-            <div id="tab-hsst" class="tab-content hidden space-y-4">
+
+            <!-- HSST -->
+            <div id="tab-hsst" class="tab-content hidden space-y-6">
                 <h2 class="text-2xl font-bold">Higiene, Saúde e Segurança no Trabalho (HSST)</h2>
-                <p class="text-gray-400">Registo de incidentes e distribuição de EPIs.</p>
+                <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl space-y-3">
+                    <p class="font-bold text-amber-400"><i class="fas fa-shield-virus mr-2"></i>Relatório de EPIs & Prevenção</p>
+                    <p class="text-sm text-gray-300">0 Incidentes de Trabalho registados nos últimos 120 dias. Inspeção diária de fardamento e EPIs ativa na entrada dos turnos.</p>
+                </div>
             </div>
-            <div id="tab-compras" class="tab-content hidden space-y-4">
-                <h2 class="text-2xl font-bold">Compras</h2>
-                <p class="text-gray-400">Gestão de stocks e requisições.</p>
+
+            <!-- Compras -->
+            <div id="tab-compras" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-bold">Compras & Requisições</h2>
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+                    <p class="font-bold">Requisição REQ-9012 - Cabos de Fibra & Sensores Infravermelhos</p>
+                    <p class="text-xs text-gray-400 mt-1">Aprovação pendente pelo Departamento Financeiro</p>
+                </div>
             </div>
-            <div id="tab-logistica" class="tab-content hidden space-y-4">
-                <h2 class="text-2xl font-bold">Logística</h2>
-                <p class="text-gray-400">Cadeia de abastecimento e armazém.</p>
+
+            <!-- Logística -->
+            <div id="tab-logistica" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-bold">Logística & Gestão de Stock</h2>
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+                    <p class="font-bold">Armazém Central Talatona</p>
+                    <p class="text-xs text-gray-400 mt-1">45 Câmeras Dome em stock • 120m Cabo Coaxial • 8 DBRs 16 Canais</p>
+                </div>
             </div>
+
         </main>
     </div>
 
-    <!-- Script de Controle de Abas e Gráficos -->
+    <!-- Script de Controle e Gráficos -->
     <script>
         function switchTab(tabId) {
-            // Esconde todos os conteúdos
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.add('hidden');
-            });
-
-            // Restaura o estilo padrão de todos os botões do menu
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-cyan-600', 'text-white', 'shadow-lg', 'shadow-cyan-600/20');
+                btn.classList.remove('bg-cyan-600', 'text-white', 'shadow-lg');
                 btn.classList.add('text-gray-400', 'hover:text-gray-200', 'hover:bg-white/5');
             });
 
-            // Mostra a aba selecionada
-            const targetTab = document.getElementById('tab- ' + tabId) || document.getElementById('tab-' + tabId);
+            const targetTab = document.getElementById('tab-' + tabId);
             if (targetTab) {
                 targetTab.classList.remove('hidden');
             }
 
-            // Destaca o botão ativo no menu
             const targetBtn = document.getElementById('btn-' + tabId);
             if (targetBtn) {
                 targetBtn.classList.remove('text-gray-400', 'hover:text-gray-200', 'hover:bg-white/5');
-                targetBtn.classList.add('bg-cyan-600', 'text-white', 'shadow-lg', 'shadow-cyan-600/20');
+                targetBtn.classList.add('bg-cyan-600', 'text-white', 'shadow-lg');
             }
         }
 
-        // Inicializar Gráficos Chart.js em segurança
         window.addEventListener('DOMContentLoaded', () => {
             try {
                 const ctxLinhas = document.getElementById('graficoLinhas');
@@ -259,7 +364,7 @@
                     });
                 }
             } catch (e) {
-                console.error("Erro ao carregar gráficos:", e);
+                console.error("Erro ao carregar os gráficos:", e);
             }
         });
     </script>
