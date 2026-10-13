@@ -336,33 +336,62 @@
             </div>
 
             <!-- 6. RH & Cadastro Operacional -->
-            <div id="tab-rh" class="tab-content hidden space-y-6">
-                <div class="border-b border-gray-900 pb-4">
-                    <h2 class="text-xl font-bold tracking-tight text-white">RH & Cadastro Operacional</h2>
-                    <p class="text-xs text-gray-400">Gestão de efectivos, escalas de serviço e registo de pessoal técnico.</p>
-                </div>
-                <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-bold text-xs text-gray-200">Efetivos Ativos em Escala (Luanda)</h3>
-                        <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded">Total: 42 Operacionais</span>
-                    </div>
-                    <ul class="divide-y divide-gray-800 text-xs">
-                        <li class="py-2.5 flex justify-between items-center">
-                            <span class="font-medium text-white">João Manuel Pedro</span>
-                            <span class="text-gray-400 bg-gray-950 px-2 py-1 rounded">Supervisor de Turno (Talatona)</span>
-                        </li>
-                        <li class="py-2.5 flex justify-between items-center">
-                            <span class="font-medium text-white">Carlos Eduardo Benguela</span>
-                            <span class="text-gray-400 bg-gray-950 px-2 py-1 rounded">Técnico Especialista DSE</span>
-                        </li>
-                        <li class="py-2.5 flex justify-between items-center">
-                            <span class="font-medium text-white">Mário André Santos</span>
-                            <span class="text-gray-400 bg-gray-950 px-2 py-1 rounded">Operador de Telemetria GPS</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+<div id="tab-rh" class="tab-content hidden space-y-6">
+    <div class="flex justify-between items-center border-b border-gray-900 pb-4">
+        <div>
+            <h2 class="text-xl font-bold tracking-tight text-white">RH & Cadastro Operacional</h2>
+            <p class="text-xs text-gray-400">Gestão de efectivos, escalas de serviço e registo de pessoal técnico Hanzolo.</p>
+        </div>
+        <button onclick="abrirModalColaborador()" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition flex items-center space-x-2 shadow-md">
+            <i class="fas fa-user-plus"></i><span>Novo Colaborador</span>
+        </button>
+    </div>
 
+    <!-- Lista de Colaboradores Cadastrados -->
+    <div class="bg-gray-900 border border-gray-800/80 rounded-xl overflow-hidden shadow-md">
+        <div class="p-4 border-b border-gray-800 flex justify-between items-center">
+            <h3 class="font-bold text-xs text-gray-200 uppercase tracking-wider">Efetivos Ativos e Registados</h3>
+            <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded font-mono" id="total-colaboradores">Total: 3 Registados</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-300">
+                <thead class="bg-gray-800 text-gray-400 uppercase text-[10px]">
+                    <tr>
+                        <th class="p-3">Foto</th>
+                        <th class="p-3">Nome Completo</th>
+                        <th class="p-3">E-mail Corporativo</th>
+                        <th class="p-3">NIF</th>
+                        <th class="p-3">Cargo / Função</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-colaboradores-corpo" class="divide-y divide-gray-800">
+                    <tr>
+                        <td class="p-3">
+                            <div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
+                                <i class="fas fa-user text-gray-400 text-xs"></i>
+                            </div>
+                        </td>
+                        <td class="p-3 font-medium text-white">João Manuel Pedro</td>
+                        <td class="p-3 text-cyan-400">joao.pedro@hanzolo.com</td>
+                        <td class="p-3 font-mono">123456789LA042</td>
+                        <td class="p-3 text-gray-400">Supervisor de Turno (Talatona)</td>
+                    </tr>
+                    <tr>
+                        <td class="p-3">
+                            <div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
+                                <i class="fas fa-user text-gray-400 text-xs"></i>
+                            </div>
+                        </td>
+                        <td class="p-3 font-medium text-white">Carlos Eduardo Benguela</td>
+                        <td class="p-3 text-cyan-400">carlos.benguela@hanzolo.com</td>
+                        <td class="p-3 font-mono">987654321LA019</td>
+                        <td class="p-3 text-gray-400">Técnico Especialista DSE</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
             <!-- 7. Gestão de Frotas & GPS -->
             <div id="tab-frotas" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
