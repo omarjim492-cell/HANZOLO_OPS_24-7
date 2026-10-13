@@ -622,17 +622,19 @@
             showAlert("Notificações:\n- Vistoria CCTV Banco Sol agendada para 2ª feira.\n- 3 Relatórios de Obras pendentes de aprovação pelo DGP.\n- Manutenção preventiva da Hilux #01 agendada.");
         }
 
-        // Gráfico de Linhas
-        new Chart(document.getElementById('graficoLinhas').getContext('2d'), {
+        document.addEventListener("DOMContentLoaded", function () {
+    // Inicializar Gráfico de Linhas
+    const ctxLinhas = document.getElementById('graficoLinhas');
+    if (ctxLinhas) {
+        new Chart(ctxLinhas.getContext('2d'), {
             type: 'line',
             data: {
                 labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
                 datasets: [{
-                    label: 'Operações Ativas',
-                    data: [18, 24, 21, 26, 22, 15, 12],
+                    label: 'Operações Luanda',
+                    data: [12, 19, 3, 5, 2, 3, 15],
                     borderColor: '#00b4d8',
-                    backgroundColor: 'rgba(0, 180, 216, 0.15)',
-                    borderWidth: 2.5,
+                    backgroundColor: 'rgba(0, 180, 216, 0.1)',
                     fill: true,
                     tension: 0.4
                 }]
@@ -642,23 +644,25 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    x: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#9ca3af', font: { size: 10 } } },
-                    y: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#9ca3af', font: { size: 10 } } }
+                    x: { ticks: { color: '#9ca3af', font: { size: 10 } }, grid: { color: '#1f293d' } },
+                    y: { ticks: { color: '#9ca3af', font: { size: 10 } }, grid: { color: '#1f293d' } }
                 }
             }
         });
+    }
 
-        // Gráfico de Velas Finas
-        new Chart(document.getElementById('graficoVelasFinas').getContext('2d'), {
+    // Inicializar Gráfico de Velas / Barras Finas
+    const ctxVelas = document.getElementById('graficoVelasFinas');
+    if (ctxVelas) {
+        new Chart(ctxVelas.getContext('2d'), {
             type: 'bar',
             data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
+                labels: ['P1', 'P2', 'P3', 'P4', 'P5'],
                 datasets: [{
-                    label: 'Variação de Desempenho',
-                    data: [65, 59, 80, 81, 56, 55, 40, 72, 85, 92],
+                    label: 'Eficiência Diária',
+                    data: [85, 92, 78, 95, 90],
                     backgroundColor: '#10b981',
-                    borderRadius: 2,
-                    barThickness: 4
+                    borderRadius: 4
                 }]
             },
             options: {
@@ -666,29 +670,35 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
-                    y: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#9ca3af', font: { size: 10 } } }
+                    x: { ticks: { color: '#9ca3af', font: { size: 10 } }, grid: { display: false } },
+                    y: { ticks: { color: '#9ca3af', font: { size: 10 } }, grid: { color: '#1f293d' } }
                 }
             }
         });
+    }
 
-        // Gráfico Circular
-        new Chart(document.getElementById('graficoCircular').getContext('2d'), {
+    // Inicializar Gráfico Circular
+    const ctxCircular = document.getElementById('graficoCircular');
+    if (ctxCircular) {
+        new Chart(ctxCircular.getContext('2d'), {
             type: 'doughnut',
             data: {
-                labels: ['SE', 'Técnicos', 'Logística', 'RH'],
+                labels: ['Talatona', 'Viana', 'Kilamba', 'Centro'],
                 datasets: [{
                     data: [40, 25, 20, 15],
-                    backgroundColor: ['#00b4d8', '#10b981', '#f59e0b', '#8b5cf6'],
-                    borderWidth: 0
+                    backgroundColor: ['#00b4d8', '#10b981', '#f59e0b', '#6366f1']
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', boxWidth: 10, font: { size: 10 } } } }
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#9ca3af', font: { size: 10 } } }
+                }
             }
         });
+    }
+});
     </script>
     <script type="module">
   // Importar o Firebase SDK (versão compatível com CDN web)
