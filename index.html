@@ -264,7 +264,7 @@
 
             <!-- TAB 3: DGP -->
             <div id="tab-dgp" class="space-y-6 hidden">
-                <div><h2 class="text-xl font-bold text-white">DGP - Direção Geral & Planeamento</h2><p class="text-xs text-gray-400">Estratégia corporativa, orçamentos e metas globais</p></div>
+                <div><h2 class="text-xl font-bold text-white">DGP - Departamento de Gestão de Projectos</h2><p class="text-xs text-gray-400">Estratégia corporativa, Gestão de leyalt e cronogramas, orçamentos e metas globais</p></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Orçamento Executado (Q4)</p><h3 class="text-2xl font-bold text-emerald-400 mt-1">78.4%</h3><p class="text-[11px] text-gray-400 mt-1">Meta trimestral em cumprimento</p></div>
                     <div class="glass-card p-5 rounded-2xl border border-borderDark"><p class="text-xs text-gray-400 uppercase font-semibold">Projetos Ativos</p><h3 class="text-2xl font-bold text-white mt-1">14</h3><p class="text-[11px] text-gray-400 mt-1">Luanda e Províncias</p></div>
@@ -714,6 +714,18 @@
       alert("Erro ao guardar dados.");
     }
   };
+    // Função para testar o envio de dados ao clicar num botão
+window.salvarNovaObraTeste = function() {
+  const dadosObra = {
+    cliente: "Cliente Teste Luanda",
+    tecnico: "Técnico HANZOLO",
+    tipoServico: "Manutenção CCTV",
+    status: "Em Andamento"
+  };
+
+  // Chama a gravação no Firebase
+  window.registarNoFirebase("folhas_obra", dadosObra);
+};
 </script>
 </body>
 </html>
