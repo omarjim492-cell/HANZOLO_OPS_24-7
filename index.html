@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HANZOLO, ops 24-7 - Plataforma Operacional</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js para Gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans antialiased min-h-screen flex flex-col">
 
+    <!-- Topo / Header -->
     <header class="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between shadow-md">
         <div class="flex items-center space-x-4">
             <div class="bg-cyan-600 p-2 rounded-lg text-white font-bold text-xl shadow-lg shadow-cyan-600/30">
@@ -20,61 +24,72 @@
                 <p class="text-xs text-gray-400">Tecnologia Sistemas & Segurança LDA — Luanda</p>
             </div>
         </div>
+        
         <div class="flex items-center space-x-4">
             <span class="hidden md:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-950 text-emerald-400 border border-emerald-800">
                 <span class="w-2 h-2 mr-2 bg-emerald-500 rounded-full animate-pulse"></span>
                 Sistema & GPS Ativos (Luanda)
             </span>
+            <button onclick="alert('Sem novas notificações pendentes.')" class="relative p-2 bg-gray-800 hover:bg-gray-700 rounded-full text-gray-300 transition-colors">
+                <i class="fas fa-bell"></i>
+                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
         </div>
     </header>
 
+    <!-- Corpo Principal com Menu Lateral e Área de Conteúdo -->
     <div class="flex flex-1 overflow-hidden">
+        
+        <!-- Menu Lateral (Sidebar) -->
         <aside class="w-64 bg-gray-900/90 border-r border-gray-800 p-4 space-y-1 overflow-y-auto hidden md:block">
-            <button onclick="switchTab('visao-geral')" id="btn-visao-geral" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium bg-cyan-600 text-white shadow-lg shadow-cyan-600/20 transition-all">
+            <button id="btn-visao-geral" onclick="switchTab('visao-geral')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium bg-cyan-600 text-white shadow-lg shadow-cyan-600/20 transition-all">
                 <i class="fas fa-chart-pie w-5"></i><span>Visão geral</span>
             </button>
-            <button onclick="switchTab('folha-obras')" id="btn-folha-obras" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <button id="btn-folha-obras" onclick="switchTab('folha-obras')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                 <i class="fas fa-file-alt w-5"></i><span>Folha de Obras & Evidências</span>
             </button>
-            <button onclick="switchTab('dgp')" id="btn-dgp" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <button id="btn-dgp" onclick="switchTab('dgp')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                 <i class="fas fa-building w-5"></i><span>DGP</span>
             </button>
-            <button onclick="switchTab('se')" id="btn-se" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <button id="btn-se" onclick="switchTab('se')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                 <i class="fas fa-video w-5"></i><span>SE (Segurança Eletrónica)</span>
             </button>
-            <button onclick="switchTab('rh')" id="btn-rh" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <button id="btn-rh" onclick="switchTab('rh')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                 <i class="fas fa-users w-5"></i><span>RH & Cadastro</span>
             </button>
-            <button onclick="switchTab('frotas')" id="btn-frotas" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <button id="btn-frotas" onclick="switchTab('frotas')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                 <i class="fas fa-truck w-5"></i><span>Gestão de Frotas & GPS</span>
             </button>
-            <button onclick="switchTab('gcq')" id="btn-gcq" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <button id="btn-gcq" onclick="switchTab('gcq')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                 <i class="fas fa-shield-alt w-5"></i><span>GCQ (Qualidade)</span>
             </button>
-            <button onclick="switchTab('hsst')" id="btn-hsst" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <button id="btn-hsst" onclick="switchTab('hsst')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                 <i class="fas fa-hard-hat w-5"></i><span>HSST</span>
             </button>
-            <button onclick="switchTab('compras')" id="btn-compras" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <button id="btn-compras" onclick="switchTab('compras')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                 <i class="fas fa-shopping-cart w-5"></i><span>COMPRAS</span>
             </button>
-            <button onclick="switchTab('logistica')" id="btn-logistica" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <button id="btn-logistica" onclick="switchTab('logistica')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all">
                 <i class="fas fa-boxes w-5"></i><span>Logística</span>
             </button>
         </aside>
 
+        <!-- Área de Conteúdo Dinâmico -->
         <main class="flex-1 p-6 overflow-y-auto bg-gray-950">
-            <!-- Visão Geral -->
+            
+            <!-- Tab: Visão Geral -->
             <div id="tab-visao-geral" class="tab-content space-y-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h2 class="text-2xl font-bold">Painel Geral & Operações Hanzolo</h2>
                         <p class="text-sm text-gray-400">Monitorização unificada em tempo real (Base Talatona & Luanda)</p>
                     </div>
-                    <button onclick="alert('Relatório executivo gerado com sucesso!')" class="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg font-medium shadow-lg shadow-cyan-600/20 flex items-center justify-center transition-all">
+                    <button onclick="alert('Relatório executivo gerado com sucesso para a base de Luanda.')" class="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg font-medium shadow-lg shadow-cyan-600/20 flex items-center justify-center transition-all">
                         <i class="fas fa-file-download mr-2"></i> Extrair Relatório Executivo
                     </button>
                 </div>
 
+                <!-- Cards de Métricas -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md">
                         <p class="text-xs text-gray-400 font-semibold uppercase">Frota Ativa</p>
@@ -106,23 +121,24 @@
                     </div>
                 </div>
 
+                <!-- Gráficos -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md">
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md lg:col-span-1">
                         <h3 class="text-sm font-bold text-gray-300 mb-4">Leituras de Linhas Operacionais</h3>
-                        <div class="h-64"><canvas id="graficoLinhas"></canvas></div>
+                        <div class="h-64 relative"><canvas id="graficoLinhas"></canvas></div>
                     </div>
-                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md">
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md lg:col-span-1">
                         <h3 class="text-sm font-bold text-gray-300 mb-4">Variação Diária</h3>
-                        <div class="h-64"><canvas id="graficoVelasFinas"></canvas></div>
+                        <div class="h-64 relative"><canvas id="graficoVelasFinas"></canvas></div>
                     </div>
-                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md">
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md lg:col-span-1">
                         <h3 class="text-sm font-bold text-gray-300 mb-4">Leituras Circulares (Sistemas)</h3>
-                        <div class="h-64"><canvas id="graficoCircular"></canvas></div>
+                        <div class="h-64 relative"><canvas id="graficoCircular"></canvas></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Outras Abas -->
+            <!-- Abas Adicionais -->
             <div id="tab-folha-obras" class="tab-content hidden space-y-4">
                 <h2 class="text-2xl font-bold">Folha de Obras & Evidências</h2>
                 <p class="text-gray-400">Registo diário de intervenções técnicas na província de Luanda.</p>
@@ -162,67 +178,89 @@
         </main>
     </div>
 
+    <!-- Script de Controle de Abas e Gráficos -->
     <script>
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('aside button').forEach(btn => {
+            // Esconde todos os conteúdos
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            // Restaura o estilo padrão de todos os botões do menu
+            document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('bg-cyan-600', 'text-white', 'shadow-lg', 'shadow-cyan-600/20');
                 btn.classList.add('text-gray-400', 'hover:text-gray-200', 'hover:bg-white/5');
             });
 
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-            const activeBtn = document.getElementById('btn-' + tabId);
-            if (activeBtn) {
-                activeBtn.classList.remove('text-gray-400', 'hover:text-gray-200', 'hover:bg-white/5');
-                activeBtn.classList.add('bg-cyan-600', 'text-white', 'shadow-lg', 'shadow-cyan-600/20');
+            // Mostra a aba selecionada
+            const targetTab = document.getElementById('tab- ' + tabId) || document.getElementById('tab-' + tabId);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+
+            // Destaca o botão ativo no menu
+            const targetBtn = document.getElementById('btn-' + tabId);
+            if (targetBtn) {
+                targetBtn.classList.remove('text-gray-400', 'hover:text-gray-200', 'hover:bg-white/5');
+                targetBtn.classList.add('bg-cyan-600', 'text-white', 'shadow-lg', 'shadow-cyan-600/20');
             }
         }
 
-        // Inicializar Gráficos Chart.js
+        // Inicializar Gráficos Chart.js em segurança
         window.addEventListener('DOMContentLoaded', () => {
-            const ctxLinhas = document.getElementById('graficoLinhas').getContext('2d');
-            new Chart(ctxLinhas, {
-                type: 'line',
-                data: {
-                    labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                    datasets: [{
-                        label: 'Operações',
-                        data: [12, 19, 15, 25, 22, 30, 28],
-                        borderColor: '#06b6d4',
-                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
+            try {
+                const ctxLinhas = document.getElementById('graficoLinhas');
+                if (ctxLinhas) {
+                    new Chart(ctxLinhas, {
+                        type: 'line',
+                        data: {
+                            labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                            datasets: [{
+                                label: 'Operações',
+                                data: [12, 19, 15, 25, 22, 30, 28],
+                                borderColor: '#06b6d4',
+                                backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                                fill: true,
+                                tension: 0.3
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                    });
+                }
 
-            const ctxVelas = document.getElementById('graficoVelasFinas').getContext('2d');
-            new Chart(ctxVelas, {
-                type: 'bar',
-                data: {
-                    labels: ['P1', 'P2', 'P3', 'P4', 'P5'],
-                    datasets: [{
-                        label: 'Variação',
-                        data: [10, 20, 15, 30, 25],
-                        backgroundColor: '#10b981'
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
+                const ctxVelas = document.getElementById('graficoVelasFinas');
+                if (ctxVelas) {
+                    new Chart(ctxVelas, {
+                        type: 'bar',
+                        data: {
+                            labels: ['P1', 'P2', 'P3', 'P4', 'P5'],
+                            datasets: [{
+                                label: 'Variação',
+                                data: [10, 20, 15, 30, 25],
+                                backgroundColor: '#10b981'
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                    });
+                }
 
-            const ctxCircular = document.getElementById('graficoCircular').getContext('2d');
-            new Chart(ctxCircular, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Ativos', 'Manutenção', 'Standby'],
-                    datasets: [{
-                        data: [70, 20, 10],
-                        backgroundColor: ['#06b6d4', '#f59e0b', '#64748b']
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
+                const ctxCircular = document.getElementById('graficoCircular');
+                if (ctxCircular) {
+                    new Chart(ctxCircular, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Ativos', 'Manutenção', 'Standby'],
+                            datasets: [{
+                                data: [70, 20, 10],
+                                backgroundColor: ['#06b6d4', '#f59e0b', '#64748b']
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                }
+            } catch (e) {
+                console.error("Erro ao carregar gráficos:", e);
+            }
         });
     </script>
 </body>
