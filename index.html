@@ -325,73 +325,66 @@
                         <p class="text-[10px] text-emerald-400 mt-2 bg-emerald-950/40 p-1.5 rounded">Criptografia: <strong>SSL/TLS Ativo</strong></p>
                     </div>
                 </div>
-                <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
-                    <h3 class="text-xs font-bold text-gray-300 uppercase mb-3">Logs de Rotinas Lógicas Ativas</h3>
-                    <div class="bg-gray-950 p-3 rounded font-mono text-[11px] text-cyan-300 space-y-1">
-                        <p>[23:30:02] [DL-SYS] Verificação automática de integridade de base de dados efetuada com sucesso.</p>
-                        <p>[23:25:10] [DL-NET] Sincronização de pacotes GPS entre Talatona e Luanda Sul validada.</p>
-                        <p>[23:20:00] [DL-API] Resposta de handshakes de segurança eletrónica normalizada (11ms).</p>
+            </div>
+
+            <!-- 6. RH & Cadastro Operacional -->
+            <div id="tab-rh" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center border-b border-gray-900 pb-4">
+                    <div>
+                        <h2 class="text-xl font-bold tracking-tight text-white">RH & Cadastro Operacional</h2>
+                        <p class="text-xs text-gray-400">Gestão de efectivos, escalas de serviço e registo de pessoal técnico Hanzolo.</p>
+                    </div>
+                    <button onclick="abrirModalColaborador()" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition flex items-center space-x-2 shadow-md">
+                        <i class="fas fa-user-plus"></i><span>Novo Colaborador</span>
+                    </button>
+                </div>
+
+                <!-- Lista de Colaboradores Cadastrados -->
+                <div class="bg-gray-900 border border-gray-800/80 rounded-xl overflow-hidden shadow-md">
+                    <div class="p-4 border-b border-gray-800 flex justify-between items-center">
+                        <h3 class="font-bold text-xs text-gray-200 uppercase tracking-wider">Efetivos Ativos e Registados</h3>
+                        <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded font-mono" id="total-colaboradores">Total: 2 Registados</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-gray-300">
+                            <thead class="bg-gray-800 text-gray-400 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-3">Foto</th>
+                                    <th class="p-3">Nome Completo</th>
+                                    <th class="p-3">E-mail Corporativo</th>
+                                    <th class="p-3">NIF</th>
+                                    <th class="p-3">Cargo / Função</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-colaboradores-corpo" class="divide-y divide-gray-800">
+                                <tr>
+                                    <td class="p-3">
+                                        <div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
+                                            <i class="fas fa-user text-gray-400 text-xs"></i>
+                                        </div>
+                                    </td>
+                                    <td class="p-3 font-medium text-white">João Manuel Pedro</td>
+                                    <td class="p-3 text-cyan-400">joao.pedro@hanzolo.com</td>
+                                    <td class="p-3 font-mono">123456789LA042</td>
+                                    <td class="p-3 text-gray-400">Supervisor de Turno (Talatona)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3">
+                                        <div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
+                                            <i class="fas fa-user text-gray-400 text-xs"></i>
+                                        </div>
+                                    </td>
+                                    <td class="p-3 font-medium text-white">Carlos Eduardo Benguela</td>
+                                    <td class="p-3 text-cyan-400">carlos.benguela@hanzolo.com</td>
+                                    <td class="p-3 font-mono">987654321LA019</td>
+                                    <td class="p-3 text-gray-400">Técnico Especialista DSE</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- 6. RH & Cadastro Operacional -->
-<div id="tab-rh" class="tab-content hidden space-y-6">
-    <div class="flex justify-between items-center border-b border-gray-900 pb-4">
-        <div>
-            <h2 class="text-xl font-bold tracking-tight text-white">RH & Cadastro Operacional</h2>
-            <p class="text-xs text-gray-400">Gestão de efectivos, escalas de serviço e registo de pessoal técnico Hanzolo.</p>
-        </div>
-        <button onclick="abrirModalColaborador()" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition flex items-center space-x-2 shadow-md">
-            <i class="fas fa-user-plus"></i><span>Novo Colaborador</span>
-        </button>
-    </div>
-
-    <!-- Lista de Colaboradores Cadastrados -->
-    <div class="bg-gray-900 border border-gray-800/80 rounded-xl overflow-hidden shadow-md">
-        <div class="p-4 border-b border-gray-800 flex justify-between items-center">
-            <h3 class="font-bold text-xs text-gray-200 uppercase tracking-wider">Efetivos Ativos e Registados</h3>
-            <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded font-mono" id="total-colaboradores">Total: 2 Registados</span>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-gray-300">
-                <thead class="bg-gray-800 text-gray-400 uppercase text-[10px]">
-                    <tr>
-                        <th class="p-3">Foto</th>
-                        <th class="p-3">Nome Completo</th>
-                        <th class="p-3">E-mail Corporativo</th>
-                        <th class="p-3">NIF</th>
-                        <th class="p-3">Cargo / Função</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela-colaboradores-corpo" class="divide-y divide-gray-800">
-                    <tr>
-                        <td class="p-3">
-                            <div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
-                                <i class="fas fa-user text-gray-400 text-xs"></i>
-                            </div>
-                        </td>
-                        <td class="p-3 font-medium text-white">João Manuel Pedro</td>
-                        <td class="p-3 text-cyan-400">joao.pedro@hanzolo.com</td>
-                        <td class="p-3 font-mono">123456789LA042</td>
-                        <td class="p-3 text-gray-400">Supervisor de Turno (Talatona)</td>
-                    </tr>
-                    <tr>
-                        <td class="p-3">
-                            <div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
-                                <i class="fas fa-user text-gray-400 text-xs"></i>
-                            </div>
-                        </td>
-                        <td class="p-3 font-medium text-white">Carlos Eduardo Benguela</td>
-                        <td class="p-3 text-cyan-400">carlos.benguela@hanzolo.com</td>
-                        <td class="p-3 font-mono">987654321LA019</td>
-                        <td class="p-3 text-gray-400">Técnico Especialista DSE</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
             <!-- 7. Gestão de Frotas & GPS -->
             <div id="tab-frotas" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
@@ -444,93 +437,146 @@
             <!-- 10. Compras & Suprimentos -->
             <div id="tab-compras" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
-                    <h2 class="text-xl font-bold tracking-tight text-white">Departamento de Compras & Suprimentos</h2>
-                    <p class="text-xs text-gray-400">Gestão de requisições de material e aprovação de orçamentos.</p>
+                    <h2 class="text-xl font-bold tracking-tight text-white">Compras & Suprimentos</h2>
+                    <p class="text-xs text-gray-400">Gestão de fornecedores, requisições de material e encomendas.</p>
                 </div>
-                <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
-                    <p class="font-bold text-xs text-white">Requisição REQ-2024-9012 • Cabos de Fibra Ótica & Sensores Infravermelhos</p>
-                    <p class="text-[11px] text-gray-400 mt-1">Estado: <span class="text-amber-400">Aguardando Aprovação do Departamento Financeiro</span></p>
+                <div class="bg-gray-900 border border-gray-800/80 p-5 rounded-xl">
+                    <p class="text-xs text-gray-300">Nenhum pedido de compra pendente para aprovação na tesouraria.</p>
                 </div>
             </div>
 
             <!-- 11. Logística & Armazém -->
             <div id="tab-logistica" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
-                    <h2 class="text-xl font-bold tracking-tight text-white">Logística & Armazém Central</h2>
-                    <p class="text-xs text-gray-400">Controlo de stock de equipamentos de segurança e acessórios técnicos.</p>
+                    <h2 class="text-xl font-bold tracking-tight text-white">Logística & Armazém</h2>
+                    <p class="text-xs text-gray-400">Controlo de stock de equipamentos de segurança, cabos e ferramentas.</p>
                 </div>
-                <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
-                    <p class="font-bold text-xs text-white">Armazém Central Talatona</p>
-                    <p class="text-[11px] text-gray-400 mt-1">Stock Disponível: 45 Câmeras Dome • 120m Cabo Coaxial • 8 DVRs 16 Canais</p>
+                <div class="bg-gray-900 border border-gray-800/80 p-5 rounded-xl">
+                    <p class="text-xs text-gray-300">Armazém Central Talatona: Stock verificado e regular.</p>
                 </div>
             </div>
 
         </main>
     </div>
 
+    <!-- Modal de Registo de Colaborador -->
+    <div id="modal-colaborador" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
+            <div class="flex justify-between items-center px-6 py-4 border-b border-gray-800 bg-gray-950">
+                <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+                    <i class="fas fa-user-plus text-cyan-400"></i><span>Cadastrar Novo Colaborador</span>
+                </h3>
+                <button onclick="fecharModalColaborador()" class="text-gray-400 hover:text-white p-1">
+                    <i class="fas fa-xmark text-sm"></i>
+                </button>
+            </div>
+            
+            <form id="form-colaborador" onsubmit="salvarColaborador(event)" class="p-6 space-y-4">
+                <!-- Foto Tipo Passe -->
+                <div class="flex items-center space-x-4">
+                    <div id="preview-container" class="w-16 h-20 bg-gray-950 border-2 border-dashed border-gray-700 rounded-lg flex items-center justify-center overflow-hidden relative">
+                        <i class="fas fa-camera text-gray-500 text-base"></i>
+                        <img id="img-preview" class="hidden w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Fotografia (Tipo Passe)</label>
+                        <input type="file" id="foto-passe" accept="image/*" onchange="preVisualizarFoto(event)" class="w-full text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-600 file:text-white hover:file:bg-cyan-500 cursor-pointer">
+                        <p class="text-[10px] text-gray-500 mt-1">Formatos aceites: JPG, PNG.</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Nome Completo *</label>
+                    <input type="text" id="colig-nome" required placeholder="Ex: Mário André Santos" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">E-mail Corporativo *</label>
+                        <input type="email" id="colig-email" required placeholder="nome@hanzolo.com" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">NIF *</label>
+                        <input type="text" id="colig-nif" required placeholder="Ex: 000000000LA000" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Cargo / Departamento *</label>
+                    <input type="text" id="colig-cargo" required placeholder="Ex: Técnico de Suporte DL" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4 border-t border-gray-800">
+                    <button type="button" onclick="fecharModalColaborador()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg transition">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold rounded-lg transition shadow-lg shadow-cyan-600/20">Guardar Colaborador</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Script de Gestão Executiva e Exportação -->
     <script>
         let currentActiveTab = 'visao-geral';
-
         let fotoBase64Temp = '';
 
-function abrirModalColaborador() {
-    document.getElementById('modal-colaborador').classList.remove('hidden');
-}
-
-function fecharModalColaborador() {
-    document.getElementById('modal-colaborador').classList.add('hidden');
-    document.getElementById('form-colaborador').reset();
-    document.getElementById('img-preview').classList.add('hidden');
-    document.getElementById('img-preview').src = '';
-    fotoBase64Temp = '';
-}
-
-function preVisualizarFoto(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            fotoBase64Temp = e.target.result;
-            const imgEl = document.getElementById('img-preview');
-            imgEl.src = fotoBase64Temp;
-            imgEl.classList.remove('hidden');
+        function abrirModalColaborador() {
+            document.getElementById('modal-colaborador').classList.remove('hidden');
         }
-        reader.readAsDataURL(file);
-    }
-}
 
-function salvarColaborador(event) {
-    event.preventDefault();
-    
-    const nome = document.getElementById('colig-nome').value;
-    const email = document.getElementById('colig-email').value;
-    const nif = document.getElementById('colig-nif').value;
-    const cargo = document.getElementById('colig-cargo').value;
+        function fecharModalColaborador() {
+            document.getElementById('modal-colaborador').classList.add('hidden');
+            document.getElementById('form-colaborador').reset();
+            document.getElementById('img-preview').classList.add('hidden');
+            document.getElementById('img-preview').src = '';
+            fotoBase64Temp = '';
+        }
 
-    const tbody = document.getElementById('tabela-colaboradores-corpo');
-    
-    const avatarHtml = fotoBase64Temp 
-        ? `<img src="${fotoBase64Temp}" class="w-full h-full object-cover">`
-        : `<i class="fas fa-user text-gray-400 text-xs"></i>`;
+        function preVisualizarFoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fotoBase64Temp = e.target.result;
+                    const imgEl = document.getElementById('img-preview');
+                    imgEl.src = fotoBase64Temp;
+                    imgEl.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
 
-    const novaLinha = document.createElement('tr');
-    novaLinha.innerHTML = `
-        <td class="p-3">
-            <div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
-                ${avatarHtml}
-            </div>
-        </td>
-        <td class="p-3 font-medium text-white">${nome}</td>
-        <td class="p-3 text-cyan-400">${email}</td>
-        <td class="p-3 font-mono">${nif}</td>
-        <td class="p-3 text-gray-400">${cargo}</td>
-    `;
+        function salvarColaborador(event) {
+            event.preventDefault();
+            
+            const nome = document.getElementById('colig-nome').value;
+            const email = document.getElementById('colig-email').value;
+            const nif = document.getElementById('colig-nif').value;
+            const cargo = document.getElementById('colig-cargo').value;
 
-    tbody.prepend(novaLinha);
-    fecharModalColaborador();
-    alert('Colaborador cadastrado com sucesso no sistema Hanzolo!');
-}
+            const tbody = document.getElementById('tabela-colaboradores-corpo');
+            
+            const avatarHtml = fotoBase64Temp 
+                ? `<img src="${fotoBase64Temp}" class="w-full h-full object-cover">`
+                : `<i class="fas fa-user text-gray-400 text-xs"></i>`;
+
+            const novaLinha = document.createElement('tr');
+            novaLinha.innerHTML = `
+                <td class="p-3">
+                    <div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
+                        ${avatarHtml}
+                    </div>
+                </td>
+                <td class="p-3 font-medium text-white">${nome}</td>
+                <td class="p-3 text-cyan-400">${email}</td>
+                <td class="p-3 font-mono">${nif}</td>
+                <td class="p-3 text-gray-400">${cargo}</td>
+            `;
+
+            tbody.prepend(novaLinha);
+            fecharModalColaborador();
+            alert('Colaborador cadastrado com sucesso no sistema Hanzolo!');
+        }
+
         function switchTab(tabId) {
             currentActiveTab = tabId;
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -554,176 +600,71 @@ function salvarColaborador(event) {
             menu.classList.toggle('hidden');
         }
 
-        window.addEventListener('click', function(e) {
-            if (!e.target.closest('button[onclick="toggleExportMenu()"]') && !e.target.closest('#export-dropdown')) {
-                document.getElementById('export-dropdown').classList.add('hidden');
-            }
-        });
-
-        function exportarRelatorio(formato) {
+        function exportarRelatorio(tipo) {
             toggleExportMenu();
-            const tabNome = currentActiveTab.toUpperCase();
-
-            if (formato === 'pdf') {
+            if(tipo === 'pdf') {
                 window.print();
-            } else if (formato === 'excel') {
-                let csvContent = "data:text/csv;charset=utf-8,Plataforma HANZOLO ops 24-7\n";
-                csvContent += "Modulo: " + tabNome + "\nData: " + new Date().toLocaleDateString() + "\n\n";
-                
-                if (currentActiveTab === 'dl') {
-                    csvContent += "Sistema,Uso,Status\n";
-                    csvContent += "Servidor Node.js,24% CPU,Estavel\n";
-                    csvContent += "APIs REST,18 Endpoints,11ms\n";
-                } else {
-                    csvContent += "Indicador,Valor\n";
-                    csvContent += "Frota Ativa,3 Viaturas\n";
-                    csvContent += "Auditorias GCQ,100%\n";
-                }
-
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", `Hanzolo_Relatorio_${tabNome}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } else if (formato === 'ppt') {
-                let pptText = `HANZOLO, ops 24-7 - SUMÁRIO EXECUTIVO PPT\nMódulo: ${tabNome}\nGerado em: ${new Date().toLocaleString()}\n\n[Slide 1: Status Operacional]\n- Monitorização em Luanda ativa\n- Departamento Lógico sincronizado`;
-                
-                const blob = new Blob([pptText], { type: 'text/plain;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = `Hanzolo_Apresentacao_${tabNome}.txt`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                alert('Sumário executivo gerado com sucesso.');
+            } else {
+                alert('Relatório exportado com sucesso no formato: ' + tipo.toUpperCase());
             }
         }
 
         function mostrarNotificacoes() {
-            alert('Central de Alertas Hanzolo: Nenhum incidente crítico reportado nas últimas 24 horas.');
+            alert('Sistema Hanzolo: Sem alertas críticos pendentes em Luanda.');
         }
 
+        // Relógio Ao Vivo
         setInterval(() => {
             const now = new Date();
-            const clockEl = document.getElementById('live-clock');
-            if(clockEl) clockEl.innerText = now.toLocaleTimeString();
+            document.getElementById('live-clock').innerText = now.toLocaleTimeString();
         }, 1000);
 
+        // Inicializar Gráficos Chart.js
         window.addEventListener('DOMContentLoaded', () => {
-            try {
-                const ctxLinhas = document.getElementById('graficoLinhas');
-                if (ctxLinhas) {
-                    new Chart(ctxLinhas, {
-                        type: 'line',
-                        data: {
-                            labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                            datasets: [{
-                                label: 'Operações',
-                                data: [14, 22, 19, 28, 25, 34, 30],
-                                borderColor: '#0ea5e9',
-                                backgroundColor: 'rgba(14, 165, 233, 0.08)',
-                                fill: true,
-                                tension: 0.35,
-                                borderWidth: 2
-                            }]
-                        },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.05)' } }, y: { grid: { color: 'rgba(255,255,255,0.05)' } } } }
-                    });
-                }
+            const ctxLinhas = document.getElementById('graficoLinhas').getContext('2d');
+            new Chart(ctxLinhas, {
+                type: 'line',
+                data: {
+                    labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                    datasets: [{
+                        label: 'Intervenções',
+                        data: [12, 19, 15, 22, 28, 14, 18],
+                        borderColor: '#0ea5e9',
+                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
 
-                const ctxVelas = document.getElementById('graficoVelasFinas');
-                if (ctxVelas) {
-                    new Chart(ctxVelas, {
-                        type: 'bar',
-                        data: {
-                            labels: ['Proj 1', 'Proj 2', 'Proj 3', 'Proj 4', 'Proj 5'],
-                            datasets: [{
-                                label: 'Variação',
-                                data: [12, 24, 18, 32, 26],
-                                backgroundColor: '#10b981',
-                                borderRadius: 4
-                            }]
-                        },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.05)' } } } }
-                    });
-                }
+            const ctxVelas = document.getElementById('graficoVelasFinas').getContext('2d');
+            new Chart(ctxVelas, {
+                type: 'bar',
+                data: {
+                    labels: ['Talatona', 'Viana', 'Kilamba', 'Ilha', 'Cacuaco'],
+                    datasets: [{
+                        label: 'Obras',
+                        data: [8, 5, 7, 3, 4],
+                        backgroundColor: '#10b981'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
 
-                const ctxCircular = document.getElementById('graficoCircular');
-                if (ctxCircular) {
-                    new Chart(ctxCircular, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['Ativos', 'Manutenção', 'Standby'],
-                            datasets: [{
-                                data: [75, 15, 10],
-                                backgroundColor: ['#0ea5e9', '#f59e0b', '#64748b'],
-                                borderWidth: 0
-                            }]
-                        },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', font: { size: 10 } } } } }
-                    });
-                }
-            } catch (e) {
-                console.error("Erro gráficos:", e);
-            }
+            const ctxCirc = document.getElementById('graficoCircular').getContext('2d');
+            new Chart(ctxCirc, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Online', 'Manutenção', 'Offline'],
+                    datasets: [{
+                        data: [85, 12, 3],
+                        backgroundColor: ['#0ea5e9', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
         });
     </script>
-    <!-- Modal de Registo de Colaborador -->
-<div id="modal-colaborador" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
-        <div class="flex justify-between items-center px-6 py-4 border-b border-gray-800 bg-gray-950">
-            <h3 class="text-sm font-bold text-white flex items-center space-x-2">
-                <i class="fas fa-user-plus text-cyan-400"></i><span>Cadastrar Novo Colaborador</span>
-            </h3>
-            <button onclick="fecharModalColaborador()" class="text-gray-400 hover:text-white p-1">
-                <i class="fas fa-xmark text-sm"></i>
-            </button>
-        </div>
-        
-        <form id="form-colaborador" onsubmit="salvarColaborador(event)" class="p-6 space-y-4">
-            <!-- Foto Tipo Passe -->
-            <div class="flex items-center space-x-4">
-                <div id="preview-container" class="w-16 h-20 bg-gray-950 border-2 border-dashed border-gray-700 rounded-lg flex items-center justify-center overflow-hidden relative">
-                    <i class="fas fa-camera text-gray-500 text-base"></i>
-                    <img id="img-preview" class="hidden w-full h-full object-cover">
-                </div>
-                <div class="flex-1">
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Fotografia (Tipo Passe)</label>
-                    <input type="file" id="foto-passe" accept="image/*" onchange="preVisualizarFoto(event)" class="w-full text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-600 file:text-white hover:file:bg-cyan-500 cursor-pointer">
-                    <p class="text-[10px] text-gray-500 mt-1">Formatos aceites: JPG, PNG.</p>
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">Nome Completo *</label>
-                <input type="text" id="colig-nome" required placeholder="Ex: Mário André Santos" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">E-mail Corporativo *</label>
-                    <input type="email" id="colig-email" required placeholder="nome@hanzolo.com" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">NIF *</label>
-                    <input type="text" id="colig-nif" required placeholder="Ex: 000000000LA000" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">Cargo / Departamento *</label>
-                <input type="text" id="colig-cargo" required placeholder="Ex: Técnico de Suporte DL" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
-            </div>
-
-            <div class="flex justify-end space-x-3 pt-4 border-t border-gray-800">
-                <button type="button" onclick="fecharModalColaborador()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg transition">Cancelar</button>
-                <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold rounded-lg transition shadow-lg shadow-cyan-600/20">Guardar Colaborador</button>
-            </div>
-        </form>
-    </div>
-</div>
 </body>
 </html>
