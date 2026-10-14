@@ -33,7 +33,7 @@
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans antialiased min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
 
-    <!-- Cabeçalho Executivo de Impressão (Apenas no Relatório PDF/Imprimir) -->
+    <!-- Cabeçalho Executivo de Impressão (PDF) -->
     <div class="print-header bg-white text-gray-900 p-6 border-b-2 border-cyan-600 justify-between items-center">
         <div class="flex items-center space-x-6">
             <div class="h-14 w-auto flex items-center justify-center">
@@ -102,7 +102,7 @@
     <!-- Estrutura Principal -->
     <div class="flex flex-1 overflow-hidden">
         
-        <!-- Sidebar de Navegação Corporativa (Reordenada) -->
+        <!-- Sidebar de Navegação Corporativa Reorganizada por Estrutura de Departamentos -->
         <aside class="no-print w-72 bg-gray-900/95 border-r border-gray-800/80 p-4 space-y-1.5 overflow-y-auto hidden md:block">
             <div class="text-[10px] uppercase font-bold text-gray-500 px-3 tracking-wider mb-2">MÓDULOS OPERACIONAIS</div>
             
@@ -111,52 +111,67 @@
                 <i class="fas fa-chart-line w-4 text-center"></i><span>Painel Visão Geral</span>
             </button>
 
-            <!-- 1. DGP -->
-            <button id="btn-dgp" onclick="switchTab('dgp')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
-                <i class="fas fa-diagram-project w-4 text-center"></i><span>DGP (Gestão de Projectos)</span>
-            </button>
+            <!-- 1. DGP + Sub-módulos Auditoria (GCQ e HSST) -->
+            <div class="space-y-1">
+                <button id="btn-dgp" onclick="switchTab('dgp')" class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-diagram-project w-4 text-center"></i>
+                        <span>DGP (Gestão de Projectos)</span>
+                    </div>
+                </button>
+                <!-- Sub-itens integrados no DGP -->
+                <div class="pl-6 space-y-1 border-l-2 border-gray-800 ml-3">
+                    <button id="btn-gcq" onclick="switchTab('gcq')" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-1.5 rounded text-xs font-medium text-gray-400 hover:text-cyan-400 hover:bg-gray-800/60 transition-all">
+                        <i class="fas fa-award w-3 text-center"></i><span>GCQ (Qualidade & Auditoria)</span>
+                    </button>
+                    <button id="btn-hsst" onclick="switchTab('hsst')" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-1.5 rounded text-xs font-medium text-gray-400 hover:text-cyan-400 hover:bg-gray-800/60 transition-all">
+                        <i class="fas fa-helmet-safety w-3 text-center"></i><span>HSST (Segurança Trabalho)</span>
+                    </button>
+                </div>
+            </div>
 
             <!-- 2. DSE -->
             <button id="btn-dse" onclick="switchTab('dse')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
                 <i class="fas fa-video w-4 text-center"></i><span>DSE (Segurança Eletrónica)</span>
             </button>
 
-            <!-- 3. DL -->
-            <button id="btn-dl" onclick="switchTab('dl')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
-                <i class="fas fa-network-wired w-4 text-center"></i><span>DL (Departamento Lógico)</span>
-            </button>
+            <!-- 3. DL (Departamento Lógico) + Sub-módulos (Logística & Requisições) -->
+            <div class="space-y-1">
+                <button id="btn-dl" onclick="switchTab('dl')" class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-network-wired w-4 text-center"></i>
+                        <span>DL (Departamento Lógico)</span>
+                    </div>
+                </button>
+                <!-- Sub-itens integrados no DL -->
+                <div class="pl-6 space-y-1 border-l-2 border-gray-800 ml-3">
+                    <button id="btn-logistica" onclick="switchTab('logistica')" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-1.5 rounded text-xs font-medium text-gray-400 hover:text-cyan-400 hover:bg-gray-800/60 transition-all">
+                        <i class="fas fa-warehouse w-3 text-center"></i><span>Logística & Armazém</span>
+                    </button>
+                    <button id="btn-requisicoes" onclick="switchTab('requisicoes')" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-1.5 rounded text-xs font-medium text-gray-400 hover:text-cyan-400 hover:bg-gray-800/60 transition-all">
+                        <i class="fas fa-file-signature w-3 text-center"></i><span>Gestão de Requisições</span>
+                    </button>
+                </div>
+            </div>
 
-            <!-- 4. Logística -->
-            <button id="btn-logistica" onclick="switchTab('logistica')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
-                <i class="fas fa-warehouse w-4 text-center"></i><span>Logística &amp; Armazém</span>
-            </button>
-
-            <!-- 5. Frotas -->
+            <!-- 4. Frotas -->
             <button id="btn-frotas" onclick="switchTab('frotas')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
                 <i class="fas fa-truck-fast w-4 text-center"></i><span>Gestão de Frotas &amp; GPS</span>
             </button>
 
-            <!-- 6. Compras -->
+            <!-- 5. Compras -->
             <button id="btn-compras" onclick="switchTab('compras')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
                 <i class="fas fa-cart-shopping w-4 text-center"></i><span>Compras &amp; Suprimentos</span>
             </button>
 
-            <!-- 7. Folha de Obras -->
+            <!-- 6. Folha de Obras -->
             <button id="btn-folha-obras" onclick="switchTab('folha-obras')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
                 <i class="fas fa-clipboard-list w-4 text-center"></i><span>Folha de Obras &amp; Evidências</span>
             </button>
 
-            <!-- Outros Módulos -->
+            <!-- 7. RH -->
             <button id="btn-rh" onclick="switchTab('rh')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
                 <i class="fas fa-users-gear w-4 text-center"></i><span>RH &amp; Cadastro Operacional</span>
-            </button>
-
-            <button id="btn-gcq" onclick="switchTab('gcq')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
-                <i class="fas fa-award w-4 text-center"></i><span>GCQ (Qualidade)</span>
-            </button>
-
-            <button id="btn-hsst" onclick="switchTab('hsst')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all">
-                <i class="fas fa-helmet-safety w-4 text-center"></i><span>HSST (Segurança no Trabalho)</span>
             </button>
         </aside>
 
@@ -175,7 +190,7 @@
                     </div>
                 </div>
 
-                <!-- Indicadores Executivos (KPIs) -->
+                <!-- KPIs -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl shadow-md">
                         <div class="flex justify-between items-start">
@@ -187,11 +202,11 @@
                     </div>
                     <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl shadow-md">
                         <div class="flex justify-between items-start">
-                            <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Auditorias GCQ</p>
+                            <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Auditorias DGP / GCQ</p>
                             <i class="fas fa-shield-check text-emerald-500 text-sm"></i>
                         </div>
                         <h3 class="text-2xl font-black text-white mt-2">100%</h3>
-                        <p class="text-[10px] text-emerald-400 mt-1">Conformidade ISO interna validada</p>
+                        <p class="text-[10px] text-emerald-400 mt-1">Conformidade ISO interna e fiscalização</p>
                     </div>
                     <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl shadow-md">
                         <div class="flex justify-between items-start">
@@ -237,12 +252,13 @@
                 </div>
             </div>
 
-            <!-- DGP (1) -->
+            <!-- DGP (Gestão de Projectos, Auditoria & Fiscalização) -->
             <div id="tab-dgp" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
-                    <h2 class="text-xl font-bold tracking-tight text-white">Departamento de Gestão de Projectos (DGP)</h2>
-                    <p class="text-xs text-gray-400">Acompanhamento de prazos, entregáveis de engenharia e orçamentos em curso.</p>
+                    <h2 class="text-xl font-bold tracking-tight text-white">DGP — Departamento de Gestão de Projectos</h2>
+                    <p class="text-xs text-gray-400">Órgão central de controlo, gestão de engenharia, fiscalização técnica e auditoria integrada de projetos.</p>
                 </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
                         <div class="flex justify-between items-center mb-2">
@@ -252,7 +268,7 @@
                         <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden mt-3">
                             <div class="bg-cyan-500 h-full w-[78%]"></div>
                         </div>
-                        <p class="text-[11px] text-gray-400 mt-2">Responsável: Eng. Hernâni Costa • Prazo: 28/10/2026</p>
+                        <p class="text-[11px] text-gray-400 mt-2">Responsável: Eng. Hernâni Costa • Fiscalização: GCQ/HSST Operacional</p>
                     </div>
                     <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
                         <div class="flex justify-between items-center mb-2">
@@ -262,15 +278,66 @@
                         <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden mt-3">
                             <div class="bg-amber-500 h-full w-[45%]"></div>
                         </div>
-                        <p class="text-[11px] text-gray-400 mt-2">Responsável: Engª. Luísa Fuxi • Prazo: 15/11/2026</p>
+                        <p class="text-[11px] text-gray-400 mt-2">Responsável: Engª. Luísa Fuxi • Fiscalização: GCQ/HSST Operacional</p>
                     </div>
                 </div>
             </div>
 
-            <!-- DSE (2) -->
+            <!-- Sub-módulo DGP: GCQ (Qualidade e Auditoria) -->
+            <div id="tab-gcq" class="tab-content hidden space-y-6">
+                <div class="border-b border-gray-900 pb-4">
+                    <div class="flex items-center space-x-2 text-xs text-cyan-400 mb-1 font-semibold">
+                        <span>DGP</span> <i class="fas fa-chevron-right text-[10px]"></i> <span>Auditoria & Fiscalização</span>
+                    </div>
+                    <h2 class="text-xl font-bold tracking-tight text-white">GCQ — Gestão de Controle de Qualidade</h2>
+                    <p class="text-xs text-gray-400">Divisão de auditoria e controlo de qualidade subordinada ao DGP.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
+                        <h3 class="font-bold text-sm text-white">Auditoria ISO 9001:2015</h3>
+                        <p class="text-xs text-gray-400 mt-1">Conformidade total dos procedimentos de segurança e engenharia lógica.</p>
+                        <span class="inline-block mt-3 bg-emerald-950 text-emerald-400 border border-emerald-800 px-2.5 py-1 rounded text-[10px] font-bold">STATUS: APROVADO</span>
+                    </div>
+                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
+                        <h3 class="font-bold text-sm text-white">Inspeção de Equipamentos de Campo</h3>
+                        <p class="text-xs text-gray-400 mt-1">Verificação semestral de ferramentas de calibração e multímetros.</p>
+                        <span class="inline-block mt-3 bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded text-[10px] font-bold">STATUS: CONCLUÍDO (100%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-módulo DGP: HSST (Segurança no Trabalho) -->
+            <div id="tab-hsst" class="tab-content hidden space-y-6">
+                <div class="border-b border-gray-900 pb-4">
+                    <div class="flex items-center space-x-2 text-xs text-cyan-400 mb-1 font-semibold">
+                        <span>DGP</span> <i class="fas fa-chevron-right text-[10px]"></i> <span>Fiscalização de Segurança</span>
+                    </div>
+                    <h2 class="text-xl font-bold tracking-tight text-white">HSST — Higiene, Segurança e Saúde no Trabalho</h2>
+                    <p class="text-xs text-gray-400">Supervisão técnica de riscos laborais em obras sob tutela do DGP.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
+                        <p class="font-bold text-xs text-white">Índice de Segurança</p>
+                        <h3 class="text-2xl font-black text-emerald-400 mt-1">98.5%</h3>
+                        <p class="text-[10px] text-gray-400 mt-1">Zero incidentes graves registados no ano.</p>
+                    </div>
+                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
+                        <p class="font-bold text-xs text-white">Distribuição de EPIs</p>
+                        <h3 class="text-2xl font-black text-cyan-400 mt-1">100%</h3>
+                        <p class="text-[10px] text-gray-400 mt-1">Equipamentos entregues a todo o efetivo técnico.</p>
+                    </div>
+                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
+                        <p class="font-bold text-xs text-white">Formações Práticas</p>
+                        <h3 class="text-2xl font-black text-amber-400 mt-1">12</h3>
+                        <p class="text-[10px] text-gray-400 mt-1">Sessões de combate a incêndio e primeiros socorros.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DSE -->
             <div id="tab-dse" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
-                    <h2 class="text-xl font-bold tracking-tight text-white">Departamento de Segurança Eletrónica (DSE)</h2>
+                    <h2 class="text-xl font-bold tracking-tight text-white">DSE — Departamento de Segurança Eletrónica</h2>
                     <p class="text-xs text-gray-400">Monitorização de centrais de alarme, CFTV IP e telemetria remota.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -298,11 +365,11 @@
                 </div>
             </div>
 
-            <!-- DL (3) -->
+            <!-- DL (Departamento Lógico) -->
             <div id="tab-dl" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
-                    <h2 class="text-xl font-bold tracking-tight text-white">Departamento Lógico (DL)</h2>
-                    <p class="text-xs text-gray-400">Gestão de infraestrutura de redes, lógica de programação de sistemas e roteamento de dados.</p>
+                    <h2 class="text-xl font-bold tracking-tight text-white">DL — Departamento Lógico</h2>
+                    <p class="text-xs text-gray-400">Gestão de infraestrutura de redes, programação de sistemas, direção de logística e requisições.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
@@ -332,11 +399,14 @@
                 </div>
             </div>
 
-            <!-- Logística (4) -->
+            <!-- Sub-módulo DL: Logística & Armazém (Direção dentro do DL) -->
             <div id="tab-logistica" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
-                    <h2 class="text-xl font-bold tracking-tight text-white">Logística &amp; Armazém</h2>
-                    <p class="text-xs text-gray-400">Controle de inventário de peças, ferramentas e equipamentos eletrónicos na Base Talatona.</p>
+                    <div class="flex items-center space-x-2 text-xs text-cyan-400 mb-1 font-semibold">
+                        <span>DL</span> <i class="fas fa-chevron-right text-[10px]"></i> <span>Direção Operacional</span>
+                    </div>
+                    <h2 class="text-xl font-bold tracking-tight text-white">Direção de Logística &amp; Armazém</h2>
+                    <p class="text-xs text-gray-400">Controlo e gestão de stocks, ferramentas e insumos operacionais integrados ao Departamento Lógico.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
@@ -352,7 +422,53 @@
                 </div>
             </div>
 
-            <!-- Frotas (5) -->
+            <!-- Sub-módulo DL: Gestão de Requisições -->
+            <div id="tab-requisicoes" class="tab-content hidden space-y-6">
+                <div class="border-b border-gray-900 pb-4">
+                    <div class="flex items-center space-x-2 text-xs text-cyan-400 mb-1 font-semibold">
+                        <span>DL</span> <i class="fas fa-chevron-right text-[10px]"></i> <span>Fluxo de Solicitações</span>
+                    </div>
+                    <h2 class="text-xl font-bold tracking-tight text-white">Gestão de Requisições Técnicas</h2>
+                    <p class="text-xs text-gray-400">Emissão, acompanhamento e aprovação de pedidos de material para obras e intervenções.</p>
+                </div>
+                <div class="bg-gray-900 border border-gray-800/80 rounded-xl p-4 shadow-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-xs text-gray-200 uppercase tracking-wider">Requisições Internas do DL</h3>
+                        <button onclick="alert('Formulário de Nova Requisição Aberto')" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs px-3 py-1.5 rounded-lg transition">
+                            <i class="fas fa-plus mr-1"></i> Nova Requisição
+                        </button>
+                    </div>
+                    <table class="w-full text-left text-xs text-gray-300">
+                        <thead class="bg-gray-800 text-gray-400 uppercase text-[10px]">
+                            <tr>
+                                <th class="p-2.5">Cód. Req.</th>
+                                <th class="p-2.5">Descrição do Insumo</th>
+                                <th class="p-2.5">Qtd.</th>
+                                <th class="p-2.5">Solicitante</th>
+                                <th class="p-2.5">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800">
+                            <tr>
+                                <td class="p-2.5 font-mono text-cyan-400">REQ-DL-2026-01</td>
+                                <td class="p-2.5">Cabo UTP Cat6 Furukawa - Caixas 305m</td>
+                                <td class="p-2.5">5 Cx</td>
+                                <td class="p-2.5">Eng. Hernâni</td>
+                                <td class="p-2.5"><span class="bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded text-[10px]">Aprovado</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-mono text-cyan-400">REQ-DL-2026-02</td>
+                                <td class="p-2.5">Connectores RJ45 Cat6 blindados</td>
+                                <td class="p-2.5">200 Un</td>
+                                <td class="p-2.5">Mateus Silva</td>
+                                <td class="p-2.5"><span class="bg-amber-950 text-amber-400 px-2 py-0.5 rounded text-[10px]">Em Análise DL</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Frotas -->
             <div id="tab-frotas" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Gestão de Frotas &amp; GPS</h2>
@@ -377,7 +493,7 @@
                 </div>
             </div>
 
-            <!-- Compras (6) -->
+            <!-- Compras -->
             <div id="tab-compras" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Compras &amp; Suprimentos</h2>
@@ -389,7 +505,7 @@
                 </div>
             </div>
 
-            <!-- Folha de Obras (7) -->
+            <!-- Folha de Obras -->
             <div id="tab-folha-obras" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center border-b border-gray-900 pb-4">
                     <div>
@@ -488,55 +604,10 @@
                 </div>
             </div>
 
-            <!-- GCQ -->
-            <div id="tab-gcq" class="tab-content hidden space-y-6">
-                <div class="border-b border-gray-900 pb-4">
-                    <h2 class="text-xl font-bold tracking-tight text-white">Gestão de Controle de Qualidade (GCQ)</h2>
-                    <p class="text-xs text-gray-400">Inspeções de conformidade, relatórios de auditoria e controle de processos técnicos.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
-                        <h3 class="font-bold text-sm text-white">Auditoria ISO 9001:2015</h3>
-                        <p class="text-xs text-gray-400 mt-1">Conformidade total dos procedimentos de segurança e engenharia lógica.</p>
-                        <span class="inline-block mt-3 bg-emerald-950 text-emerald-400 border border-emerald-800 px-2.5 py-1 rounded text-[10px] font-bold">STATUS: APROVADO</span>
-                    </div>
-                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
-                        <h3 class="font-bold text-sm text-white">Inspeção de Equipamentos de Campo</h3>
-                        <p class="text-xs text-gray-400 mt-1">Verificação semestral de ferramentas de calibração e multímetros.</p>
-                        <span class="inline-block mt-3 bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded text-[10px] font-bold">STATUS: CONCLUÍDO (100%)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- HSST -->
-            <div id="tab-hsst" class="tab-content hidden space-y-6">
-                <div class="border-b border-gray-900 pb-4">
-                    <h2 class="text-xl font-bold tracking-tight text-white">HSST (Segurança, Higiene e Saúde no Trabalho)</h2>
-                    <p class="text-xs text-gray-400">Controle de EPIs, prevenção de riscos laborais e formações de segurança.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
-                        <p class="font-bold text-xs text-white">Índice de Segurança</p>
-                        <h3 class="text-2xl font-black text-emerald-400 mt-1">98.5%</h3>
-                        <p class="text-[10px] text-gray-400 mt-1">Zero incidentes graves registados no ano.</p>
-                    </div>
-                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
-                        <p class="font-bold text-xs text-white">Distribuição de EPIs</p>
-                        <h3 class="text-2xl font-black text-cyan-400 mt-1">100%</h3>
-                        <p class="text-[10px] text-gray-400 mt-1">Equipamentos entregues a todo o efetivo técnico.</p>
-                    </div>
-                    <div class="bg-gray-900 border border-gray-800/80 p-4 rounded-xl">
-                        <p class="font-bold text-xs text-white">Formações Práticas</p>
-                        <h3 class="text-2xl font-black text-amber-400 mt-1">12</h3>
-                        <p class="text-[10px] text-gray-400 mt-1">Sessões de combate a incêndio e primeiros socorros.</p>
-                    </div>
-                </div>
-            </div>
-
         </main>
     </div>
 
-    <!-- Modal para Novo Colaborador -->
+    <!-- Modal Novo Colaborador -->
     <div id="modal-colaborador" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b border-gray-800 pb-3">
@@ -570,7 +641,6 @@
 
     <!-- Script de Gestão e Gráficos -->
     <script>
-        // Relógio em tempo real
         function atualizarRelogio() {
             const agora = new Date();
             document.getElementById('live-clock').innerText = agora.toLocaleDateString('pt-AO') + ' ' + agora.toLocaleTimeString('pt-AO');
@@ -579,22 +649,24 @@
         setInterval(atualizarRelogio, 1000);
         atualizarRelogio();
 
-        // Troca de Abas do Sistema
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById('tab-' + tabId).classList.remove('hidden');
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all";
+                if(btn.classList.contains('pl-6') || btn.parentNode.classList.contains('pl-6')) {
+                    btn.className = "nav-btn w-full flex items-center space-x-2.5 px-3 py-1.5 rounded text-xs font-medium text-gray-400 hover:text-cyan-400 hover:bg-gray-800/60 transition-all";
+                } else {
+                    btn.className = "nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all";
+                }
             });
 
             const activeBtn = document.getElementById('btn-' + tabId);
             if (activeBtn) {
-                activeBtn.className = "nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold bg-cyan-600 text-white shadow-lg shadow-cyan-600/20 transition-all";
+                activeBtn.className += " bg-cyan-600 text-white shadow-lg shadow-cyan-600/20";
             }
         }
 
-        // Menu de Exportação
         function toggleExportMenu() {
             const menu = document.getElementById('export-dropdown');
             menu.classList.toggle('hidden');
@@ -606,23 +678,21 @@
             }
         });
 
-        // Funções de Exportação
         function exportarRelatorio(tipo) {
             document.getElementById('export-dropdown').classList.add('hidden');
             if (tipo === 'pdf') {
                 window.print();
             } else if (tipo === 'excel') {
-                alert('A exportação do relatório operacional em formato CSV (Excel) foi iniciada com sucesso para a base Hanzolo.');
+                alert('Exportação CSV concluída para o departamento selecionado.');
             } else if (tipo === 'ppt') {
-                alert('Sumário executivo formatado para Apresentação PPT gerado com sucesso.');
+                alert('Apresentação PPT gerada.');
             }
         }
 
         function mostrarNotificacoes() {
-            alert('Centro de Alertas Hanzolo OPS 24-7: Nenhum incidente crítico reportado nas últimas 24 horas.');
+            alert('Centro de Alertas Hanzolo OPS 24-7: Nenhum incidente crítico reportado.');
         }
 
-        // Modal de Colaboradores
         function abrirModalColaborador() {
             document.getElementById('modal-colaborador').classList.remove('hidden');
         }
@@ -654,10 +724,9 @@
             tbody.appendChild(novaLinha);
             fecharModalColaborador();
             document.getElementById('form-colaborador').reset();
-            alert('Colaborador registado com sucesso no sistema Hanzolo!');
+            alert('Colaborador registado com sucesso!');
         }
 
-        // Inicialização de Gráficos Chart.js
         window.addEventListener('DOMContentLoaded', () => {
             const commonOptions = {
                 responsive: true,
@@ -669,7 +738,6 @@
                 }
             };
 
-            // Gráfico de Linhas
             new Chart(document.getElementById('graficoLinhas'), {
                 type: 'line',
                 data: {
@@ -686,7 +754,6 @@
                 options: commonOptions
             });
 
-            // Gráfico de Velas / Barras Finas
             new Chart(document.getElementById('graficoVelasFinas'), {
                 type: 'bar',
                 data: {
@@ -701,7 +768,6 @@
                 options: commonOptions
             });
 
-            // Gráfico Circular
             new Chart(document.getElementById('graficoCircular'), {
                 type: 'doughnut',
                 data: {
