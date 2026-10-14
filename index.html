@@ -26,21 +26,51 @@
         @media print {
             body { background: white !important; color: black !important; }
             .no-print { display: none !important; }
+            .print-header { display: flex !important; }
         }
+        .print-header { display: none; }
     </style>
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans antialiased min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
 
-    <!-- Topo Executivo -->
-    <header class="bg-gray-900 border-b border-gray-800 px-6 py-3.5 flex items-center justify-between shadow-xl z-30">
+    <!-- Cabeçalho Executivo de Impressão (Visível Apenas no Relatório PDF/Imprimir) -->
+    <div class="print-header bg-white text-gray-900 p-6 border-b-2 border-cyan-600 justify-between items-center">
         <div class="flex items-center space-x-4">
-            <div class="bg-gradient-to-tr from-cyan-600 to-blue-600 p-2.5 rounded-xl text-white shadow-lg shadow-cyan-600/20">
-                <i class="fas fa-shield-halved text-lg"></i>
+            <!-- Logótipo Oficial Vetorial para Impressão -->
+            <svg class="h-12 w-auto" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M190 20L20 120L190 220V160H250V80H190V20Z" fill="#0EA5E9"/>
+                <path d="M350 40H450V200H350V40ZM480 40H580V200H480V40ZM610 40H710V200H610V40ZM740 40H840V200H740V40Z" fill="#0EA5E9"/>
+            </svg>
+            <div>
+                <h1 class="text-xl font-black uppercase text-gray-900 tracking-tight">HANZOLO — Tecnologia, Sistemas & Segurança, LDA</h1>
+                <p class="text-xs text-gray-600 font-mono">NIF: 5417271608 • Base Talatona, Luanda, Angola</p>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-xs font-bold text-gray-800">RELATÓRIO OPERACIONAL OFICIAL</p>
+            <p class="text-[10px] text-gray-500" id="print-date">Data: 14/10/2026</p>
+        </div>
+    </div>
+
+    <!-- Topo Executivo Digital -->
+    <header class="no-print bg-gray-900 border-b border-gray-800 px-6 py-3.5 flex items-center justify-between shadow-xl z-30">
+        <div class="flex items-center space-x-4">
+            <!-- Logotipo Vetorial Oficial Hanzolo -->
+            <div class="bg-cyan-950/80 border border-cyan-800/50 p-2 rounded-xl shadow-lg flex items-center justify-center">
+                <svg class="h-8 w-auto" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Seta/Ponta Esquerda com Degradê Simulado -->
+                    <path d="M190 10L10 120L190 230V165H260V75H190V10Z" fill="#0EA5E9"/>
+                    <!-- Circuito interno e letra H -->
+                    <circle cx="130" cy="120" r="14" fill="#0284C7"/>
+                    <path d="M130 114H220V75H250V165H220V126H130V114Z" fill="#38BDF8"/>
+                    <!-- Texto HANZOLO Estilizado em SVG -->
+                    <path d="M370 45H420V115H500V45H550V195H500V135H420V195H370V45ZM580 45H680V85H630V195H580V45ZM710 45H810V85H760V195H710V45ZM840 45H940V195H890V85H840V45Z" fill="#FFFFFF"/>
+                </svg>
             </div>
             <div>
                 <div class="flex items-center space-x-2">
                     <h1 class="text-base font-extrabold tracking-wide uppercase text-white">HANZOLO, ops 24-7</h1>
-                    <span class="bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px] px-2 py-0.5 rounded font-mono">ENTERPRISE v3.6</span>
+                    <span class="bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px] px-2 py-0.5 rounded font-mono">NIF: 5417271608</span>
                 </div>
                 <p class="text-xs text-gray-400">Tecnologia, Sistemas & Segurança LDA — Base Talatona, Luanda</p>
             </div>
@@ -49,7 +79,7 @@
         <div class="flex items-center space-x-3">
             <div class="hidden lg:flex items-center space-x-2 bg-gray-950 px-3 py-1.5 rounded-lg border border-gray-800 text-xs">
                 <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
-                <span class="text-gray-300 font-medium">Stack (HTML/CSS/JS): <strong class="text-emerald-400">Ativo</strong></span>
+                <span class="text-gray-300 font-medium">Stack: <strong class="text-emerald-400">Ativo (24/7)</strong></span>
             </div>
             
             <!-- Menu Dropdown de Exportação Global -->
@@ -58,7 +88,7 @@
                     <i class="fas fa-download"></i><span>Exportar Relatório</span><i class="fas fa-chevron-down text-[10px]"></i>
                 </button>
                 <div id="export-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-gray-900 border border-gray-800 rounded-xl shadow-2xl py-1.5 z-50 text-xs">
-                    <button onclick="exportarRelatorio('pdf')" class="w-full text-left px-4 py-2.5 hover:bg-gray-800 text-gray-300 hover:text-white flex items-center space-x-2"><i class="fas fa-file-pdf text-red-400 w-4"></i><span>Exportar PDF / Imprimir</span></button>
+                    <button onclick="exportarRelatorio('pdf')" class="w-full text-left px-4 py-2.5 hover:bg-gray-800 text-gray-300 hover:text-white flex items-center space-x-2"><i class="fas fa-file-pdf text-red-400 w-4"></i><span>Gerar PDF / Imprimir</span></button>
                     <button onclick="exportarRelatorio('excel')" class="w-full text-left px-4 py-2.5 hover:bg-gray-800 text-gray-300 hover:text-white flex items-center space-x-2"><i class="fas fa-file-excel text-emerald-400 w-4"></i><span>Exportar Excel (CSV)</span></button>
                     <button onclick="exportarRelatorio('ppt')" class="w-full text-left px-4 py-2.5 hover:bg-gray-800 text-gray-300 hover:text-white flex items-center space-x-2"><i class="fas fa-file-powerpoint text-amber-400 w-4"></i><span>Exportar Sumário PPT</span></button>
                 </div>
@@ -75,7 +105,7 @@
     <div class="flex flex-1 overflow-hidden">
         
         <!-- Sidebar de Navegação Corporativa -->
-        <aside class="w-72 bg-gray-900/95 border-r border-gray-800/80 p-4 space-y-1.5 overflow-y-auto hidden md:block">
+        <aside class="no-print w-72 bg-gray-900/95 border-r border-gray-800/80 p-4 space-y-1.5 overflow-y-auto hidden md:block">
             <div class="text-[10px] uppercase font-bold text-gray-500 px-3 tracking-wider mb-2">Módulos Operacionais</div>
             
             <button id="btn-visao-geral" onclick="switchTab('visao-geral')" class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold bg-cyan-600 text-white shadow-lg shadow-cyan-600/20 transition-all">
@@ -120,7 +150,7 @@
             <div id="tab-visao-geral" class="tab-content space-y-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-900 pb-4">
                     <div>
-                        <h2 class="text-xl font-bold tracking-tight text-white">Painel Geral de Operações</h2>
+                        <h2 class="text-xl font-bold tracking-tight text-white">Painel Geral de Operaciones</h2>
                         <p class="text-xs text-gray-400">Monitorização unificada e telemetria ativa em tempo real na província de Luanda.</p>
                     </div>
                     <div class="flex items-center space-x-2">
@@ -197,12 +227,12 @@
                         <h2 class="text-xl font-bold tracking-tight text-white">Folha de Obras & Evidências Técnicas</h2>
                         <p class="text-xs text-gray-400">Registo de intervenções, manutenções e relatórios fotográficos de campo.</p>
                     </div>
-                    <button onclick="alert('Funcionalidade de inserção de nova obra aberta.')" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold px-3 py-2 rounded-lg transition">
+                    <button onclick="alert('Funcionalidade de inserção de nova obra aberta.')" class="no-print bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold px-3 py-2 rounded-lg transition">
                         <i class="fas fa-plus mr-1.5"></i> Nova Intervenção
                     </button>
                 </div>
                 <div class="bg-gray-900 border border-gray-800/80 rounded-xl overflow-hidden shadow-md">
-                    <table class="w-full text-left text-xs text-gray-300" id="tabela-dados-obras">
+                    <table class="w-full text-left text-xs text-gray-300">
                         <thead class="bg-gray-800 text-gray-400 uppercase text-[10px]">
                             <tr>
                                 <th class="p-3">Ref / Data</th>
@@ -232,7 +262,7 @@
                 </div>
             </div>
 
-            <!-- 3. DGP (Departamento de Gestão de Projectos) -->
+            <!-- 3. DGP -->
             <div id="tab-dgp" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Departamento de Gestão de Projectos (DGP)</h2>
@@ -262,7 +292,7 @@
                 </div>
             </div>
 
-            <!-- 4. DSE (Departamento de Segurança Eletrónica) -->
+            <!-- 4. DSE -->
             <div id="tab-dse" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Departamento de Segurança Eletrónica (DSE)</h2>
@@ -293,7 +323,7 @@
                 </div>
             </div>
 
-            <!-- 5. DL (Departamento Lógico) -->
+            <!-- 5. DL -->
             <div id="tab-dl" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Departamento Lógico (DL)</h2>
@@ -334,16 +364,15 @@
                         <h2 class="text-xl font-bold tracking-tight text-white">RH & Cadastro Operacional</h2>
                         <p class="text-xs text-gray-400">Gestão de efectivos, escalas de serviço e registo de pessoal técnico Hanzolo.</p>
                     </div>
-                    <button onclick="abrirModalColaborador()" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition flex items-center space-x-2 shadow-md">
+                    <button onclick="abrirModalColaborador()" class="no-print bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition flex items-center space-x-2 shadow-md">
                         <i class="fas fa-user-plus"></i><span>Novo Colaborador</span>
                     </button>
                 </div>
 
-                <!-- Lista de Colaboradores Cadastrados -->
                 <div class="bg-gray-900 border border-gray-800/80 rounded-xl overflow-hidden shadow-md">
                     <div class="p-4 border-b border-gray-800 flex justify-between items-center">
                         <h3 class="font-bold text-xs text-gray-200 uppercase tracking-wider">Efetivos Ativos e Registados</h3>
-                        <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded font-mono" id="total-colaboradores">Total: 2 Registados</span>
+                        <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded font-mono" id="total-colaboradores">NIF: 5417271608 (Registos: 2)</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs text-gray-300">
@@ -352,7 +381,7 @@
                                     <th class="p-3">Foto</th>
                                     <th class="p-3">Nome Completo</th>
                                     <th class="p-3">E-mail Corporativo</th>
-                                    <th class="p-3">NIF</th>
+                                    <th class="p-3">NIF Pessoal</th>
                                     <th class="p-3">Cargo / Função</th>
                                 </tr>
                             </thead>
@@ -385,7 +414,7 @@
                 </div>
             </div>
 
-            <!-- 7. Gestão de Frotas & GPS -->
+            <!-- 7. Frotas -->
             <div id="tab-frotas" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Gestão de Frotas & GPS</h2>
@@ -410,7 +439,7 @@
                 </div>
             </div>
 
-            <!-- 8. GCQ (Qualidade) -->
+            <!-- 8. GCQ -->
             <div id="tab-gcq" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Garantia e Controlo de Qualidade (GCQ)</h2>
@@ -422,7 +451,7 @@
                 </div>
             </div>
 
-            <!-- 9. HSST (Segurança no Trabalho) -->
+            <!-- 9. HSST -->
             <div id="tab-hsst" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Higiene, Saúde e Segurança no Trabalho (HSST)</h2>
@@ -434,7 +463,7 @@
                 </div>
             </div>
 
-            <!-- 10. Compras & Suprimentos -->
+            <!-- 10. Compras -->
             <div id="tab-compras" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Compras & Suprimentos</h2>
@@ -445,7 +474,7 @@
                 </div>
             </div>
 
-            <!-- 11. Logística & Armazém -->
+            <!-- 11. Logística -->
             <div id="tab-logistica" class="tab-content hidden space-y-6">
                 <div class="border-b border-gray-900 pb-4">
                     <h2 class="text-xl font-bold tracking-tight text-white">Logística & Armazém</h2>
@@ -464,7 +493,7 @@
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
             <div class="flex justify-between items-center px-6 py-4 border-b border-gray-800 bg-gray-950">
                 <h3 class="text-sm font-bold text-white flex items-center space-x-2">
-                    <i class="fas fa-user-plus text-cyan-400"></i><span>Cadastrar Novo Colaborador</span>
+                    <i class="fas fa-user-plus text-cyan-400"></i><span>Cadastrar Novo Colaborador (NIF Hanzolo: 5417271608)</span>
                 </h3>
                 <button onclick="fecharModalColaborador()" class="text-gray-400 hover:text-white p-1">
                     <i class="fas fa-xmark text-sm"></i>
@@ -472,7 +501,6 @@
             </div>
             
             <form id="form-colaborador" onsubmit="salvarColaborador(event)" class="p-6 space-y-4">
-                <!-- Foto Tipo Passe -->
                 <div class="flex items-center space-x-4">
                     <div id="preview-container" class="w-16 h-20 bg-gray-950 border-2 border-dashed border-gray-700 rounded-lg flex items-center justify-center overflow-hidden relative">
                         <i class="fas fa-camera text-gray-500 text-base"></i>
@@ -481,7 +509,6 @@
                     <div class="flex-1">
                         <label class="block text-xs font-medium text-gray-300 mb-1">Fotografia (Tipo Passe)</label>
                         <input type="file" id="foto-passe" accept="image/*" onchange="preVisualizarFoto(event)" class="w-full text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-600 file:text-white hover:file:bg-cyan-500 cursor-pointer">
-                        <p class="text-[10px] text-gray-500 mt-1">Formatos aceites: JPG, PNG.</p>
                     </div>
                 </div>
 
@@ -496,7 +523,7 @@
                         <input type="email" id="colig-email" required placeholder="nome@hanzolo.com" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">NIF *</label>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">NIF do Colaborador *</label>
                         <input type="text" id="colig-nif" required placeholder="Ex: 000000000LA000" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
                     </div>
                 </div>
@@ -514,9 +541,8 @@
         </div>
     </div>
 
-    <!-- Script de Gestão Executiva e Exportação -->
+    <!-- Script de Gestão Executiva -->
     <script>
-        let currentActiveTab = 'visao-geral';
         let fotoBase64Temp = '';
 
         function abrirModalColaborador() {
@@ -547,14 +573,12 @@
 
         function salvarColaborador(event) {
             event.preventDefault();
-            
             const nome = document.getElementById('colig-nome').value;
             const email = document.getElementById('colig-email').value;
             const nif = document.getElementById('colig-nif').value;
             const cargo = document.getElementById('colig-cargo').value;
 
             const tbody = document.getElementById('tabela-colaboradores-corpo');
-            
             const avatarHtml = fotoBase64Temp 
                 ? `<img src="${fotoBase64Temp}" class="w-full h-full object-cover">`
                 : `<i class="fas fa-user text-gray-400 text-xs"></i>`;
@@ -574,11 +598,10 @@
 
             tbody.prepend(novaLinha);
             fecharModalColaborador();
-            alert('Colaborador cadastrado com sucesso no sistema Hanzolo!');
+            alert('Colaborador cadastrado com sucesso!');
         }
 
         function switchTab(tabId) {
-            currentActiveTab = tabId;
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('bg-cyan-600', 'text-white', 'shadow-lg', 'shadow-cyan-600/20');
@@ -596,8 +619,7 @@
         }
 
         function toggleExportMenu() {
-            const menu = document.getElementById('export-dropdown');
-            menu.classList.toggle('hidden');
+            document.getElementById('export-dropdown').classList.toggle('hidden');
         }
 
         function exportarRelatorio(tipo) {
@@ -613,27 +635,19 @@
             alert('Sistema Hanzolo: Sem alertas críticos pendentes em Luanda.');
         }
 
-        // Relógio Ao Vivo
         setInterval(() => {
             const now = new Date();
             document.getElementById('live-clock').innerText = now.toLocaleTimeString();
+            document.getElementById('print-date').innerText = 'Data: ' + now.toLocaleDateString();
         }, 1000);
 
-        // Inicializar Gráficos Chart.js
         window.addEventListener('DOMContentLoaded', () => {
             const ctxLinhas = document.getElementById('graficoLinhas').getContext('2d');
             new Chart(ctxLinhas, {
                 type: 'line',
                 data: {
                     labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                    datasets: [{
-                        label: 'Intervenções',
-                        data: [12, 19, 15, 22, 28, 14, 18],
-                        borderColor: '#0ea5e9',
-                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
+                    datasets: [{ data: [12, 19, 15, 22, 28, 14, 18], borderColor: '#0ea5e9', backgroundColor: 'rgba(14, 165, 233, 0.1)', fill: true, tension: 0.3 }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
@@ -643,11 +657,7 @@
                 type: 'bar',
                 data: {
                     labels: ['Talatona', 'Viana', 'Kilamba', 'Ilha', 'Cacuaco'],
-                    datasets: [{
-                        label: 'Obras',
-                        data: [8, 5, 7, 3, 4],
-                        backgroundColor: '#10b981'
-                    }]
+                    datasets: [{ data: [8, 5, 7, 3, 4], backgroundColor: '#10b981' }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
@@ -657,10 +667,7 @@
                 type: 'doughnut',
                 data: {
                     labels: ['Online', 'Manutenção', 'Offline'],
-                    datasets: [{
-                        data: [85, 12, 3],
-                        backgroundColor: ['#0ea5e9', '#f59e0b', '#ef4444']
-                    }]
+                    datasets: [{ data: [85, 12, 3], backgroundColor: ['#0ea5e9', '#f59e0b', '#ef4444'] }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
