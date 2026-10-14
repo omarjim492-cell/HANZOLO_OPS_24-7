@@ -12,10 +12,10 @@
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#090D16',
-                        cardBg: '#0D1322',
+                        darkBg: '#080C14',
+                        cardBg: '#0B1120',
                         panelBg: '#111827',
-                        borderCol: '#1E293B',
+                        borderCol: '#172033',
                         cyanAccent: '#00B4D8',
                         blueAccent: '#1D4ED8',
                         purpleAccent: '#7C3AED',
@@ -29,140 +29,147 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #090D16;
+            background: #080C14;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1E293B;
+            background: #172033;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #334155;
         }
         .tree-line-v {
-            width: 2px;
+            width: 1px;
             background-color: #1E293B;
         }
         .tree-line-h {
-            height: 2px;
+            height: 1px;
             background-color: #1E293B;
         }
     </style>
 </head>
-<body class="bg-darkBg text-slate-200 font-sans antialiased min-h-screen flex flex-col overflow-x-hidden">
+<body class="bg-[#060911] text-slate-200 font-sans antialiased min-h-screen flex flex-col overflow-x-hidden">
 
-    <!-- Top Navigation Bar -->
-    <header class="h-16 border-b border-borderCol bg-cardBg px-6 flex items-center justify-between sticky top-0 z-30">
-        <!-- Brand & Title -->
+    <!-- Header -->
+    <header class="h-16 border-b border-slate-800/80 bg-[#0A0E1A] px-6 flex items-center justify-between sticky top-0 z-30">
         <div class="flex items-center space-x-6">
-            <div class="flex items-center space-x-2">
-                <div class="bg-gradient-to-r from-cyanAccent to-blue600 p-2 rounded-lg flex items-center justify-center">
-                    <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+            <div class="flex items-center space-x-3">
+                <div class="bg-cyan-500/10 border border-cyan-500/30 p-2 rounded-lg flex items-center justify-center">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-cyan-400"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-black tracking-wider text-white">HANZOLO</h1>
-                    <p class="text-[10px] text-cyanAccent tracking-widest uppercase font-semibold">Tecnologia, Logística & Segurança</p>
+                    <h1 class="text-base font-black tracking-wider text-white flex items-center gap-2">
+                        HANZOLO
+                    </h1>
+                    <p class="text-[9px] text-cyan-400 tracking-widest uppercase font-medium">Tecnologia, Logística & Segurança</p>
                 </div>
             </div>
             
-            <div class="h-8 w-[1px] bg-borderCol"></div>
+            <div class="h-6 w-[1px] bg-slate-800"></div>
 
             <div class="flex items-center space-x-3">
-                <span class="text-xl font-bold tracking-tight text-white">OPS 24-7</span>
-                <span class="bg-slate-800/80 border border-slate-700 text-cyan-400 text-xs px-2.5 py-1 rounded-md font-mono">NIF: 5417271608</span>
+                <span class="text-base font-bold tracking-tight text-white">OPS 24-7</span>
+                <span class="bg-cyan-950/60 border border-cyan-800/50 text-cyan-400 text-[11px] px-2.5 py-0.5 rounded-md font-mono">NIF: 5417271608</span>
             </div>
         </div>
 
-        <!-- Right System Indicators -->
         <div class="flex items-center space-x-4">
-            <div class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 flex items-center space-x-2">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-lg px-3 py-1.5 flex items-center space-x-2">
                 <span class="text-xs text-slate-400">Stack:</span>
-                <span class="text-xs text-emerald-400 font-semibold flex items-center gap-1.5">
+                <span class="text-xs text-emerald-400 font-medium flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     Ativo (24/7)
                 </span>
             </div>
 
-            <button class="bg-cyanAccent/10 hover:bg-cyanAccent/20 border border-cyanAccent/30 text-cyan-400 px-4 py-1.5 rounded-lg text-sm font-medium flex items-center space-x-2 transition-all">
-                <i data-lucide="download" class="w-4 h-4"></i>
+            <button class="bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 transition-all">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
                 <span>Exportar Relatório</span>
-                <i data-lucide="chevron-down" class="w-4 h-4 ml-1"></i>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 ml-0.5"></i>
             </button>
 
-            <button class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors relative">
-                <i data-lucide="bell" class="w-5 h-5"></i>
-                <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+            <button class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800/60 transition-colors relative">
+                <i data-lucide="bell" class="w-4 h-4"></i>
+                <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full"></span>
             </button>
         </div>
     </header>
 
-    <!-- Main Container -->
+    <!-- Main Section -->
     <div class="flex flex-1 overflow-hidden">
         
         <!-- Sidebar Navigation -->
-        <aside class="w-64 border-r border-borderCol bg-cardBg flex flex-col justify-between py-4 shrink-0">
+        <aside class="w-64 border-r border-slate-800/80 bg-[#080C16] flex flex-col justify-between py-4 shrink-0">
             <div class="space-y-6">
                 <div>
-                    <h2 class="px-6 text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Módulos Operacionais</h2>
+                    <h2 class="px-5 text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Módulos Operacionais</h2>
                     <nav class="space-y-1 px-3">
-                        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors text-sm font-medium">
+                        <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800/40 hover:text-slate-200 transition-colors text-xs font-medium">
                             <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                             <span>Painel Visão Geral</span>
                         </a>
-                        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-cyanAccent/10 border border-cyanAccent/30 text-cyan-400 text-sm font-medium">
+                        <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-medium">
                             <i data-lucide="git-fork" class="w-4 h-4"></i>
                             <span>Organograma Funcional</span>
                         </a>
-                        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors text-sm font-medium">
-                            <i data-lucide="briefcase" class="w-4 h-4"></i>
-                            <span>DGP (Gestão de Projectos)</span>
-                        </a>
-                        <div class="pl-8 space-y-1 text-xs text-slate-400">
-                            <a href="#" class="flex items-center space-x-2 py-1.5 hover:text-white transition-colors">
-                                <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
-                                <span>GCQ (Qualidade & Auditoria)</span>
+                        
+                        <div class="pt-2">
+                            <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800/40 hover:text-slate-200 transition-colors text-xs font-medium">
+                                <i data-lucide="briefcase" class="w-4 h-4"></i>
+                                <span>DGP (Gestão de Projectos)</span>
                             </a>
-                            <a href="#" class="flex items-center space-x-2 py-1.5 hover:text-white transition-colors">
-                                <i data-lucide="hard-hat" class="w-3.5 h-3.5"></i>
-                                <span>HSST (Segurança Trabalho)</span>
-                            </a>
+                            <div class="pl-8 space-y-1 text-[11px] text-slate-400 mt-1">
+                                <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-2 py-1 hover:text-cyan-400 transition-colors">
+                                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                                    <span>GCQ (Qualidade & Auditoria)</span>
+                                </a>
+                                <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-2 py-1 hover:text-cyan-400 transition-colors">
+                                    <i data-lucide="hard-hat" class="w-3.5 h-3.5"></i>
+                                    <span>HSST (Segurança Trabalho)</span>
+                                </a>
+                            </div>
                         </div>
-                        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors text-sm font-medium">
+
+                        <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800/40 hover:text-slate-200 transition-colors text-xs font-medium">
                             <i data-lucide="video" class="w-4 h-4"></i>
                             <span>DSE (Segurança Eletrónica)</span>
                         </a>
-                        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors text-sm font-medium">
-                            <i data-lucide="boxes" class="w-4 h-4"></i>
-                            <span>DL (Departamento Lógico)</span>
-                        </a>
-                        <div class="pl-8 space-y-1 text-xs text-slate-400">
-                            <a href="#" class="flex items-center space-x-2 py-1.5 hover:text-white transition-colors">
-                                <i data-lucide="warehouse" class="w-3.5 h-3.5"></i>
-                                <span>Logística & Armazém</span>
+
+                        <div class="pt-1">
+                            <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800/40 hover:text-slate-200 transition-colors text-xs font-medium">
+                                <i data-lucide="boxes" class="w-4 h-4"></i>
+                                <span>DL (Departamento Lógico)</span>
                             </a>
-                            <a href="#" class="flex items-center space-x-2 py-1.5 hover:text-white transition-colors">
-                                <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-                                <span>Gestão de Rerequisições</span>
-                            </a>
+                            <div class="pl-8 space-y-1 text-[11px] text-slate-400 mt-1">
+                                <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-2 py-1 hover:text-cyan-400 transition-colors">
+                                    <i data-lucide="warehouse" class="w-3.5 h-3.5"></i>
+                                    <span>Logística & Armazém</span>
+                                </a>
+                                <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-2 py-1 hover:text-cyan-400 transition-colors">
+                                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                                    <span>Gestão de Rerequisições</span>
+                                </a>
+                            </div>
                         </div>
-                        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors text-sm font-medium">
+
+                        <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800/40 hover:text-slate-200 transition-colors text-xs font-medium">
                             <i data-lucide="truck" class="w-4 h-4"></i>
                             <span>Gestão de Frotas & GPS</span>
                         </a>
-                        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors text-sm font-medium">
+                        <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800/40 hover:text-slate-200 transition-colors text-xs font-medium">
                             <i data-lucide="shopping-cart" class="w-4 h-4"></i>
                             <span>Compras & Suprimentos</span>
                         </a>
-                        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors text-sm font-medium">
+                        <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800/40 hover:text-slate-200 transition-colors text-xs font-medium">
                             <i data-lucide="clipboard-list" class="w-4 h-4"></i>
                             <span>Folha de Obras & Evidências</span>
                         </a>
-                        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors text-sm font-medium">
+                        <a href="#" onclick="selectMenu(this)" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800/40 hover:text-slate-200 transition-colors text-xs font-medium">
                             <i data-lucide="users" class="w-4 h-4"></i>
                             <span>RH & Cadastro Operacional</span>
                         </a>
@@ -170,97 +177,92 @@
                 </div>
             </div>
 
-            <!-- Footer info inside sidebar -->
-            <div class="px-6 border-t border-borderCol pt-4 text-xs text-slate-500">
+            <div class="px-5 border-t border-slate-800/80 pt-3 text-[10px] text-slate-500">
                 <p>Sistema Integrado de Gestão</p>
-                <p class="text-[10px] text-slate-600">v2.4.0 • Hanzolo Ops</p>
+                <p class="text-[9px] text-slate-600 mt-0.5">v2.4.0 • Hanzolo Ops</p>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
-        <main class="flex-1 p-8 overflow-auto bg-darkBg relative">
+        <!-- Main Content -->
+        <main class="flex-1 p-8 overflow-auto bg-[#060911] relative">
             
-            <!-- Page Title Area -->
-            <div class="mb-8">
-                <h1 class="text-2xl font-bold text-white tracking-tight">Organograma Funcional e Hierárquico</h1>
-                <p class="text-slate-400 text-sm mt-1">Estrutura organizacional ramificada das direções, departamentos e funções da Hanzolo.</p>
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-white tracking-tight">Organograma Funcional e Hierárquico</h2>
+                <p class="text-slate-400 text-xs mt-0.5">Estrutura organizacional ramificada das direções, departamentos e funções da Hanzolo.</p>
             </div>
 
-            <!-- Chart Tree Container -->
-            <div class="bg-cardBg border border-borderCol rounded-xl p-8 min-w-[980px] shadow-2xl relative overflow-hidden">
+            <!-- Chart Canvas -->
+            <div class="bg-[#090D18] border border-slate-800/80 rounded-2xl p-8 min-w-[980px] shadow-2xl relative">
                 
                 <!-- LEVEL 1: DIREÇÃO GERAL -->
                 <div class="flex justify-center mb-6">
-                    <div onclick="openDeptDrawer('direcao')" class="cursor-pointer group relative bg-gradient-to-b from-blue-900/60 to-blue-950/80 border-2 border-blue-500 rounded-xl p-4 w-72 text-center shadow-lg shadow-blue-500/10 hover:border-cyan-400 transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="mx-auto w-8 h-8 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
-                            <i data-lucide="building-2" class="w-5 h-5"></i>
+                    <div onclick="openDeptDrawer('direcao')" class="cursor-pointer group relative bg-[#0D152A]/90 border border-blue-500/80 hover:border-cyan-400 rounded-xl p-4 w-72 text-center shadow-lg shadow-blue-900/20 transition-all duration-300">
+                        <div class="mx-auto w-8 h-8 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center mb-2">
+                            <i data-lucide="building-2" class="w-4 h-4"></i>
                         </div>
-                        <h3 class="font-bold text-white text-sm tracking-wide uppercase">DIREÇÃO GERAL / ADMINISTRAÇÃO</h3>
-                        <p class="text-[11px] text-cyan-400 mt-1">Supervisão Executiva Geral</p>
-                        <span class="absolute top-2 right-2 flex h-2 w-2">
+                        <h3 class="font-bold text-white text-xs tracking-wide uppercase">DIREÇÃO GERAL / ADMINISTRAÇÃO</h3>
+                        <p class="text-[10px] text-cyan-400 mt-1">Supervisão Executiva Geral</p>
+                        <span class="absolute top-2.5 right-2.5 flex h-2 w-2">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
                         </span>
                     </div>
                 </div>
 
-                <!-- CONNECTOR L1 to L2 -->
                 <div class="flex justify-center">
-                    <div class="tree-line-v h-8"></div>
+                    <div class="tree-line-v h-6"></div>
                 </div>
 
-                <!-- HORIZONTAL BRANCH L2 -->
                 <div class="flex justify-center relative">
-                    <div class="tree-line-h w-[78%]"></div>
+                    <div class="tree-line-h w-[75%]"></div>
                 </div>
 
-                <!-- LEVEL 2: DIRECTORS / MAIN BRANCHES -->
-                <div class="grid grid-cols-4 gap-6 mt-0 relative pt-8">
+                <!-- LEVEL 2: DIRECTORS -->
+                <div class="grid grid-cols-4 gap-6 relative pt-6">
                     
-                    <!-- Vertical connectors down to Level 2 nodes -->
-                    <div class="absolute -top-0 left-[12.5%] -translate-x-1/2 tree-line-v h-8"></div>
-                    <div class="absolute -top-0 left-[37.5%] -translate-x-1/2 tree-line-v h-8"></div>
-                    <div class="absolute -top-0 left-[62.5%] -translate-x-1/2 tree-line-v h-8"></div>
-                    <div class="absolute -top-0 left-[87.5%] -translate-x-1/2 tree-line-v h-8"></div>
+                    <div class="absolute -top-0 left-[12.5%] -translate-x-1/2 tree-line-v h-6"></div>
+                    <div class="absolute -top-0 left-[37.5%] -translate-x-1/2 tree-line-v h-6"></div>
+                    <div class="absolute -top-0 left-[62.5%] -translate-x-1/2 tree-line-v h-6"></div>
+                    <div class="absolute -top-0 left-[87.5%] -translate-x-1/2 tree-line-v h-6"></div>
 
-                    <!-- Node L2: DGP -->
+                    <!-- DGP -->
                     <div class="flex flex-col items-center">
-                        <div onclick="openDeptDrawer('dgp')" class="cursor-pointer group bg-slate-900/90 border border-cyan-500/40 hover:border-cyan-400 rounded-xl p-3.5 w-full text-center shadow-md hover:bg-slate-800/80 transition-all transform hover:-translate-y-1">
+                        <div onclick="openDeptDrawer('dgp')" class="cursor-pointer group bg-[#0A101D] border border-cyan-500/40 hover:border-cyan-400 rounded-xl p-3.5 w-full text-center shadow-md transition-all">
                             <div class="mx-auto w-7 h-7 bg-cyan-500/20 text-cyan-400 rounded-lg flex items-center justify-center mb-1.5">
-                                <i data-lucide="git-fork" class="w-4 h-4"></i>
+                                <i data-lucide="git-fork" class="w-3.5 h-3.5"></i>
                             </div>
                             <h4 class="font-bold text-white text-xs">DGP</h4>
                             <p class="text-[10px] text-slate-400 mt-0.5">Gestão de Projectos</p>
                         </div>
                     </div>
 
-                    <!-- Node L2: DSE -->
+                    <!-- DSE -->
                     <div class="flex flex-col items-center">
-                        <div onclick="openDeptDrawer('dse')" class="cursor-pointer group bg-slate-900/90 border border-blue-500/40 hover:border-blue-400 rounded-xl p-3.5 w-full text-center shadow-md hover:bg-slate-800/80 transition-all transform hover:-translate-y-1">
+                        <div onclick="openDeptDrawer('dse')" class="cursor-pointer group bg-[#0A101D] border border-blue-500/40 hover:border-blue-400 rounded-xl p-3.5 w-full text-center shadow-md transition-all">
                             <div class="mx-auto w-7 h-7 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center mb-1.5">
-                                <i data-lucide="video" class="w-4 h-4"></i>
+                                <i data-lucide="video" class="w-3.5 h-3.5"></i>
                             </div>
                             <h4 class="font-bold text-white text-xs">DSE</h4>
                             <p class="text-[10px] text-slate-400 mt-0.5">Segurança Eletrónica</p>
                         </div>
                     </div>
 
-                    <!-- Node L2: DL -->
+                    <!-- DL -->
                     <div class="flex flex-col items-center">
-                        <div onclick="openDeptDrawer('dl')" class="cursor-pointer group bg-slate-900/90 border border-purple-500/40 hover:border-purple-400 rounded-xl p-3.5 w-full text-center shadow-md hover:bg-slate-800/80 transition-all transform hover:-translate-y-1">
+                        <div onclick="openDeptDrawer('dl')" class="cursor-pointer group bg-[#0A101D] border border-purple-500/40 hover:border-purple-400 rounded-xl p-3.5 w-full text-center shadow-md transition-all">
                             <div class="mx-auto w-7 h-7 bg-purple-500/20 text-purple-400 rounded-lg flex items-center justify-center mb-1.5">
-                                <i data-lucide="boxes" class="w-4 h-4"></i>
+                                <i data-lucide="boxes" class="w-3.5 h-3.5"></i>
                             </div>
                             <h4 class="font-bold text-white text-xs">DL</h4>
                             <p class="text-[10px] text-slate-400 mt-0.5">Departamento Lógico</p>
                         </div>
                     </div>
 
-                    <!-- Node L2: APOIO OPERACIONAL -->
+                    <!-- APOIO OPERACIONAL -->
                     <div class="flex flex-col items-center">
-                        <div onclick="openDeptDrawer('apoio')" class="cursor-pointer group bg-slate-900/90 border border-slate-700 hover:border-slate-500 rounded-xl p-3.5 w-full text-center shadow-md hover:bg-slate-800/80 transition-all transform hover:-translate-y-1">
+                        <div onclick="openDeptDrawer('apoio')" class="cursor-pointer group bg-[#0A101D] border border-slate-700/80 hover:border-slate-500 rounded-xl p-3.5 w-full text-center shadow-md transition-all">
                             <div class="mx-auto w-7 h-7 bg-slate-800 text-slate-300 rounded-lg flex items-center justify-center mb-1.5">
-                                <i data-lucide="settings" class="w-4 h-4"></i>
+                                <i data-lucide="settings" class="w-3.5 h-3.5"></i>
                             </div>
                             <h4 class="font-bold text-white text-xs">APOIO OPERACIONAL</h4>
                             <p class="text-[10px] text-slate-400 mt-0.5">Serviços Transversais</p>
@@ -269,99 +271,94 @@
 
                 </div>
 
-                <!-- CONNECTOR L2 to L3 (Multi-branch) -->
-                <!-- Connectors for DGP Sub-nodes -->
-                <div class="grid grid-cols-4 gap-6 mt-4">
-                    <!-- Column 1 (DGP) Sub-connectors -->
+                <!-- CONNECTORS L2 to L3 -->
+                <div class="grid grid-cols-4 gap-6 mt-3">
                     <div class="flex flex-col items-center">
-                        <div class="tree-line-v h-6"></div>
+                        <div class="tree-line-v h-5"></div>
                         <div class="tree-line-h w-full"></div>
-                        <div class="grid grid-cols-2 w-full pt-0 relative">
-                            <div class="flex justify-center"><div class="tree-line-v h-6"></div></div>
-                            <div class="flex justify-center"><div class="tree-line-v h-6"></div></div>
+                        <div class="grid grid-cols-2 w-full pt-0">
+                            <div class="flex justify-center"><div class="tree-line-v h-5"></div></div>
+                            <div class="flex justify-center"><div class="tree-line-v h-5"></div></div>
                         </div>
                     </div>
 
-                    <!-- Column 2 (DSE) Sub-connectors -->
                     <div class="flex flex-col items-center">
-                        <div class="tree-line-v h-12"></div>
+                        <div class="tree-line-v h-10"></div>
                     </div>
 
-                    <!-- Column 3 (DL) Sub-connectors -->
                     <div class="flex flex-col items-center">
-                        <div class="tree-line-v h-6"></div>
+                        <div class="tree-line-v h-5"></div>
                         <div class="tree-line-h w-full"></div>
-                        <div class="grid grid-cols-2 w-full pt-0 relative">
-                            <div class="flex justify-center"><div class="tree-line-v h-6"></div></div>
-                            <div class="flex justify-center"><div class="tree-line-v h-6"></div></div>
+                        <div class="grid grid-cols-2 w-full pt-0">
+                            <div class="flex justify-center"><div class="tree-line-v h-5"></div></div>
+                            <div class="flex justify-center"><div class="tree-line-v h-5"></div></div>
                         </div>
                     </div>
 
-                    <!-- Column 4 (Apoio) Sub-connectors -->
                     <div class="flex flex-col items-center">
-                        <div class="tree-line-v h-6"></div>
+                        <div class="tree-line-v h-5"></div>
                         <div class="tree-line-h w-full"></div>
-                        <div class="grid grid-cols-3 w-full pt-0 relative">
-                            <div class="flex justify-center"><div class="tree-line-v h-6"></div></div>
-                            <div class="flex justify-center"><div class="tree-line-v h-6"></div></div>
-                            <div class="flex justify-center"><div class="tree-line-v h-6"></div></div>
+                        <div class="grid grid-cols-3 w-full pt-0">
+                            <div class="flex justify-center"><div class="tree-line-v h-5"></div></div>
+                            <div class="flex justify-center"><div class="tree-line-v h-5"></div></div>
+                            <div class="flex justify-center"><div class="tree-line-v h-5"></div></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- LEVEL 3: SUB-DEPARTMENTS -->
+                <!-- LEVEL 3: SUB DEPARTMENTS -->
                 <div class="grid grid-cols-4 gap-6 mt-0">
                     
-                    <!-- Sub-nodes for DGP -->
+                    <!-- DGP Sub -->
                     <div class="grid grid-cols-2 gap-3">
-                        <div onclick="openDeptDrawer('gcq')" class="cursor-pointer group bg-slate-900/60 border border-emerald-500/30 hover:border-emerald-400 rounded-lg p-2.5 text-center transition-all hover:bg-slate-800">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 mx-auto mb-1"></i>
+                        <div onclick="openDeptDrawer('gcq')" class="cursor-pointer group bg-[#0A101D] border border-emerald-500/30 hover:border-emerald-400 rounded-lg p-2.5 text-center transition-all">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400 mx-auto mb-1"></i>
                             <h5 class="font-bold text-[11px] text-white">GCQ</h5>
-                            <p class="text-[9px] text-slate-400">Auditoria & Qualidade</p>
+                            <p class="text-[9px] text-slate-400 mt-0.5">Auditoria & Qualidade</p>
                         </div>
-                        <div onclick="openDeptDrawer('hsst')" class="cursor-pointer group bg-slate-900/60 border border-amber-500/30 hover:border-amber-400 rounded-lg p-2.5 text-center transition-all hover:bg-slate-800">
-                            <i data-lucide="hard-hat" class="w-4 h-4 text-amber-400 mx-auto mb-1"></i>
-                            <h5 class="font-bold text-[11px] text-white">HSST</h5>
-                            <p class="text-[9px] text-slate-400">Fiscalização de Segurança</p>
+                        <div onclick="openDeptDrawer('hsst')" class="cursor-pointer group bg-[#0A101D] border border-amber-500/50 hover:border-amber-400 rounded-lg p-2.5 text-center transition-all">
+                            <i data-lucide="hard-hat" class="w-3.5 h-3.5 text-amber-400 mx-auto mb-1"></i>
+                            <h5 class="font-bold text-[11px] text-amber-400">HSST</h5>
+                            <p class="text-[9px] text-slate-400 mt-0.5">Fiscalização de Segurança</p>
                         </div>
                     </div>
 
-                    <!-- Sub-node for DSE -->
+                    <!-- DSE Sub -->
                     <div class="flex justify-center">
-                        <div onclick="openDeptDrawer('cftv')" class="cursor-pointer group bg-slate-900/60 border border-blue-500/30 hover:border-blue-400 rounded-lg p-2.5 w-full text-center transition-all hover:bg-slate-800">
-                            <i data-lucide="camera" class="w-4 h-4 text-blue-400 mx-auto mb-1"></i>
+                        <div onclick="openDeptDrawer('cftv')" class="cursor-pointer group bg-[#0A101D] border border-blue-500/30 hover:border-blue-400 rounded-lg p-2.5 w-full text-center transition-all">
+                            <i data-lucide="camera" class="w-3.5 h-3.5 text-blue-400 mx-auto mb-1"></i>
                             <h5 class="font-bold text-[11px] text-white">CFTV & Alarmes</h5>
-                            <p class="text-[9px] text-slate-400">Monitorização & Resposta</p>
+                            <p class="text-[9px] text-slate-400 mt-0.5">Monitorização 24/7</p>
                         </div>
                     </div>
 
-                    <!-- Sub-nodes for DL -->
+                    <!-- DL Sub -->
                     <div class="grid grid-cols-2 gap-3">
-                        <div onclick="openDeptDrawer('logistica')" class="cursor-pointer group bg-slate-900/60 border border-purple-500/30 hover:border-purple-400 rounded-lg p-2.5 text-center transition-all hover:bg-slate-800">
-                            <i data-lucide="warehouse" class="w-4 h-4 text-purple-400 mx-auto mb-1"></i>
-                            <h5 class="font-bold text-[11px] text-white">Logística & Armazém</h5>
-                            <p class="text-[9px] text-slate-400">Direção Técnica</p>
+                        <div onclick="openDeptDrawer('logistica')" class="cursor-pointer group bg-[#0A101D] border border-purple-500/30 hover:border-purple-400 rounded-lg p-2.5 text-center transition-all">
+                            <i data-lucide="warehouse" class="w-3.5 h-3.5 text-purple-400 mx-auto mb-1"></i>
+                            <h5 class="font-bold text-[10px] text-white">Logística & Armazém</h5>
+                            <p class="text-[9px] text-slate-400 mt-0.5">Direção Técnica</p>
                         </div>
-                        <div onclick="openDeptDrawer('requisicoes')" class="cursor-pointer group bg-slate-900/60 border border-purple-500/30 hover:border-purple-400 rounded-lg p-2.5 text-center transition-all hover:bg-slate-800">
-                            <i data-lucide="file-check" class="w-4 h-4 text-purple-400 mx-auto mb-1"></i>
-                            <h5 class="font-bold text-[11px] text-white">Requisições</h5>
-                            <p class="text-[9px] text-slate-400">Função Interna</p>
+                        <div onclick="openDeptDrawer('requisicoes')" class="cursor-pointer group bg-[#0A101D] border border-purple-500/30 hover:border-purple-400 rounded-lg p-2.5 text-center transition-all">
+                            <i data-lucide="file-check" class="w-3.5 h-3.5 text-purple-400 mx-auto mb-1"></i>
+                            <h5 class="font-bold text-[10px] text-white">Requisições</h5>
+                            <p class="text-[9px] text-slate-400 mt-0.5">Função Interna</p>
                         </div>
                     </div>
 
-                    <!-- Sub-nodes for Apoio Operacional -->
+                    <!-- Apoio Sub -->
                     <div class="grid grid-cols-3 gap-2">
-                        <div onclick="openDeptDrawer('frotas')" class="cursor-pointer group bg-slate-900/60 border border-slate-700 hover:border-cyan-400 rounded-lg p-2 text-center transition-all hover:bg-slate-800">
+                        <div onclick="openDeptDrawer('frotas')" class="cursor-pointer group bg-[#0A101D] border border-slate-700/60 hover:border-cyan-400 rounded-lg p-2 text-center transition-all">
                             <i data-lucide="truck" class="w-3.5 h-3.5 text-cyan-400 mx-auto mb-1"></i>
-                            <h5 class="font-bold text-[10px] text-white">Frotas & GPS</h5>
+                            <h5 class="font-bold text-[9px] text-white">Frotas & GPS</h5>
                         </div>
-                        <div onclick="openDeptDrawer('compras')" class="cursor-pointer group bg-slate-900/60 border border-slate-700 hover:border-emerald-400 rounded-lg p-2 text-center transition-all hover:bg-slate-800">
+                        <div onclick="openDeptDrawer('compras')" class="cursor-pointer group bg-[#0A101D] border border-slate-700/60 hover:border-emerald-400 rounded-lg p-2 text-center transition-all">
                             <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-emerald-400 mx-auto mb-1"></i>
-                            <h5 class="font-bold text-[10px] text-white">Compras</h5>
+                            <h5 class="font-bold text-[9px] text-white">Compras</h5>
                         </div>
-                        <div onclick="openDeptDrawer('rh')" class="cursor-pointer group bg-slate-900/60 border border-slate-700 hover:border-indigo-400 rounded-lg p-2 text-center transition-all hover:bg-slate-800">
+                        <div onclick="openDeptDrawer('rh')" class="cursor-pointer group bg-[#0A101D] border border-slate-700/60 hover:border-indigo-400 rounded-lg p-2 text-center transition-all">
                             <i data-lucide="users" class="w-3.5 h-3.5 text-indigo-400 mx-auto mb-1"></i>
-                            <h5 class="font-bold text-[10px] text-white">RH / Escalas</h5>
+                            <h5 class="font-bold text-[9px] text-white">RH / Escalas</h5>
                         </div>
                     </div>
 
@@ -372,83 +369,78 @@
         </main>
     </div>
 
-    <!-- Interactive Drawer for Department Details -->
+    <!-- Drawer Panel for Node Interactivity -->
     <div id="drawerOverlay" onclick="closeDeptDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
     
-    <aside id="deptDrawer" class="fixed top-0 right-0 h-full w-96 bg-cardBg border-l border-borderCol z-50 transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col justify-between">
+    <aside id="deptDrawer" class="fixed top-0 right-0 h-full w-96 bg-[#0A0E1A] border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col justify-between">
         <div class="p-6 overflow-y-auto flex-1">
-            <div class="flex items-center justify-between pb-4 border-b border-borderCol">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
                 <div class="flex items-center space-x-3">
-                    <div id="drawerIconBg" class="p-2.5 rounded-lg bg-cyanAccent/20 text-cyanAccent">
-                        <i id="drawerIcon" data-lucide="building-2" class="w-6 h-6"></i>
+                    <div id="drawerIconBg" class="p-2.5 rounded-lg bg-cyan-500/20 text-cyan-400">
+                        <i id="drawerIcon" data-lucide="building-2" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <h3 id="drawerTitle" class="text-lg font-bold text-white">Nome do Módulo</h3>
-                        <p id="drawerCode" class="text-xs text-cyanAccent font-mono">CÓDIGO-01</p>
+                        <h3 id="drawerTitle" class="text-base font-bold text-white">Nome do Módulo</h3>
+                        <p id="drawerCode" class="text-xs text-cyan-400 font-mono">CÓDIGO-01</p>
                     </div>
                 </div>
-                <button onclick="closeDeptDrawer()" class="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800">
+                <button onclick="closeDeptDrawer()" class="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800/60">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <!-- Content Details inside Drawer -->
             <div class="mt-6 space-y-6">
                 <div>
-                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Descrição Funcional</h4>
-                    <p id="drawerDescription" class="text-sm text-slate-300 leading-relaxed bg-slate-900/50 p-3 rounded-lg border border-slate-800/80">
-                        Descrição do departamento e responsabilidades operacionais dentro da organização.
+                    <h4 class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Descrição Funcional</h4>
+                    <p id="drawerDescription" class="text-xs text-slate-300 leading-relaxed bg-slate-900/60 p-3 rounded-lg border border-slate-800/80">
+                        Descrição do departamento e responsabilidades operacionais dentro da organização Hanzolo.
                     </p>
                 </div>
 
                 <div>
-                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Responsável Principal</h4>
+                    <h4 class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Responsável Principal</h4>
                     <div class="flex items-center space-x-3 bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-white text-sm" id="drawerAvatar">
+                        <div class="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-white text-xs" id="drawerAvatar">
                             JD
                         </div>
                         <div>
-                            <p id="drawerLeaderName" class="text-sm font-semibold text-white">Nome do Responsável</p>
-                            <p id="drawerLeaderRole" class="text-xs text-slate-400">Cargo / Direção</p>
+                            <p id="drawerLeaderName" class="text-xs font-semibold text-white">Nome do Responsável</p>
+                            <p id="drawerLeaderRole" class="text-[10px] text-slate-400">Cargo / Direção</p>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Métricas & Atividade</h4>
+                    <h4 class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-3">Métricas Operacionais</h4>
                     <div class="grid grid-cols-2 gap-3">
                         <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
-                            <span class="text-xs text-slate-400">Pessoal Ativo</span>
-                            <p id="drawerStaff" class="text-lg font-bold text-emerald-400 mt-1">0 Pessoas</p>
+                            <span class="text-[10px] text-slate-400">Equipa Ativa</span>
+                            <p id="drawerStaff" class="text-sm font-bold text-emerald-400 mt-1">0 Pessoas</p>
                         </div>
                         <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
-                            <span class="text-xs text-slate-400">Status Operacional</span>
-                            <p id="drawerStatus" class="text-sm font-semibold text-cyan-400 mt-1.5 flex items-center gap-1.5">
-                                <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Normal
+                            <span class="text-[10px] text-slate-400">Status Módulo</span>
+                            <p id="drawerStatus" class="text-xs font-semibold text-cyan-400 mt-1 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Normal
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Atribuições Diretas</h4>
-                    <ul id="drawerTasks" class="space-y-2 text-xs text-slate-300">
-                        <!-- JS injected list items -->
-                    </ul>
+                    <h4 class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Atribuições Diretas</h4>
+                    <ul id="drawerTasks" class="space-y-2 text-xs text-slate-300"></ul>
                 </div>
             </div>
         </div>
 
-        <!-- Drawer Action Footer -->
-        <div class="p-4 border-t border-borderCol bg-slate-900/60 flex items-center space-x-3">
-            <button id="drawerActionBtn" class="flex-1 bg-cyanAccent hover:bg-cyan-500 text-slate-950 font-bold py-2.5 px-4 rounded-lg text-sm transition-colors flex items-center justify-center space-x-2">
+        <div class="p-4 border-t border-slate-800 bg-slate-950/60">
+            <button onclick="closeDeptDrawer()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2 px-4 rounded-lg text-xs transition-colors flex items-center justify-center space-x-2">
                 <span>Aceder ao Módulo</span>
                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
         </div>
     </aside>
 
-    <!-- JavaScript Data and Drawer Logic -->
     <script>
         const deptData = {
             direcao: {
@@ -664,18 +656,26 @@
                 leader: "Dra. Maria Neves",
                 role: "Gestora de Recursos Humanos",
                 avatar: "MN",
-                staff: "65 Colaboradores Total",
+                staff: "65 Colaboradores",
                 status: "Escalas Definidas",
                 tasks: [
-                    "Planeamento das equipas de piquete noturno/fds",
+                    "Planeamento das equipas de piquete noturno",
                     "Gestão do cadastro individual de fardamento/EPI",
                     "Processamento de horas de intervenção técnica"
                 ]
             }
         };
 
-        // Lucide icons initialization
         lucide.createIcons();
+
+        function selectMenu(element) {
+            document.querySelectorAll('aside nav a').forEach(el => {
+                el.classList.remove('bg-cyan-500/10', 'border', 'border-cyan-500/30', 'text-cyan-400');
+                el.classList.add('text-slate-400');
+            });
+            element.classList.remove('text-slate-400');
+            element.classList.add('bg-cyan-500/10', 'border', 'border-cyan-500/30', 'text-cyan-400');
+        }
 
         function openDeptDrawer(key) {
             const data = deptData[key];
@@ -688,7 +688,7 @@
             document.getElementById('drawerLeaderRole').innerText = data.role;
             document.getElementById('drawerAvatar').innerText = data.avatar;
             document.getElementById('drawerStaff').innerText = data.staff;
-            document.getElementById('drawerStatus').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> ${data.status}`;
+            document.getElementById('drawerStatus').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${data.status}`;
 
             const iconContainer = document.getElementById('drawerIconBg');
             iconContainer.className = `p-2.5 rounded-lg ${data.colorClass}`;
@@ -696,7 +696,6 @@
             const iconElem = document.getElementById('drawerIcon');
             iconElem.setAttribute('data-lucide', data.icon);
 
-            // Populate tasks list
             const tasksContainer = document.getElementById('drawerTasks');
             tasksContainer.innerHTML = '';
             data.tasks.forEach(task => {
@@ -706,10 +705,8 @@
                 tasksContainer.appendChild(li);
             });
 
-            // Re-render icons inside drawer
             lucide.createIcons();
 
-            // Show drawer with transition
             const overlay = document.getElementById('drawerOverlay');
             const drawer = document.getElementById('deptDrawer');
 
