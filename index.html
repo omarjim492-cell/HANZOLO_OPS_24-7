@@ -35,15 +35,21 @@
 
     <!-- Cabeçalho Executivo de Impressão (Visível Apenas no Relatório PDF/Imprimir) -->
     <div class="print-header bg-white text-gray-900 p-6 border-b-2 border-cyan-600 justify-between items-center">
-        <div class="flex items-center space-x-4">
-            <!-- Logótipo Oficial Vetorial para Impressão -->
-            <svg class="h-12 w-auto" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M190 20L20 120L190 220V160H250V80H190V20Z" fill="#0EA5E9"/>
-                <path d="M350 40H450V200H350V40ZM480 40H580V200H480V40ZM610 40H710V200H610V40ZM740 40H840V200H740V40Z" fill="#0EA5E9"/>
-            </svg>
+        <div class="flex items-center space-x-6">
+            <!-- Logótipo Oficial Vetorial Enquadrado para Impressão -->
+            <div class="h-14 w-auto flex items-center justify-center">
+                <svg class="h-full w-auto max-w-[280px]" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMid meet">
+                    <!-- Seta/Ponta Esquerda e H -->
+                    <path d="M190 10L10 120L190 230V165H260V75H190V10Z" fill="#0EA5E9"/>
+                    <circle cx="130" cy="120" r="14" fill="#0284C7"/>
+                    <path d="M130 114H220V75H250V165H220V126H130V114Z" fill="#0284C7"/>
+                    <!-- Texto HANZOLO em Azul Escuro para fundo branco de impressão -->
+                    <path d="M370 45H420V115H500V45H550V195H500V135H420V195H370V45ZM580 45H680V85H630V195H580V45ZM710 45H810V85H760V195H710V45ZM840 45H940V195H890V85H840V45Z" fill="#0F172A"/>
+                </svg>
+            </div>
             <div>
                 <h1 class="text-xl font-black uppercase text-gray-900 tracking-tight">HANZOLO — Tecnologia, Sistemas & Segurança, LDA</h1>
-                <p class="text-xs text-gray-600 font-mono">NIF: 5417271608 • Base Talatona, Luanda, Angola</p>
+                <p class="text-xs text-gray-600 font-mono font-semibold mt-0.5">NIF: 5417271608 • Base Talatona, Luanda, Angola</p>
             </div>
         </div>
         <div class="text-right">
@@ -53,24 +59,25 @@
     </div>
 
     <!-- Topo Executivo Digital -->
-    <header class="no-print bg-gray-900 border-b border-gray-800 px-6 py-3.5 flex items-center justify-between shadow-xl z-30">
-        <div class="flex items-center space-x-4">
-            <!-- Logotipo Vetorial Oficial Hanzolo -->
-            <div class="bg-cyan-950/80 border border-cyan-800/50 p-2 rounded-xl shadow-lg flex items-center justify-center">
-                <svg class="h-8 w-auto" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <header class="no-print bg-gray-900 border-b border-gray-800 px-6 py-3 flex items-center justify-between shadow-xl z-30">
+        <div class="flex items-center space-x-5">
+            <!-- Logotipo Vetorial Oficial Hanzolo com Enquadramento Perfeito -->
+            <div class="bg-gray-950 border border-gray-800/80 px-4 py-2 rounded-xl shadow-inner flex items-center justify-center h-12 w-auto">
+                <svg class="h-8 w-auto max-w-[240px]" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMid meet">
                     <!-- Seta/Ponta Esquerda com Degradê Simulado -->
                     <path d="M190 10L10 120L190 230V165H260V75H190V10Z" fill="#0EA5E9"/>
                     <!-- Circuito interno e letra H -->
                     <circle cx="130" cy="120" r="14" fill="#0284C7"/>
                     <path d="M130 114H220V75H250V165H220V126H130V114Z" fill="#38BDF8"/>
-                    <!-- Texto HANZOLO Estilizado em SVG -->
+                    <!-- Texto HANZOLO Estilizado -->
                     <path d="M370 45H420V115H500V45H550V195H500V135H420V195H370V45ZM580 45H680V85H630V195H580V45ZM710 45H810V85H760V195H710V45ZM840 45H940V195H890V85H840V45Z" fill="#FFFFFF"/>
                 </svg>
             </div>
-            <div>
+            
+            <div class="border-l border-gray-800 pl-4 py-0.5">
                 <div class="flex items-center space-x-2">
                     <h1 class="text-base font-extrabold tracking-wide uppercase text-white">HANZOLO, ops 24-7</h1>
-                    <span class="bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px] px-2 py-0.5 rounded font-mono">NIF: 5417271608</span>
+                    <span class="bg-cyan-950 text-cyan-400 border border-cyan-800 text-[11px] px-2.5 py-0.5 rounded-md font-mono font-bold">NIF: 5417271608</span>
                 </div>
                 <p class="text-xs text-gray-400">Tecnologia, Sistemas & Segurança LDA — Base Talatona, Luanda</p>
             </div>
@@ -150,7 +157,7 @@
             <div id="tab-visao-geral" class="tab-content space-y-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-900 pb-4">
                     <div>
-                        <h2 class="text-xl font-bold tracking-tight text-white">Painel Geral de Operaciones</h2>
+                        <h2 class="text-xl font-bold tracking-tight text-white">Painel Geral de Operações</h2>
                         <p class="text-xs text-gray-400">Monitorização unificada e telemetria ativa em tempo real na província de Luanda.</p>
                     </div>
                     <div class="flex items-center space-x-2">
@@ -372,7 +379,7 @@
                 <div class="bg-gray-900 border border-gray-800/80 rounded-xl overflow-hidden shadow-md">
                     <div class="p-4 border-b border-gray-800 flex justify-between items-center">
                         <h3 class="font-bold text-xs text-gray-200 uppercase tracking-wider">Efetivos Ativos e Registados</h3>
-                        <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded font-mono" id="total-colaboradores">NIF: 5417271608 (Registos: 2)</span>
+                        <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded font-mono font-bold" id="total-colaboradores">NIF Hanzolo: 5417271608</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs text-gray-300">
