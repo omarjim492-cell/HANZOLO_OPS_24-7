@@ -1697,6 +1697,42 @@
             if (elTotal) elTotal.innerText = linhas.length;
             if (elAlertas) elAlertas.innerText = alertas;
         }
+                /* ══════ APROVAÇÃO DE REQUISIÇÕES ══════ */
+        function atualizarAcoesRequisicao(tr) {
+            const cod = tr.dataset.req;
+            if (!cod) return;
+            const tdEstado = tr.querySelector('.td-estado');
+            const tdAcoes = tr.querySelector('.td-acoes');
+            if (!tdEstado || !tdAcoes) return;
+            const estado = (tdEstado.innerText || '').trim();
+            const mapa = {
+                'Aprovado': { cor: 'emerald', icone: 'fa-check' },
+                'Rejeitado': { cor: 'red', icone: 'fa-xmark' },
+                'Em Análise': { cor: 'amber', icone: 'fa-clock' }
+            };
+            const info = mapa[estado] || mapa['Em Análise'];
+            tdEstado.innerHTML = `<span class="badge-modern bg-${info.cor}-500/15 text-${info.cor}-500"><i class="fas ${info.icone} text-[8px]"></i> ${estado}</span>`;
+            if (estado === 'Em Análise') {
+                tdAcoes.innerHTML = `<button onclick="mudarEstadoReq('${cod}', 'Aprovado')" class="text-emerald-500 hover:text-emerald-400 mr-2"><i class="fas fa-check"></i></button><button onclick="mudarEstadoReq('${cod}', 'Rejeitado')" class="text-red-500 hover:text-red-400"><i class="fas fa-xmark"></i></button>`;
+            } else if (estado === 'Aprovado') {
+                tdAcoes.innerHTML = `<button onclick="mudarEstadoReq('${cod}', 'Rejeitado')" class="text-red-500 hover:text-red-400"><i class="fas fa-xmark"></i></button>`;
+            } else {
+                tdAcoes.innerHTML = `<button onclick="mudarEstadoReq('${cod}', 'Aprovado')" class="text-emerald-500 hover:text-emerald-400"><i class="fas fa-check"></i></button>`;
+            }
+        }
+
+        function mudarEstadoReq(cod, novoEstado) {
+            const tr = document.querySelector(`tr[data-req="${cod}"]`);
+            if (!tr) return;
+            tr.querySelector('.td-estado').innerText = novoEstado;
+            const dados = JSON.parse(localStorage.getItem('hanzolo_requisicoes') || '[]');
+            const idx = dados.findIndex(r => r.cod === cod);
+            if (idx >= 0) { dados[idx].estado = novoEstado; localStorage.setItem('hanzolo_requisicoes', JSON.stringify(dados)); }
+            atualizarAcoesRequisicao(tr);
+            mostrarToast(`Requisição ${cod} → ${novoEstado}`, novoEstado === 'Aprovado' ? 'success' : 'warn');
+        }
+
+        
         function removerLinha(btn, tipo) {
             if (!confirm('Remover este registo?')) return;
             btn.closest('tr').remove();
