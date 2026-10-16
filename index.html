@@ -51,6 +51,22 @@
         .text-secondary-themed { color: var(--text-secondary); }
         .border-themed { border-color: var(--border); }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
+                /* ═══ Remover sublinhados em códigos, links e spans ═══ */
+        a, u, span, td, th { text-decoration: none !important; }
+        .font-mono, [class*="text-blue-500"] { text-decoration: none !important; }
+                /* ═══ Modo claro — contraste melhorado ═══ */
+        html.light {
+            --text-primary: #020617 !important;
+            --text-secondary: #334155 !important;
+            --border: #cbd5e1 !important;
+        }
+        html.light body { color: #020617 !important; font-weight: 500; }
+        html.light .text-secondary-themed { color: #334155 !important; font-weight: 500; }
+        html.light .card-themed { background: #ffffff !important; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        html.light .badge-modern { font-weight: 800; }
+        html.light table thead { color: #1e293b !important; font-weight: 700; }
+        html.light .border-themed { border-color: #cbd5e1 !important; }
+        html.light .sidebar-themed { background: #ffffff !important; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
