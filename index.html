@@ -2116,6 +2116,25 @@
                 setInterval(atualizarGraficos, 8000);
                 inicializarMapa();
             }, 300);
+                        // Restaurar requisições (PATCH D)
+            JSON.parse(localStorage.getItem('hanzolo_requisicoes') || '[]').forEach(r => {
+                const tbody = document.getElementById('tabela-requisicoes');
+                if (!tbody) return;
+                if (tbody.querySelector(`tr[data-req="${r.cod}"]`)) return;
+                const tr = document.createElement('tr');
+                tr.dataset.req = r.cod;
+                tr.className = 'hover:bg-blue-500/5 transition-colors';
+                tr.innerHTML = `
+                    <td class="p-3 font-mono text-blue-500">${r.cod}</td>
+                    <td class="p-3 text-primary-themed">${r.desc}</td>
+                    <td class="p-3 text-secondary-themed">${r.qtd}</td>
+                    <td class="p-3 text-secondary-themed">${r.sol}</td>
+                    <td class="p-3 td-estado">${r.estado || 'Em Análise'}</td>
+                    <td class="p-3 td-acoes"></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.querySelectorAll('#tabela-requisicoes tr[data-req]').forEach(tr => atualizarAcoesRequisicao(tr));
 
             setTimeout(() => mostrarToast('Bem-vindo ao HANZOLO OPS 24-7', 'info'), 800);
         });
