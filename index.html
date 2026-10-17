@@ -2076,14 +2076,27 @@
 
             JSON.parse(localStorage.getItem(STORAGE_KEYS.colab) || '[]').forEach(c => inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto));
             JSON.parse(localStorage.getItem(STORAGE_KEYS.dse) || '[]').forEach(d => inserirLinhaDSE(d.nome, d.esp, d.zona, d.contacto, d.estado));
-            JSON.parse(localStorage.getItem(STORAGE_KEYS.req) || '[]').forEach(r => {
+                 // Restaurar requisições (com estado persistente)
+            JSON.parse(localStorage.getItem('hanzolo_requisicoes') || '[]').forEach(r => {
                 const tbody = document.getElementById('tabela-requisicoes');
                 if (!tbody) return;
+                if (tbody.querySelector(`tr[data-req="${r.cod}"]`)) return; // já existe no HTML
                 const tr = document.createElement('tr');
+                tr.dataset.req = r.cod;
                 tr.className = 'hover:bg-blue-500/5 transition-colors';
-                tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${r.cod}</td><td class="p-3 text-primary-themed">${r.desc}</td><td class="p-3 text-secondary-themed">${r.qtd}</td><td class="p-3 text-secondary-themed">${r.sol}</td><td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Análise</span></td>`;
+                tr.innerHTML = `
+                    <td class="p-3 font-mono text-blue-500">${r.cod}</td>
+                    <td class="p-3 text-primary-themed">${r.desc}</td>
+                    <td class="p-3 text-secondary-themed">${r.qtd}</td>
+                    <td class="p-3 text-secondary-themed">${r.sol}</td>
+                    <td class="p-3 td-estado">${r.estado || 'Em Análise'}</td>
+                    <td class="p-3 td-acoes"></td>
+                `;
                 tbody.appendChild(tr);
             });
+
+            // Aplicar botões em todas as linhas existentes
+            document.querySelectorAll('#tabela-requisicoes tr[data-req]').forEach(tr => atualizarAcoesRequisicao(tr));
             JSON.parse(localStorage.getItem(STORAGE_KEYS.epiGeral) || '[]').forEach(e => {
                 const tbody = document.getElementById('tabela-epi-geral');
                 if (!tbody) return;
