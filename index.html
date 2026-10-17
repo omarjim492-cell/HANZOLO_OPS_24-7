@@ -1836,21 +1836,36 @@
             tbody.appendChild(tr);
             atualizarContadores();
         }
-        function adicionarRequisicao(event) {
+         function adicionarRequisicao(event) {
             event.preventDefault();
             const desc = document.getElementById('req-desc').value.trim();
             const qtd = document.getElementById('req-qtd').value.trim();
             const sol = document.getElementById('req-solicitante').value.trim();
             const cod = 'REQ-DL-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-3);
+
             const tr = document.createElement('tr');
+            tr.dataset.req = cod;
             tr.className = 'hover:bg-blue-500/5 transition-colors';
-            tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${cod}</td><td class="p-3 text-primary-themed">${desc}</td><td class="p-3 text-secondary-themed">${qtd}</td><td class="p-3 text-secondary-themed">${sol}</td><td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Análise</span></td>`;
+            tr.innerHTML = `
+                <td class="p-3 font-mono text-blue-500">${cod}</td>
+                <td class="p-3 text-primary-themed">${desc}</td>
+                <td class="p-3 text-secondary-themed">${qtd}</td>
+                <td class="p-3 text-secondary-themed">${sol}</td>
+                <td class="p-3 td-estado"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Análise</span></td>
+                <td class="p-3 td-acoes"></td>
+            `;
             document.getElementById('tabela-requisicoes').appendChild(tr);
-            guardar(STORAGE_KEYS.req, { cod, desc, qtd, sol });
+
+            // Persistir
+            const dados = JSON.parse(localStorage.getItem('hanzolo_requisicoes') || '[]');
+            dados.push({ cod, desc, qtd, sol, estado: 'Em Análise' });
+            localStorage.setItem('hanzolo_requisicoes', JSON.stringify(dados));
+
+            atualizarAcoesRequisicao(tr);
             fecharModalRequisicao();
             document.getElementById('form-requisicao').reset();
             mostrarToast(`Requisição ${cod} submetida!`, 'success');
-        }
+        }        
         function adicionarIntervencao(event) {
             event.preventDefault();
             const cliente = document.getElementById('int-cliente').value.trim();
