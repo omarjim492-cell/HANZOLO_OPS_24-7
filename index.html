@@ -30,8 +30,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
         :root {
             --bg-app: #0f172a; --bg-card: #1e293b; --bg-sidebar: #111827;
@@ -1989,10 +1989,22 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                                function temaMapaLeaflet() {
             return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         }
-        function inicializarMapa() {
+                function inicializarMapa() {
             const el = document.getElementById('mapa-frotas');
             if (!el) return;
-            if (!window.L) { document.getElementById('mapa-fallback')?.classList.remove('hidden'); return; }
+            
+            // Se o Leaflet não carregou por causa do bloqueio do browser
+            if (typeof L === 'undefined') {
+                el.innerHTML = `
+                    <div class="w-full h-full flex flex-col items-center justify-center p-8 text-center" style="background: var(--bg-card);">
+                        <i class="fas fa-shield-halved text-4xl text-amber-500 mb-4"></i>
+                        <p class="text-sm font-bold text-primary-themed">O navegador bloqueou o mapa</p>
+                        <p class="text-xs text-secondary-themed mt-2 max-w-md">Por favor, desativa o "Bloqueio de Rastreadores" ou "Escudo" do teu navegador para este site, ou tenta abrir no Chrome puro.</p>
+                    </div>
+                `;
+                return;
+            }
+            
             document.getElementById('mapa-fallback')?.classList.add('hidden');
             mapaLeaflet = L.map('mapa-frotas', { zoomControl: false, attributionControl: false }).setView([-8.9070, 13.2400], 12);
             const tileLayer = L.tileLayer(temaMapaLeaflet(), { maxZoom: 19, subdomains: 'abcd' }).addTo(mapaLeaflet);
