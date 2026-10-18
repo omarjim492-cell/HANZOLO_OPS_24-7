@@ -1414,8 +1414,35 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             }
         } // <--- ESTA É A CHAVETA QUE FALTAVA PARA FECHAR A switchTab
 
-        /* ═══════════════════════════════════════════════════════
+                /* ═══════════════════════════════════════════════════════
            4. SIDEBAR MOBILE
+           ═══════════════════════════════════════════════════════ */
+        function toggleSidebarMobile() {
+            const s = document.getElementById('sidebar');
+            const o = document.getElementById('sidebar-overlay');
+            if (s && o) { s.classList.toggle('hidden'); o.classList.toggle('hidden'); }
+        }
+        function fecharSidebarMobile() {
+            const s = document.getElementById('sidebar');
+            const o = document.getElementById('sidebar-overlay');
+            if (window.innerWidth < 768 && s && o) { s.classList.add('hidden'); o.classList.add('hidden'); }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           5. MENU DOCUMENTOS
+           ═══════════════════════════════════════════════════════ */
+        function toggleExportMenu() {
+            document.getElementById('export-dropdown')?.classList.toggle('hidden');
+        }
+        window.addEventListener('click', (e) => {
+            const menu = document.getElementById('export-dropdown');
+            if (menu && !e.target.closest('button[onclick="toggleExportMenu()"]') && !e.target.closest('#export-dropdown')) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        /* ═══════════════════════════════════════════════════════
+           6. EXPORTAÇÕES
            ═══════════════════════════════════════════════════════ */
         function exportarRelatorio(tipo) {
             document.getElementById('export-dropdown')?.classList.add('hidden');
