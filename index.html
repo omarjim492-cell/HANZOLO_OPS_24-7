@@ -1973,8 +1973,10 @@
             { id: 'H-03', nome: 'Mitsubishi L200', matricula: 'LD-55-90-ZZ', cor: 'Azul', condutor: 'António Banza', pos: { lat: -8.9050, lng: 13.3700 }, status: 'Em Intervenção', velocidade: 42, rota: 'Viana Industrial', corHex: '#f59e0b' }
         ];
         let mapaLeaflet, marcadoresLeaflet = {}, rotaLeaflet;
-                function temaMapaLeaflet() {
-            return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+                        function temaMapaLeaflet() {
+            return document.documentElement.classList.contains('light')
+                ? 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+                : 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
         }
         function inicializarMapa() {
             const el = document.getElementById('mapa-frotas');
