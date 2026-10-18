@@ -92,9 +92,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         .stock-bar > div { height: 100%; transition: width 0.6s ease; }
         .import-box { border: 2px dashed var(--border); border-radius: 16px; padding: 32px; text-align: center; transition: all 0.3s; cursor: pointer; }
         .import-box:hover { border-color: var(--accent); background: rgba(59,130,246,0.05); }
-                /* Correção de alinhamento do conteúdo */
-        .tab-content { display: flex; flex-direction: column; gap: 1.5rem; }
-        .tab-content.hidden { display: none !important; }
+                .tab-content:not(.hidden) { display: block; animation: fadeIn 0.4s ease-out; }
         /* Organograma */
         .tree ul { padding-top: 20px; position: relative; transition: all 0.5s; display: flex; justify-content: center; }
         .tree li { float: left; text-align: center; list-style-type: none; position: relative; padding: 20px 5px 0 5px; }
@@ -274,7 +272,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         <div id="sidebar-overlay" onclick="toggleSidebarMobile()" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"></div>
 
         <!-- ÁREA DE TRABALHO -->
-        <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+        <main class="flex-1 p-4 md:p-6 overflow-y-auto" style="position: absolute; top: 65px; bottom: 0; left: 288px; right: 0;">
 
             <!-- TAB: VISÃO GERAL -->
             <div id="tab-visao-geral" class="tab-content space-y-6">
@@ -850,7 +848,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                     <h2 class="text-2xl font-black tracking-tight text-primary-themed">Compras &amp; Suprimentos</h2>
                     <p class="text-xs text-secondary-themed mt-1">Requisições, cotações e controle orçamental.</p>
                 </div>
-               <div class="card-themed p-12 rounded-2xl text-center max-w-2xl mx-auto mt-8">
+               <div class="card-themed p-10 rounded-2xl text-center max-w-2xl mx-auto mt-6">
                     <div class="w-16 h-16 mx-auto rounded-2xl bg-blue-500/15 flex items-center justify-center mb-4">
                         <i class="fas fa-cart-shopping text-blue-500 text-xl"></i>
                     </div>
