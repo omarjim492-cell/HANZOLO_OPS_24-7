@@ -215,7 +215,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
     <!-- ═══════════════════════════════════════════════════════ -->
     <!-- ESTRUTURA PRINCIPAL (sidebar + main) — continua no BLOCO 2/4 -->
     <!-- ═══════════════════════════════════════════════════════ -->
-    <div class="flex flex-1 overflow-hidden">
+    <div class="flex flex-1 overflow-hidden" style="height: calc(100vh - 65px);">
 
         <!-- SIDEBAR -->
         <aside id="sidebar" class="no-print w-72 p-4 space-y-1.5 overflow-y-auto hidden md:block sidebar-themed">
@@ -275,7 +275,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         <div id="sidebar-overlay" onclick="toggleSidebarMobile()" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"></div>
 
         <!-- ÁREA DE TRABALHO -->
-        <main class="flex-1 p-4 md:p-6 overflow-y-auto" style="position: absolute; top: 65px; bottom: 0; left: 288px; right: 0;">
+        <main class="flex-1 p-4 md:p-6 overflow-y-auto">
 
             <!-- TAB: VISÃO GERAL -->
             <div id="tab-visao-geral" class="tab-content space-y-6">
