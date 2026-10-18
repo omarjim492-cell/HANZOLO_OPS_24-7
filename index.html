@@ -846,6 +846,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                 </div>
             </div>
             </div>
+            </div>
 
             <!-- TAB: COMPRAS -->
             <div id="tab-compras" class="tab-content hidden space-y-6">
@@ -1402,12 +1403,15 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             const activeBtn = document.getElementById('btn-' + tabId);
             if (activeBtn) activeBtn.classList.add('active');
             if (window.innerWidth < 768) fecharSidebarMobile();
-            if (tabId === 'frotas') {
+                        if (tabId === 'frotas') {
                 setTimeout(() => {
-                    if (window.mapaLeaflet) window.mapaLeaflet.invalidateSize();
-                }, 250);
+                    if (window.mapaLeaflet) {
+                        window.mapaLeaflet.invalidateSize();
+                    } else if (typeof inicializarMapa === 'function') {
+                        inicializarMapa();
+                    }
+                }, 350);
             }
-        }
 
         /* ═══════════════════════════════════════════════════════
            4. SIDEBAR MOBILE
