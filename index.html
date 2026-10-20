@@ -2017,19 +2017,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             });
             rotaLeaflet = L.polyline([[VIATURAS[0].pos.lat, VIATURAS[0].pos.lng], [-8.9100, 13.2500], [VIATURAS[2].pos.lat, VIATURAS[2].pos.lng]], { color: '#3b82f6', weight: 4, opacity: 0.7, dashArray: '10, 8' }).addTo(mapaLeaflet);
             window.mapaLeaflet = mapaLeaflet;
-        }            document.getElementById('mapa-fallback')?.classList.add('hidden');
-            mapaLeaflet = L.map('mapa-frotas', { zoomControl: false, attributionControl: false }).setView([-8.9070, 13.2400], 12);
-            const tileLayer = L.tileLayer(temaMapaLeaflet(), { maxZoom: 19, subdomains: 'abcd' }).addTo(mapaLeaflet);
-            window.tileLayerAtual = tileLayer;
-            VIATURAS.forEach(v => {
-                const icone = L.divIcon({ className: 'mapa-uber-marker-custom', html: `<div class="mapa-uber-marker ${v.status === 'Estacionado' ? 'parked' : v.status === 'Em Intervenção' ? 'intervention' : ''}" style="background:${v.corHex}"><i class="fas fa-truck"></i></div>`, iconSize: [44, 44], iconAnchor: [22, 22] });
-                const marker = L.marker([v.pos.lat, v.pos.lng], { icon: icone }).addTo(mapaLeaflet);
-                marker.on('click', () => abrirUberPanel(v));
-                marcadoresLeaflet[v.id] = marker;
-            });
-            rotaLeaflet = L.polyline([[VIATURAS[0].pos.lat, VIATURAS[0].pos.lng], [-8.9100, 13.2500], [VIATURAS[2].pos.lat, VIATURAS[2].pos.lng]], { color: '#3b82f6', weight: 4, opacity: 0.7, dashArray: '10, 8' }).addTo(mapaLeaflet);
-            window.mapaLeaflet = mapaLeaflet;
-        }
+        }            
         function atualizarTemaMapa() {
             if (window.tileLayerAtual) window.tileLayerAtual.setUrl(temaMapaLeaflet());
         }
