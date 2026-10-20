@@ -727,7 +727,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                     </div>
                 </div>
 
-            <!-- TAB: FROTAS & GPS (Uber-style) -->
+                                    <!-- TAB: FROTAS & GPS -->
             <div id="tab-frotas" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center pb-4 border-b border-themed flex-wrap gap-3">
                     <div>
@@ -743,6 +743,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                         </span>
                     </div>
                 </div>
+
                 <div class="grid grid-cols-1 xl:grid-cols-4 gap-4">
                     <div class="xl:col-span-3 relative">
                         <div id="mapa-frotas" class="relative overflow-hidden">
@@ -751,6 +752,8 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                                 <p class="text-sm font-bold text-primary-themed">A carregar mapa…</p>
                             </div>
                         </div>
+                        
+                        <!-- Bottom Sheet Uber -->
                         <div id="uber-panel" class="hidden absolute bottom-4 left-4 right-4 backdrop-blur-xl border-themed border rounded-2xl p-4 shadow-2xl z-[500] modal-panel" style="background: color-mix(in srgb, var(--bg-card) 92%, transparent);">
                             <div class="flex justify-between items-start gap-4">
                                 <div class="flex items-start gap-3 flex-1">
@@ -769,11 +772,15 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                                 <button onclick="fecharUberPanel()" class="w-8 h-8 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500 flex-shrink-0"><i class="fas fa-xmark"></i></button>
                             </div>
                         </div>
+
+                        <!-- Controlos do Mapa -->
                         <div class="absolute top-4 right-4 flex flex-col gap-2 z-[400]">
                             <button onclick="mapaZoomIn()" class="w-10 h-10 rounded-xl backdrop-blur-xl border border-themed flex items-center justify-center text-primary-themed hover:bg-blue-500/15 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 90%, transparent);"><i class="fas fa-plus"></i></button>
                             <button onclick="mapaZoomOut()" class="w-10 h-10 rounded-xl backdrop-blur-xl border border-themed flex items-center justify-center text-primary-themed hover:bg-blue-500/15 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 90%, transparent);"><i class="fas fa-minus"></i></button>
                             <button onclick="mapaMinhaLocalizacao()" class="w-10 h-10 rounded-xl backdrop-blur-xl border border-themed flex items-center justify-center text-blue-500 hover:bg-blue-500/15 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 90%, transparent);"><i class="fas fa-location-crosshairs"></i></button>
                         </div>
+                        
+                        <!-- Barra de Pesquisa -->
                         <div class="absolute top-4 left-4 right-20 z-[400]">
                             <div class="backdrop-blur-xl border border-themed rounded-2xl px-4 py-3 flex items-center gap-3 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 92%, transparent);">
                                 <i class="fas fa-magnifying-glass text-secondary-themed text-sm"></i>
@@ -781,7 +788,10 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                             </div>
                         </div>
                     </div>
+
+                    <!-- Painel Lateral Viaturas -->
                     <div class="space-y-3 xl:max-h-[600px] xl:overflow-y-auto pr-1">
+                        <!-- H-01 -->
                         <div class="card-themed p-4 rounded-2xl cursor-pointer transition-all hover:border-blue-500/50" onclick="focarViatura('H-01')">
                             <div class="flex justify-between items-start mb-3">
                                 <div class="flex items-center gap-2">
@@ -798,6 +808,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                                 <div class="text-secondary-themed">Rota:</div><div class="text-primary-themed text-right">Talatona → Viana</div>
                             </div>
                         </div>
+                        <!-- H-02 -->
                         <div class="card-themed p-4 rounded-2xl cursor-pointer transition-all hover:border-emerald-500/50" onclick="focarViatura('H-02')">
                             <div class="flex justify-between items-start mb-3">
                                 <div class="flex items-center gap-2">
@@ -814,6 +825,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                                 <div class="text-secondary-themed">Local:</div><div class="text-primary-themed text-right">Base Talatona</div>
                             </div>
                         </div>
+                        <!-- H-03 -->
                         <div class="card-themed p-4 rounded-2xl cursor-pointer transition-all hover:border-amber-500/50" onclick="focarViatura('H-03')">
                             <div class="flex justify-between items-start mb-3">
                                 <div class="flex items-center gap-2">
@@ -830,6 +842,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                                 <div class="text-secondary-themed">Rota:</div><div class="text-primary-themed text-right">Viana Ind.</div>
                             </div>
                         </div>
+                        <!-- Resumo -->
                         <div class="card-themed p-4 rounded-2xl">
                             <h4 class="font-bold text-xs text-primary-themed uppercase tracking-wider mb-3 flex items-center gap-2">
                                 <i class="fas fa-gauge-high text-blue-500"></i> Resumo da Frota
@@ -845,7 +858,6 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                     </div>
                 </div>
             </div>
-        </div>
             
 
             <!-- TAB: COMPRAS -->
