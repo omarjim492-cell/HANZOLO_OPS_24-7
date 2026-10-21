@@ -30,6 +30,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- ═══════════ INÍCIO DO BLOCO FIREBASE ═══════════ -->
+    
+    <!-- 1. A tua configuração do Firebase -->
+    <script type="module">
+        const firebaseConfig = {
+            apiKey: "AIzaSyAWgdR8hOmpMvb3cBXAljaPnDryo5hqFWQ",
+  authDomain: "hanzolo-ops.firebaseapp.com",
+  projectId: "hanzolo-ops",
+  storageBucket: "hanzolo-ops.firebasestorage.app",
+  messagingSenderId: "961155869470",
+  appId: "1:961155869470:web:c19e492565b935ed9bf70f",
+  measurementId: "G-Y9SYZRG4FS"
+        };
+        window.firebaseConfig = firebaseConfig;
+    </script>
+
+    <!-- 2. Ligar o Firebase à página -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        const app = initializeApp(window.firebaseConfig);
+        const db = getFirestore(app);
+        
+        window.dbFirebase = db;
+        console.log("Firebase ligado com sucesso!");
+    </script>
+
+    <!-- ═══════════ FIM DO BLOCO FIREBASE ═══════════ -->
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" ...>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" ...></script>
+    
+    <style>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
@@ -2169,7 +2205,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                     g.options.scales.x.grid.color = grid;
                     g.options.scales.y.grid.color = grid;
                     g.update('none');
-                }
+                }  
             });
             if (graficoCircular) { graficoCircular.options.plugins.legend.labels.color = cor; graficoCircular.update('none'); }
             atualizarTemaMapa();
