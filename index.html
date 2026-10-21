@@ -1872,22 +1872,40 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         /* ═══════════════════════════════════════════════════════
            14. ADICIONAR COLABORADOR / REQUISIÇÃO / OBRA / DSE
            ═══════════════════════════════════════════════════════ */
-        function adicionarColaborador(event) {
+                function adicionarColaborador(event) {
             event.preventDefault();
             const nome = document.getElementById('novo-nome').value.trim();
             const tel = document.getElementById('novo-telefone').value.trim();
             const email = document.getElementById('novo-email').value.trim();
             const nif = document.getElementById('novo-nif').value.trim().toUpperCase();
             const cargo = document.getElementById('novo-cargo').value.trim();
+
             if (!/^\d{9}[A-Z]{2}\d{3}$/.test(nif)) { mostrarToast('NIF inválido. Formato: 000000000LA000', 'error'); return; }
+
+            // INSERIR NA TELA IMEDIATAMENTE
             inserirLinhaColaborador(nome, tel, email, nif, cargo, fotoColaboradorBase64);
-            guardar(STORAGE_KEYS.colab, { nome, tel, email, nif, cargo, foto: fotoColaboradorBase64 });
+            
+            // ENVIAR PARA O FIREBASE (NUVEM)
+            if (window.dbFirebase) {
+                import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js").then(({ collection, addDoc }) => {
+                    addDoc(collection(window.dbFirebase, "colaboradores"), {
+                        nome, tel, email, nif, cargo, foto: fotoColaboradorBase64,
+                        dataRegisto: new Date().toISOString()
+                    }).then(() => {
+                        console.log("Colaborador guardado na nuvem!");
+                        mostrarToast('Guardado na nuvem com sucesso!', 'success');
+                    }).catch(err => {
+                        console.error("Erro ao guardar na nuvem: ", err);
+                        mostrarToast('Guardado localmente (sem internet)', 'warn');
+                    });
+                });
+            }
+
             fecharModalColaborador();
             document.getElementById('form-colaborador').reset();
             const box = document.getElementById('foto-preview-box');
             if (box) box.innerHTML = `<i class="fas fa-cloud-arrow-up text-3xl text-blue-500 mb-3"></i><p class="text-sm text-primary-themed font-semibold">Arrasta a foto ou clica</p><p class="text-[10px] text-secondary-themed mt-1">PNG, JPG — máx 2 MB</p>`;
             fotoColaboradorBase64 = null;
-            mostrarToast('Colaborador registado!', 'success');
         }
         function inserirLinhaColaborador(nome, tel, email, nif, cargo, foto) {
             const tbody = document.getElementById('tabela-colaboradores-corpo');
