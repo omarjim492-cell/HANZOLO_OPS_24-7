@@ -218,7 +218,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                     <span class="hidden md:inline">Documentos</span>
                     <i class="fas fa-chevron-down text-[9px] opacity-70"></i>
                 </button>
-                <div id="export-dropdown" class="hidden absolute right-0 mt-2 w-64 border-themed border rounded-2xl shadow-2xl py-2 z-50 text-xs overflow-hidden" style="background: var(--bg-card);">
+                                <div id="export-dropdown" class="hidden absolute right-0 mt-2 w-64 border border-themed rounded-2xl shadow-2xl py-2 z-[999] text-xs overflow-hidden" style="background: var(--bg-card) !important;">
                     <div class="px-4 py-2 text-[10px] font-bold text-secondary-themed uppercase tracking-widest">Exportar</div>
                     <button onclick="exportarRelatorio('pdf')" class="w-full text-left px-4 py-2.5 hover:bg-blue-500/10 flex items-center gap-3">
                         <i class="fas fa-file-pdf text-red-500 w-4"></i><span class="text-primary-themed">Gerar PDF / Imprimir</span>
@@ -245,7 +245,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             </button>
         </div>
 
-        <div id="painel-notificacoes" class="hidden absolute top-16 right-4 md:right-24 w-80 border-themed border rounded-2xl shadow-2xl z-50 overflow-hidden modal-panel" style="background: var(--bg-card) !important; z-index: 999 !important;">
+                <div id="painel-notificacoes" class="hidden absolute top-16 right-4 md:right-24 w-80 border border-themed rounded-2xl shadow-2xl z-[100] overflow-hidden modal-panel" style="background: var(--bg-card) !important;">
             <div class="p-4 border-b flex justify-between items-center border-themed">
                 <h4 class="text-xs font-bold text-primary-themed uppercase tracking-wider flex items-center gap-2">
                     <i class="fas fa-bell text-blue-500"></i> Centro de Alertas
@@ -1646,7 +1646,13 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         /* ═══════════════════════════════════════════════════════
            9. NOTIFICAÇÕES
            ═══════════════════════════════════════════════════════ */
-        function toggleNotificacoes() { document.getElementById('painel-notificacoes')?.classList.toggle('hidden'); }
+                function toggleNotificacoes() { 
+            const painel = document.getElementById('painel-notificacoes');
+            if (painel) {
+                // Se estiver escondido, mostra. Se estiver visível, esconde.
+                painel.classList.toggle('hidden'); 
+            }
+        }
 
         const ALERTAS = [
             { icone: 'fa-circle-check', cor: 'emerald', titulo: 'Sistema Operacional', resumo: 'Todos os serviços online há 24h.', detalhe: 'Stack completo a funcionar sem interrupções. APIs REST a responder em < 15ms.' },
