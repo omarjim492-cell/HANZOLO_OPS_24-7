@@ -1907,6 +1907,27 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             if (box) box.innerHTML = `<i class="fas fa-cloud-arrow-up text-3xl text-blue-500 mb-3"></i><p class="text-sm text-primary-themed font-semibold">Arrasta a foto ou clica</p><p class="text-[10px] text-secondary-themed mt-1">PNG, JPG — máx 2 MB</p>`;
             fotoColaboradorBase64 = null;
         }
+                // NOVA FUNÇÃO: Ler da Nuvem
+        async function carregarColaboradoresNuvem() {
+            if (!window.dbFirebase) return;
+            try {
+                const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+                const querySnapshot = await getDocs(collection(window.dbFirebase, "colaboradores"));
+                
+                // Limpar a tabela antes de mostrar os da nuvem (para não duplicar)
+                const tbody = document.getElementById('tabela-colaboradores-corpo');
+                if (tbody) tbody.innerHTML = '';
+
+                querySnapshot.forEach((doc) => {
+                    const c = doc.data();
+                    inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto);
+                });
+                console.log("Colaboradores carregados da nuvem!");
+            } catch (e) {
+                console.error("Erro ao ler da nuvem:", e);
+            }
+        }
+
         function inserirLinhaColaborador(nome, tel, email, nif, cargo, foto) {
             const tbody = document.getElementById('tabela-colaboradores-corpo');
             if (!tbody) return;
