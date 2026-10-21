@@ -100,12 +100,17 @@
             --border: #cbd5e1 !important;
         }
         html.light body { color: #020617 !important; font-weight: 500; }
+                /* Corrige o botão ativo no modo claro */
+        html.light .nav-btn.active { background: #2563eb !important; color: #ffffff !important; }
+        
+        /* Corrige o hover (passar o rato) no modo claro */
+        html.light .nav-btn:not(.active):hover { background: #e2e8f0 !important; color: #0f172a !important; }
         html.light .text-secondary-themed { color: #334155 !important; font-weight: 500; }
         html.light .card-themed { background: #ffffff !important; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
         html.light .badge-modern { font-weight: 800; }
         html.light table thead { color: #1e293b !important; font-weight: 700; }
         html.light .border-themed { border-color: #cbd5e1 !important; }
-        html.light .sidebar-themed { background: #ffffff !important; }
+                html.light .sidebar-themed { background: #f1f5f9 !important; border-right: 1px solid #cbd5e1 !important; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
@@ -240,7 +245,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             </button>
         </div>
 
-        <div id="painel-notificacoes" class="hidden absolute top-16 right-4 md:right-24 w-80 border-themed border rounded-2xl shadow-2xl z-50 overflow-hidden modal-panel" style="background: var(--bg-card);">
+        <div id="painel-notificacoes" class="hidden absolute top-16 right-4 md:right-24 w-80 border-themed border rounded-2xl shadow-2xl z-50 overflow-hidden modal-panel" style="background: var(--bg-card) !important; z-index: 999 !important;">
             <div class="p-4 border-b flex justify-between items-center border-themed">
                 <h4 class="text-xs font-bold text-primary-themed uppercase tracking-wider flex items-center gap-2">
                     <i class="fas fa-bell text-blue-500"></i> Centro de Alertas
