@@ -140,6 +140,16 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                 @media (max-width: 768px) {
             main[style] { left: 0 !important; }
         }
+                /* Forçar menus a ficarem opacos e por cima */
+        #export-dropdown, #painel-notificacoes {
+            background-color: #1e293b !important; /* Cor escura */
+            opacity: 1 !important;
+            z-index: 9999 !important;
+        }
+        html.light #export-dropdown, html.light #painel-notificacoes {
+            background-color: #ffffff !important; /* Cor clara */
+            border: 1px solid #cbd5e1 !important;
+        }
         /* Organograma */
         .tree ul { padding-top: 20px; position: relative; transition: all 0.5s; display: flex; justify-content: center; }
         .tree li { float: left; text-align: center; list-style-type: none; position: relative; padding: 20px 5px 0 5px; }
