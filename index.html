@@ -140,15 +140,22 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                 @media (max-width: 768px) {
             main[style] { left: 0 !important; }
         }
-                /* Forçar menus a ficarem opacos e por cima */
+                        /* Forçar menus a ficarem opacos e por cima */
         #export-dropdown, #painel-notificacoes {
-            background-color: #1e293b !important; /* Cor escura */
+            background-color: #1e293b !important;
             opacity: 1 !important;
             z-index: 9999 !important;
         }
         html.light #export-dropdown, html.light #painel-notificacoes {
-            background-color: #ffffff !important; /* Cor clara */
+            background-color: #ffffff !important;
             border: 1px solid #cbd5e1 !important;
+        }
+
+        /* ═══ A MARTELADA FINAL: Esconder o fantasma ═══ */
+        #painel-notificacoes.hidden, #export-dropdown.hidden {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
         }
         /* Organograma */
         .tree ul { padding-top: 20px; position: relative; transition: all 0.5s; display: flex; justify-content: center; }
@@ -2256,8 +2263,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
 
             setTimeout(() => mostrarToast('Bem-vindo ao HANZOLO OPS 24-7', 'info'), 800);
         });
-
-        new MutationObserver(() => {
+         new MutationObserver(() => {
             const cor = corGrafico(), grid = corGrid();
             [graficoLinhas, graficoBarras].forEach(g => {
                 if (g && g.options.scales) {
