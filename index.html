@@ -190,6 +190,44 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         .tree li:last-child::before { border-right: 2px solid var(--border); border-radius: 0 5px 0 0; }
         .tree li:first-child::after { border-radius: 5px 0 0 0; }
         .tree ul ul::before { content: ''; position: absolute; top: 0; left: 50%; border-left: 2px solid var(--border); width: 0; height: 20px; }
+                /* ═══════════════════════════════════════════════════════
+           MELHORIAS DE COR E CONTRASTE (MODO CLARO)
+           ═══════════════════════════════════════════════════════ */
+        
+        /* 1. Fundo da Área de Trabalho mais suave (cinza azulado) */
+        html.light main { background-color: #f1f5f9 !important; }
+        
+        /* 2. Cartões (KPIs) com sombra mais forte e bordas definidas */
+        html.light .card-themed {
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+        }
+        
+        /* 3. Títulos e Textos mais escuros e legíveis */
+        html.light .text-primary-themed { color: #0f172a !important; }
+        html.light .text-secondary-themed { color: #475569 !important; }
+        
+        /* 4. Dar vida aos ícones dos KPIs (Cores sólidas) */
+        /* Frota */
+        html.light .bg-blue-500\/15 { background-color: #dbeafe !important; }
+        html.light .text-blue-500 { color: #2563eb !important; }
+        /* Auditoria */
+        html.light .bg-emerald-500\/15 { background-color: #d1fae5 !important; }
+        html.light .text-emerald-500 { color: #059669 !important; }
+        /* Efetivo */
+        html.light .bg-violet-500\/15 { background-color: #ede9fe !important; }
+        html.light .text-violet-500 { color: #7c3aed !important; }
+        /* HSST */
+        html.light .bg-amber-500\/15 { background-color: #fef3c7 !important; }
+        html.light .text-amber-500 { color: #d97706 !important; }
+
+        /* 5. Melhorar as cores dos Gráficos (Linhas e Barras) */
+        html.light #graficoLinhas,
+        html.light #graficoVelasFinas,
+        html.light #graficoCircular {
+            filter: saturate(1.2) contrast(1.1) !important; /* Aumenta a vivacidade das cores do Chart.js */
+        }
     </style>
 </head>
 <body class="font-sans antialiased min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
