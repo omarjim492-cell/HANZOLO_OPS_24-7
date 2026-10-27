@@ -2313,6 +2313,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
            17. INICIALIZAÇÃO
            ═══════════════════════════════════════════════════════ */
         document.addEventListener('DOMContentLoaded', () => {
+                        verificarSessao();
             aplicarTema(localStorage.getItem('hanzolo_tema') || 'dark');
             atualizarRelogio();
             renderizarAlertas();
