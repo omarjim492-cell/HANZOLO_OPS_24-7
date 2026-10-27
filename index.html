@@ -1488,6 +1488,56 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         /* ═══════════════════════════════════════════════════════
            1. TEMA CLARO / ESCURO
            ═══════════════════════════════════════════════════════ */
+                /* ═══════════════════════════════════════════════════════
+           LOGIN E SEGURANÇA (FIREBASE AUTH)
+           ═══════════════════════════════════════════════════════ */
+        async function fazerLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const senha = document.getElementById('login-senha').value;
+            const btn = document.getElementById('btn-login');
+            const erroDiv = document.getElementById('login-erro');
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> A validar...';
+            btn.disabled = true;
+            erroDiv.classList.add('hidden');
+
+            try {
+                const { getAuth, signInWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
+                const auth = getAuth();
+                await signInWithEmailAndPassword(auth, email, senha);
+                
+                // Se chegou aqui, o login foi bem-sucedido!
+                document.getElementById('ecra-login').classList.add('hidden');
+                mostrarToast('Bem-vindo de volta, ' + email.split('@')[0], 'success');
+                
+            } catch (error) {
+                console.error(error);
+                erroDiv.innerText = "E-mail ou palavra-passe incorretos.";
+                erroDiv.classList.remove('hidden');
+                btn.innerHTML = '<span>Entrar na Plataforma</span><i class="fas fa-arrow-right"></i>';
+                btn.disabled = false;
+            }
+        }
+
+        // Verificar se o utilizador já está logado (para não pedir login a cada refresh)
+        async function verificarSessao() {
+            try {
+                const { getAuth, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
+                const auth = getAuth();
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        // Utilizador logado
+                        document.getElementById('ecra-login').classList.add('hidden');
+                    } else {
+                        // Não logado
+                        document.getElementById('ecra-login').classList.remove('hidden');
+                    }
+                });
+            } catch (e) {
+                console.log("Erro ao verificar sessão", e);
+            }
+        }
         function aplicarTema(tema) {
             const html = document.documentElement;
             const icone = document.getElementById('icone-tema');
