@@ -157,7 +157,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             color: #ffffff !important;
         }
 
-                /* Menus Dropdown e Painel de Alertas (Tema Adaptável) */
+                        /* Menus Dropdown e Painel de Alertas (Tema Adaptável) */
         #export-dropdown, #painel-notificacoes {
             background-color: var(--bg-card) !important;
             border: 1px solid var(--border) !important;
@@ -167,12 +167,22 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         #export-dropdown span, #painel-notificacoes span,
         #export-dropdown p, #painel-notificacoes p,
         #export-dropdown h4, #painel-notificacoes h4,
-        #export-dropdown button {
+        #export-dropdown button, #painel-notificacoes button {
             color: var(--text-primary) !important;
         }
         #export-dropdown .text-secondary-themed, #painel-notificacoes .text-secondary-themed {
             color: var(--text-secondary) !important;
         }
+        /* Corrige os ícones que estavam brancos no modo claro */
+        html.light #painel-notificacoes i, 
+        html.light #export-dropdown i {
+            color: var(--text-secondary) !important;
+        }
+        html.light #painel-notificacoes .fa-circle-check { color: #10b981 !important; }
+        html.light #painel-notificacoes .fa-truck-fast { color: #3b82f6 !important; }
+        html.light #painel-notificacoes .fa-triangle-exclamation { color: #f59e0b !important; }
+        html.light #painel-notificacoes .fa-boxes-stacked { color: #8b5cf6 !important; }
+        html.light #painel-notificacoes .fa-chevron-right { color: #cbd5e1 !important; }
         /* A MARTELADA FINAL: Esconder quando tiver a classe hidden */
         #painel-notificacoes.hidden, #export-dropdown.hidden {
             display: none !important;
