@@ -1955,7 +1955,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             if (box) box.innerHTML = `<i class="fas fa-cloud-arrow-up text-3xl text-blue-500 mb-3"></i><p class="text-sm text-primary-themed font-semibold">Arrasta a foto ou clica</p><p class="text-[10px] text-secondary-themed mt-1">PNG, JPG — máx 2 MB</p>`;
             fotoColaboradorBase64 = null;
         }
-                // NOVA FUNÇÃO: Ler da Nuvem
+                        // Função para Ler da Nuvem
         async function carregarColaboradoresNuvem() {
             if (!window.dbFirebase) return;
             try {
@@ -1966,13 +1966,17 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                 const tbody = document.getElementById('tabela-colaboradores-corpo');
                 if (tbody) tbody.innerHTML = '';
 
+                let total = 0;
                 querySnapshot.forEach((doc) => {
                     const c = doc.data();
                     inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto);
+                    total++;
                 });
-                console.log("Colaboradores carregados da nuvem!");
+                console.log(`Carregados ${total} colaboradores da nuvem!`);
+                atualizarContadores(); // Atualiza o KPI do dashboard
             } catch (e) {
                 console.error("Erro ao ler da nuvem:", e);
+                mostrarToast('Sem ligação à nuvem. A usar dados locais.', 'warn');
             }
         }
 
