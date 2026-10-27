@@ -157,22 +157,22 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             color: #ffffff !important;
         }
 
-        /* Menus Dropdown e Painel de Alertas sempre escuros */
+                /* Menus Dropdown e Painel de Alertas (Tema Adaptável) */
         #export-dropdown, #painel-notificacoes {
-            background-color: #1e293b !important;
-            border: 1px solid #334155 !important;
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
             opacity: 1 !important;
             z-index: 9999 !important;
         }
         #export-dropdown span, #painel-notificacoes span,
         #export-dropdown p, #painel-notificacoes p,
-        #export-dropdown h4, #painel-notificacoes h4 {
-            color: #f1f5f9 !important;
+        #export-dropdown h4, #painel-notificacoes h4,
+        #export-dropdown button {
+            color: var(--text-primary) !important;
         }
         #export-dropdown .text-secondary-themed, #painel-notificacoes .text-secondary-themed {
-            color: #94a3b8 !important;
+            color: var(--text-secondary) !important;
         }
-        
         /* A MARTELADA FINAL: Esconder quando tiver a classe hidden */
         #painel-notificacoes.hidden, #export-dropdown.hidden {
             display: none !important;
