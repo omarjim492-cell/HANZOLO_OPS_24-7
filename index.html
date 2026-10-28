@@ -2191,7 +2191,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             mostrarToast(`Intervenção ${ref} registada!`, 'success');
         }
         // ── ABRIR DETALHES DA OBRA ──
-        function abrirDetalhesObra(cliente, servico, tecnico, ref, data, evidencias) {
+                function abrirDetalhesObra(cliente, servico, tecnico, ref, data, evidencias) {
             document.getElementById('det-ref').innerText = ref;
             document.getElementById('det-data').innerText = data;
             document.getElementById('det-cliente').innerText = cliente;
@@ -2200,9 +2200,16 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             const galeria = document.getElementById('det-galeria');
             const semFotos = document.getElementById('det-sem-fotos');
 
-            if (evidencias && evidencias.length > 0) {
+            // Se não recebermos as fotos, vamos procurar no navegador
+            let fotosParaMostrar = evidencias;
+            if (!fotosParaMostrar || fotosParaMostrar.length === 0) {
+                const salvas = localStorage.getItem('hanzolo_evid_' + ref.replace('#', '_'));
+                if (salvas) fotosParaMostrar = JSON.parse(salvas);
+            }
+
+            if (fotosParaMostrar && fotosParaMostrar.length > 0) {
                 semFotos.classList.add('hidden');
-                galeria.innerHTML = evidencias.map(e => `
+                galeria.innerHTML = fotosParaMostrar.map(e => `
                     <div class="border border-themed rounded-xl overflow-hidden cursor-pointer hover:opacity-80 transition-opacity" onclick="window.open('${e.base64}', '_blank')">
                         ${e.tipo === 'image' ? `<img src="${e.base64}" class="w-full h-24 object-cover">` : `<div class="w-full h-24 flex items-center justify-center bg-blue-500/15"><i class="fas fa-play-circle text-blue-500 text-2xl"></i></div>`}
                     </div>
