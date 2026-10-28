@@ -1173,18 +1173,44 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                 <!-- Molde do PDF para exportação -->
     <div id="pdf-folha-obra" style="position: absolute; left: -9999px; top: -9999px; background: white; color: black; width: 800px; padding: 40px; font-family: Arial, sans-serif;">
         
-        <!-- Cabeçalho com Logotipo Desenhado -->
-        <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px;">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <!-- Desenho do Logotipo em SVG para o PDF -->
-                <svg style="height: 50px; width: auto;" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M190 10L10 120L190 230V165H260V75H190V10Z" fill="#38BDF8"/>
-                    <circle cx="130" cy="120" r="14" fill="#0284C7"/>
-                    <path d="M130 114H220V75H250V165H220V126H130V114Z" fill="#0284C7"/>
-                    <text x="320" y="150" fill="#000000" font-family="Arial, sans-serif" font-weight="900" font-size="110" letter-spacing="4">HANZOLO</text>
-                    <text x="325" y="195" fill="#0284C7" font-family="Arial, sans-serif" font-weight="700" font-size="28" letter-spacing="2">TECNOLOGIA, SISTEMAS &amp; SEGURANÇA</text>
+                <!-- Cabeçalho com Logotipo Desenhado -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+            
+            <!-- Lado Esquerdo: Logotipo e Endereço -->
+            <div style="display: flex; align-items: center; gap: 10px;">
+                
+                <!-- Logotipo Desenhado (SVG Azul e Preto) -->
+                <svg style="height: 60px; width: auto;" viewBox="0 0 500 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Seta e Circuitos (Azul) -->
+                    <path d="M 80 10 L 10 60 L 80 110 L 80 85 L 120 85 L 120 35 L 80 35 Z" fill="#0EA5E9" />
+                    <circle cx="55" cy="60" r="8" fill="#0284C7" />
+                    <path d="M 55 56 H 100 V 35 H 110 V 85 H 100 V 64 H 55 Z" fill="#0284C7" />
+                    <circle cx="70" cy="45" r="3" fill="#0284C7" />
+                    <circle cx="70" cy="75" r="3" fill="#0284C7" />
+                    
+                    <!-- Texto HANZOLO (Azul) -->
+                    <text x="130" y="75" fill="#0EA5E9" font-family="Arial, sans-serif" font-weight="900" font-size="65" letter-spacing="1">HANZOLO</text>
+                    
+                    <!-- Subtítulo (Preto) -->
+                    <text x="132" y="95" fill="#000000" font-family="Arial, sans-serif" font-weight="bold" font-size="11" letter-spacing="1">TECNOLOGIA, SISTEMAS &amp; SEGURANÇA, LDA</text>
                 </svg>
-                <div>
+                
+                <!-- Endereço -->
+                <div style="margin-left: 10px; border-left: 1px solid #ccc; padding-left: 10px;">
+                    <p style="margin: 0; font-size: 9px; color: #333;">Av. Rei Katyavala, Maculusso, Prédio 43/45, Luanda</p>
+                    <p style="margin: 0; font-size: 9px; color: #333;">NIF: 5417271608</p>
+                </div>
+            </div>
+
+            <!-- Lado Direito: Título e Nº Obra -->
+            <div style="text-align: right;">
+                <h2 style="margin: 0; font-size: 13px; font-weight: 900; color: #000;">RELATÓRIO DE ASSISTÊNCIA TÉCNICA</h2>
+                <p style="margin: 0; font-size: 10px; font-weight: bold; border: 2px solid #000; padding: 4px 8px; display: inline-block; margin-top: 5px;">
+                    OBRA Nº <span id="pdf-num-obra">001</span> <br>
+                    <span style="font-size: 8px; color: #555;">ID: <span id="pdf-ref">—</span></span>
+                </p>
+            </div>
+        </div>
                     <p style="margin: 0; font-size: 10px; color: #333;">Av. Rei Katyavala, Maculusso, Prédio 43/45, Luanda</p>
                     <p style="margin: 0; font-size: 10px; color: #333;">NIF: 5417271608</p>
                 </div>
