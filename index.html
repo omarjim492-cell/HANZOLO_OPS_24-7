@@ -1018,8 +1018,8 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                                     <th class="p-3 font-bold">Estado</th>
                                 </tr>
                             </thead>
-                            <tbody id="tabela-obras" class="divide-y divide-themed">
-                                <tr class="hover:bg-blue-500/5 transition-colors">
+                                                        <tbody id="tabela-obras" class="divide-y divide-themed">
+                                <tr onclick="abrirDetalhesObra('Banco BAI - Talatona', 'Manutenção CFTV', 'Mateus Silva', '#OBR-24-089', '24/10/2026 09:30', [])" class="hover:bg-blue-500/5 transition-colors cursor-pointer">
                                     <td class="p-3 font-mono text-blue-500">#OBR-24-089</td>
                                     <td class="p-3 text-primary-themed font-medium">Banco BAI - Talatona</td>
                                     <td class="p-3 text-secondary-themed">Manutenção CFTV</td>
@@ -1027,7 +1027,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                                     <td class="p-3"><span class="text-secondary-themed text-[10px]">—</span></td>
                                     <td class="p-3"><span class="badge-modern bg-emerald-500/15 text-emerald-500">Concluído</span></td>
                                 </tr>
-                                <tr class="hover:bg-blue-500/5 transition-colors">
+                                <tr onclick="abrirDetalhesObra('Condomínio Marbelo', 'Cerca Perimétrica', 'António Banza', '#OBR-24-090', '25/10/2026 14:15', [])" class="hover:bg-blue-500/5 transition-colors cursor-pointer">
                                     <td class="p-3 font-mono text-blue-500">#OBR-24-090</td>
                                     <td class="p-3 text-primary-themed font-medium">Condomínio Marbelo</td>
                                     <td class="p-3 text-secondary-themed">Cerca Perimétrica</td>
@@ -1036,11 +1036,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                                     <td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Execução</span></td>
                                 </tr>
                             </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
+                            
             <!-- TAB: RH + Organograma -->
             <div id="tab-rh" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center pb-4 border-b border-themed flex-wrap gap-3">
