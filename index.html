@@ -2156,22 +2156,34 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             document.getElementById('form-requisicao').reset();
             mostrarToast(`Requisição ${cod} submetida!`, 'success');
         }        
-        function adicionarIntervencao(event) {
+                function adicionarIntervencao(event) {
             event.preventDefault();
             const cliente = document.getElementById('int-cliente').value.trim();
             const servico = document.getElementById('int-servico').value.trim();
             const tecnico = document.getElementById('int-tecnico').value.trim();
             const ref = '#OBR-24-' + String(Date.now()).slice(-3);
+            const dataHora = new Date().toLocaleDateString('pt-AO') + ' ' + new Date().toLocaleTimeString('pt-AO');
+            
+            // Guarda as fotos no "baú" do navegador para esta obra específica
+            const chaveEvidencias = 'hanzolo_evid_' + ref.replace('#', '_');
+            localStorage.setItem(chaveEvidencias, JSON.stringify(evidenciasObra));
+
             const numEvid = evidenciasObra.length;
             const badgeEvid = numEvid > 0
-                ? `<button onclick="verEvidenciasObra('${ref}')" class="badge-modern bg-blue-500/15 text-blue-500"><i class="fas fa-paperclip"></i> ${numEvid}</button>`
+                ? `<button class="badge-modern bg-blue-500/15 text-blue-500"><i class="fas fa-paperclip"></i> ${numEvid}</button>`
                 : `<span class="text-secondary-themed text-[10px]">—</span>`;
+
             const tr = document.createElement('tr');
-            tr.className = 'hover:bg-blue-500/5 transition-colors';
+            tr.className = 'hover:bg-blue-500/5 transition-colors cursor-pointer';
+            // Aqui está o segredo: adicionar o clique na linha nova!
+            tr.onclick = () => abrirDetalhesObra(cliente, servico, tecnico, ref, dataHora, evidenciasObra);
+            
             tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${ref}</td><td class="p-3 text-primary-themed font-medium">${cliente}</td><td class="p-3 text-secondary-themed">${servico}</td><td class="p-3 text-secondary-themed">${tecnico}</td><td class="p-3">${badgeEvid}</td><td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Execução</span></td>`;
+            
             document.getElementById('tabela-obras').appendChild(tr);
-            window[`evid_${ref.replace('#','_')}`] = [...evidenciasObra];
-            guardar(STORAGE_KEYS.obras, { ref, cliente, servico, tecnico });
+            
+            guardar(STORAGE_KEYS.obras, { ref, cliente, servico, tecnico, data: dataHora });
+            
             fecharModalIntervencao();
             document.getElementById('form-intervencao').reset();
             document.getElementById('int-evidencia-preview').innerHTML = '';
