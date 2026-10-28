@@ -1170,20 +1170,70 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
     <!-- ═══════════════════════════════════════════════════════ -->
     <!-- MODAIS — continuam no BLOCO 4/4 -->
     <!-- ═══════════════════════════════════════════════════════ -->
-        <!-- Molde do PDF para exportação -->
+            <!-- Molde do PDF para exportação -->
     <div id="pdf-folha-obra" class="hidden" style="background: white; color: black; width: 800px; padding: 40px; font-family: Arial, sans-serif;">
-        <!-- Cabeçalho -->
-        <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+        
+        <!-- Cabeçalho com Logotipo -->
+        <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px;">
             <div>
-                <h1 style="margin: 0; color: #0EA5E9; font-size: 24px;">HANZOLO, LDA</h1>
-                <p style="margin: 0; font-size: 10px; color: #555;">Av. Rei Katyavala, Maculusso, Prédio 43/45, Luanda</p>
-                <p style="margin: 0; font-size: 10px; color: #555;">NIF: 5417271608</p>
+                <!-- Se a imagem abaixo não carregar, substitui o link pelo Base64 da imagem -->
+                <img src="https://i.ibb.co/3k4m5j6/hanzolo-logo.png" alt="HANZOLO" style="height: 50px; object-fit: contain;" crossorigin="anonymous">
+                <p style="margin: 5px 0 0 0; font-size: 9px; color: #333;">Av. Rei Katyavala, Maculusso, Prédio 43/45, Luanda</p>
+                <p style="margin: 0; font-size: 9px; color: #333;">NIF: 5417271608</p>
             </div>
             <div style="text-align: right;">
-                <h2 style="margin: 0; font-size: 16px;">RELATÓRIO DE ASSISTÊNCIA TÉCNICA</h2>
-                <p style="margin: 0; font-size: 12px; font-weight: bold; border: 1px solid #000; padding: 2px 8px; display: inline-block; margin-top: 5px;">FACTURA Nº: <span id="pdf-ref">—</span></p>
+                <h2 style="margin: 0; font-size: 14px; font-weight: 900;">RELATÓRIO DE ASSISTÊNCIA TÉCNICA</h2>
+                <p style="margin: 0; font-size: 11px; font-weight: bold; border: 2px solid #000; padding: 4px 8px; display: inline-block; margin-top: 8px;">
+                    OBRA Nº <span id="pdf-num-obra">001</span> <br>
+                    <span style="font-size: 9px; color: #555;">ID: <span id="pdf-ref">—</span></span>
+                </p>
             </div>
         </div>
+
+        <!-- Informação do Cliente -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 12px;">
+            <tr>
+                <td style="border: 1px solid #000; padding: 6px; width: 50%;"><strong>Cliente:</strong> <span id="pdf-cliente">—</span></td>
+                <td style="border: 1px solid #000; padding: 6px; width: 50%;"><strong>Data:</strong> <span id="pdf-data">—</span></td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 6px;"><strong>Técnico(s):</strong> <span id="pdf-tecnico">—</span></td>
+                <td style="border: 1px solid #000; padding: 6px;"><strong>Serviço:</strong> <span id="pdf-servico">—</span></td>
+            </tr>
+        </table>
+
+        <!-- Ação Desenvolvida -->
+        <div style="border: 1px solid #000; min-height: 200px; padding: 10px; margin-bottom: 10px; font-size: 12px; position: relative;">
+            <strong style="display: block; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 10px;">AÇÃO DESENVOLVIDA</strong>
+            <p id="pdf-descricao" style="white-space: pre-wrap; line-height: 1.6;">—</p>
+        </div>
+
+        <!-- Inquérito de Satisfação -->
+        <div style="border: 1px solid #000; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <p style="margin: 0; font-size: 11px; font-weight: bold;">Por favor avalie-nos:</p>
+            <div style="display: flex; gap: 15px; font-size: 14px;">
+                <div>😊 Bom <span style="font-family: Arial;">☐</span></div>
+                <div>😐 Razoável <span style="font-family: Arial;">☐</span></div>
+                <div>☹️ Ruim <span style="font-family: Arial;">☐</span></div>
+            </div>
+        </div>
+
+        <!-- Evidências (Opcional) -->
+        <div id="pdf-fotos-container" style="margin-bottom: 10px;">
+            <strong style="display: block; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 10px; font-size: 12px;">REGISTO FOTOGRÁFICO</strong>
+            <div id="pdf-galeria" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+        </div>
+
+        <!-- Assinaturas (Logo abaixo do conteúdo) -->
+        <div style="display: flex; justify-content: space-between; margin-top: 30px; font-size: 11px;">
+            <div style="text-align: center; width: 45%;">
+                <div style="border-top: 1px solid #000; padding-top: 5px;">Assinatura do Técnico</div>
+            </div>
+            <div style="text-align: center; width: 45%;">
+                <div style="border-top: 1px solid #000; padding-top: 5px;">Aceitação do Cliente</div>
+            </div>
+        </div>
+    </div>
 
         <!-- Informação do Cliente -->
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 12px;">
