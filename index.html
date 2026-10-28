@@ -31,7 +31,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+        <!-- Bibliotecas para gerar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- ═══════════ INÍCIO DO BLOCO FIREBASE ═══════════ -->
     
     <!-- 1. A tua configuração do Firebase -->
@@ -1168,6 +1170,55 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
     <!-- ═══════════════════════════════════════════════════════ -->
     <!-- MODAIS — continuam no BLOCO 4/4 -->
     <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- Molde do PDF para exportação -->
+    <div id="pdf-folha-obra" class="hidden" style="background: white; color: black; width: 800px; padding: 40px; font-family: Arial, sans-serif;">
+        <!-- Cabeçalho -->
+        <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+            <div>
+                <h1 style="margin: 0; color: #0EA5E9; font-size: 24px;">HANZOLO, LDA</h1>
+                <p style="margin: 0; font-size: 10px; color: #555;">Av. Rei Katyavala, Maculusso, Prédio 43/45, Luanda</p>
+                <p style="margin: 0; font-size: 10px; color: #555;">NIF: 5417271608</p>
+            </div>
+            <div style="text-align: right;">
+                <h2 style="margin: 0; font-size: 16px;">RELATÓRIO DE ASSISTÊNCIA TÉCNICA</h2>
+                <p style="margin: 0; font-size: 12px; font-weight: bold; border: 1px solid #000; padding: 2px 8px; display: inline-block; margin-top: 5px;">FACTURA Nº: <span id="pdf-ref">—</span></p>
+            </div>
+        </div>
+
+        <!-- Informação do Cliente -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 12px;">
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px; width: 50%;"><strong>Cliente:</strong> <span id="pdf-cliente">—</span></td>
+                <td style="border: 1px solid #000; padding: 5px; width: 50%;"><strong>Data:</strong> <span id="pdf-data">—</span></td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px;"><strong>Técnico(s):</strong> <span id="pdf-tecnico">—</span></td>
+                <td style="border: 1px solid #000; padding: 5px;"><strong>Serviço:</strong> <span id="pdf-servico">—</span></td>
+            </tr>
+        </table>
+
+        <!-- Ação Desenvolvida -->
+        <div style="border: 1px solid #000; min-height: 200px; padding: 10px; margin-bottom: 15px; font-size: 12px;">
+            <strong style="display: block; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 10px;">AÇÃO DESENVOLVIDA</strong>
+            <p id="pdf-descricao" style="white-space: pre-wrap; line-height: 1.5;">—</p>
+        </div>
+
+        <!-- Evidências (Opcional, se houver fotos) -->
+        <div id="pdf-fotos-container" style="margin-bottom: 15px;">
+            <strong style="display: block; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 10px; font-size: 12px;">REGISTO FOTOGRÁFICO</strong>
+            <div id="pdf-galeria" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+        </div>
+
+        <!-- Assinaturas -->
+        <div style="display: flex; justify-content: space-between; margin-top: 50px;">
+            <div style="text-align: center; width: 45%;">
+                <div style="border-top: 1px solid #000; padding-top: 5px;">Assinatura do Técnico</div>
+            </div>
+            <div style="text-align: center; width: 45%;">
+                <div style="border-top: 1px solid #000; padding-top: 5px;">Aceitação do Cliente</div>
+            </div>
+        </div>
+    </div>
         <!-- Modal: Detalhes da Folha de Obra -->
     <div id="modal-detalhes-obra" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="modal-panel border-themed border rounded-3xl w-full max-w-2xl shadow-2xl max-h-[92vh] overflow-y-auto" style="background: var(--bg-card);">
@@ -1175,6 +1226,9 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                 <h3 class="font-bold text-sm text-primary-themed uppercase tracking-wider flex items-center gap-2">
                     <i class="fas fa-file-invoice text-blue-500"></i> Detalhes da Intervenção
                 </h3>
+                <button id="btn-exportar-pdf-obra" onclick="exportarObraPDF()" class="bg-red-500 hover:bg-red-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all shadow-md flex items-center gap-2 mr-auto ml-4">
+    <i class="fas fa-file-pdf"></i> Descarregar PDF
+</button>
                 <button onclick="fecharDetalhesObra()" class="w-8 h-8 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500"><i class="fas fa-xmark"></i></button>
             </div>
             <div class="p-5 space-y-4 text-xs">
@@ -2191,7 +2245,13 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             mostrarToast(`Intervenção ${ref} registada!`, 'success');
         }
         // ── ABRIR DETALHES DA OBRA ──
-                function abrirDetalhesObra(cliente, servico, tecnico, ref, data, evidencias) {
+                        // Variável global para guardar a obra que está aberta no momento
+        let obraAtualAberta = null;
+
+        function abrirDetalhesObra(cliente, servico, tecnico, ref, data, evidencias) {
+            // Guardar os dados para o botão de PDF saber o que exportar
+            obraAtualAberta = { cliente, servico, tecnico, ref, data, evidencias };
+
             document.getElementById('det-ref').innerText = ref;
             document.getElementById('det-data').innerText = data;
             document.getElementById('det-cliente').innerText = cliente;
@@ -2200,7 +2260,6 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             const galeria = document.getElementById('det-galeria');
             const semFotos = document.getElementById('det-sem-fotos');
 
-            // Se não recebermos as fotos, vamos procurar no navegador
             let fotosParaMostrar = evidencias;
             if (!fotosParaMostrar || fotosParaMostrar.length === 0) {
                 const salvas = localStorage.getItem('hanzolo_evid_' + ref.replace('#', '_'));
@@ -2220,6 +2279,67 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             }
 
             document.getElementById('modal-detalhes-obra').classList.remove('hidden');
+        }
+
+        function fecharDetalhesObra() {
+            document.getElementById('modal-detalhes-obra').classList.add('hidden');
+        }
+
+        // ── FUNÇÃO PARA GERAR O PDF ──
+        async function exportarObraPDF() {
+            if (!obraAtualAberta) return;
+            
+            const btn = document.getElementById('btn-exportar-pdf-obra');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> A gerar...';
+            
+            const { cliente, servico, tecnico, ref, data, evidencias } = obraAtualAberta;
+            let fotos = evidencias;
+            if (!fotos || fotos.length === 0) {
+                const salvas = localStorage.getItem('hanzolo_evid_' + ref.replace('#', '_'));
+                if (salvas) fotos = JSON.parse(salvas);
+            }
+
+            // Preencher o Molde HTML
+            document.getElementById('pdf-ref').innerText = ref;
+            document.getElementById('pdf-cliente').innerText = cliente;
+            document.getElementById('pdf-data').innerText = data;
+            document.getElementById('pdf-tecnico').innerText = tecnico;
+            document.getElementById('pdf-servico').innerText = servico;
+            document.getElementById('pdf-descricao').innerText = "Serviço executado conforme solicitado. Verificações realizadas e sistema testado em pleno funcionamento.";
+
+            const galeriaPdf = document.getElementById('pdf-galeria');
+            const containerFotos = document.getElementById('pdf-fotos-container');
+            if (fotos && fotos.length > 0) {
+                containerFotos.style.display = 'block';
+                galeriaPdf.innerHTML = fotos.filter(f => f.tipo === 'image').map(f => 
+                    `<img src="${f.base64}" style="width: 180px; height: 130px; object-fit: cover; border: 1px solid #ccc;">`
+                ).join('');
+            } else {
+                containerFotos.style.display = 'none';
+            }
+
+            // Criar o PDF
+            const elemento = document.getElementById('pdf-folha-obra');
+            elemento.classList.remove('hidden'); // Mostrar temporariamente para o html2canvas ler
+
+            try {
+                const canvas = await html2canvas(elemento, { scale: 2, useCORS: true });
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save(`Relatorio_${ref.replace('#', '')}_${cliente}.pdf`);
+                mostrarToast('PDF gerado com sucesso!', 'success');
+            } catch (error) {
+                console.error(error);
+                mostrarToast('Erro ao gerar o PDF.', 'error');
+            } finally {
+                elemento.classList.add('hidden'); // Esconder novamente
+                btn.innerHTML = '<i class="fas fa-file-pdf"></i> Descarregar PDF';
+            }
         }
 
         function fecharDetalhesObra() {
