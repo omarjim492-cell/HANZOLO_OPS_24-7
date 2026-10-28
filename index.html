@@ -412,7 +412,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                     </span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="card-themed p-5 rounded-2xl">
+                    <div onclick="switchTab('frotas')" class="card-themed p-5 rounded-2xl cursor-pointer hover:border-blue-500/50 transition-all">
                         <div class="flex justify-between items-start">
                             <p class="text-[10px] text-secondary-themed font-bold uppercase tracking-widest">Frota em Campo</p>
                             <div class="w-8 h-8 rounded-lg bg-blue-500/15 flex items-center justify-center"><i class="fas fa-truck text-blue-500 text-xs"></i></div>
@@ -420,14 +420,14 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                         <h3 class="text-3xl font-black text-primary-themed mt-3">3</h3>
                         <p class="text-[10px] text-emerald-500 mt-1"><i class="fas fa-circle text-[6px] mr-1 animate-pulse-soft"></i> 100% GPS online</p>
                     </div>
-                    <div class="card-themed p-5 rounded-2xl">
-                        <div class="flex justify-between items-start">
+                    <div onclick="switchTab('hsst')" class="card-themed p-5 rounded-2xl cursor-pointer hover:border-amber-500/50 transition-all">
+                        <div onclick="switchTab('gcq')" class="card-themed p-5 rounded-2xl cursor-pointer hover:border-emerald-500/50 transition-all">
                             <p class="text-[10px] text-secondary-themed font-bold uppercase tracking-widest">Auditorias DGP/GCQ</p>
                             <div class="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center"><i class="fas fa-shield-halved text-emerald-500 text-xs"></i></div>
                         </div>
                         <h3 class="text-3xl font-black text-primary-themed mt-3">100%</h3>
                     </div>
-                    <div class="card-themed p-5 rounded-2xl">
+                    <div onclick="switchTab('rh')" class="card-themed p-5 rounded-2xl cursor-pointer hover:border-violet-500/50 transition-all">
                         <div class="flex justify-between items-start">
                             <p class="text-[10px] text-secondary-themed font-bold uppercase tracking-widest">Efetivo Ativo</p>
                             <div class="w-8 h-8 rounded-lg bg-violet-500/15 flex items-center justify-center"><i class="fas fa-users text-violet-500 text-xs"></i></div>
