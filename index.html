@@ -2180,30 +2180,35 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             fotoColaboradorBase64 = null;
         }
                         // Função para Ler da Nuvem
-        async function carregarColaboradoresNuvem() {
+                async function carregarObrasNuvem() {
             if (!window.dbFirebase) return;
             try {
                 const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
-                const querySnapshot = await getDocs(collection(window.dbFirebase, "colaboradores"));
+                const querySnapshot = await getDocs(collection(window.dbFirebase, "obras"));
                 
-                // Limpar a tabela antes de mostrar os da nuvem (para não duplicar)
-                const tbody = document.getElementById('tabela-colaboradores-corpo');
-                if (tbody) tbody.innerHTML = '';
+                const tbody = document.getElementById('tabela-obras');
+                if (!tbody) return;
 
-                let total = 0;
                 querySnapshot.forEach((doc) => {
-                    const c = doc.data();
-                    inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto);
-                    total++;
+                    const o = doc.data();
+                    // Se a obra já estiver na tela (HTML fixo), não duplica
+                    if (tbody.innerHTML.includes(o.ref)) return;
+
+                    const badgeEvid = o.numEvid > 0 
+                        ? `<button class="badge-modern bg-blue-500/15 text-blue-500"><i class="fas fa-paperclip"></i> ${o.numEvid}</button>`
+                        : `<span class="text-secondary-themed text-[10px]">—</span>`;
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-blue-500/5 transition-colors cursor-pointer';
+                    tr.onclick = () => abrirDetalhesObra(o.cliente, o.servico, o.tecnico, o.ref, o.dataHora, []);
+                    tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${o.ref}</td><td class="p-3 text-primary-themed font-medium">${o.cliente}</td><td class="p-3 text-secondary-themed">${o.servico}</td><td class="p-3 text-secondary-themed">${o.tecnico}</td><td class="p-3">${badgeEvid}</td><td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Execução</span></td>`;
+                    tbody.appendChild(tr);
                 });
-                console.log(`Carregados ${total} colaboradores da nuvem!`);
-                atualizarContadores(); // Atualiza o KPI do dashboard
+                console.log("Obras carregadas da nuvem!");
             } catch (e) {
-                console.error("Erro ao ler da nuvem:", e);
-                mostrarToast('Sem ligação à nuvem. A usar dados locais.', 'warn');
+                console.error("Erro ao ler obras da nuvem:", e);
             }
         }
-
         function inserirLinhaColaborador(nome, tel, email, nif, cargo, foto) {
             const tbody = document.getElementById('tabela-colaboradores-corpo');
             if (!tbody) return;
@@ -2570,6 +2575,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             configurarDropEvidencia();
             configurarPesquisaMapa();
             carregarColaboradoresNuvem();
+            carregarObrasNuvem();
 
             ['modal-colaborador','modal-requisicao','modal-intervencao','modal-tecnico-dse','modal-alerta','modal-epi','modal-epc','modal-inventario','modal-importar'].forEach(id => {
                 const m = document.getElementById(id);
