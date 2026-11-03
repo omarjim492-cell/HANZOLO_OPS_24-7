@@ -2180,8 +2180,35 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             if (box) box.innerHTML = `<i class="fas fa-cloud-arrow-up text-3xl text-blue-500 mb-3"></i><p class="text-sm text-primary-themed font-semibold">Arrasta a foto ou clica</p><p class="text-[10px] text-secondary-themed mt-1">PNG, JPG — máx 2 MB</p>`;
             fotoColaboradorBase64 = null;
         }
-                        // Função para Ler da Nuvem
-                async function carregarObrasNuvem() {
+                                // Função para Ler os Colaboradores da Nuvem
+        async function carregarColaboradoresNuvem() {
+            if (!window.dbFirebase) return;
+            try {
+                const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+                const querySnapshot = await getDocs(collection(window.dbFirebase, "colaboradores"));
+                
+                const tbody = document.getElementById('tabela-colaboradores-corpo');
+                if (tbody) tbody.innerHTML = '';
+
+                let total = 0;
+                querySnapshot.forEach((doc) => {
+                    const c = doc.data();
+                    inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto);
+                    total++;
+                });
+                console.log(`Carregados ${total} colaboradores da nuvem!`);
+                
+                // Atualiza o KPI do Efetivo Ativo no Dashboard
+                const kpi = document.getElementById('kpi-efetivo');
+                if (kpi) kpi.innerText = total;
+                
+            } catch (e) {
+                console.error("Erro ao ler colaboradores da nuvem:", e);
+            }
+        }
+
+        // Função para Ler as Obras da Nuvem
+        async function carregarObrasNuvem() {
             if (!window.dbFirebase) return;
             try {
                 const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
