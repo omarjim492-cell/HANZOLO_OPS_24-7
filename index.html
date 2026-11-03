@@ -2644,8 +2644,6 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             carregarEPIsNuvem();
 
             });
-        }
-        
       async function carregarRequisicoesNuvem() {
             if (!window.dbFirebase) return;
             const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
