@@ -1686,19 +1686,18 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         }
         // Verificar se o utilizador já está logado (para não pedir login a cada refresh)
                 async function verificarSessao() {
-            try {
-                const { onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
-                onAuthStateChanged(window.authFirebase, (user) => {
-                    if (user) {
-                        document.getElementById('ecra-login').classList.add('hidden');
-                    } else {
-                        document.getElementById('ecra-login').classList.remove('hidden');
-                    }
-                });
-            } catch (e) {
-                console.log("Erro ao verificar sessão", e);
-            }
-        }
+    try {
+        const { getApps } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
+        const { getAuth, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
+        const app = getApps()[0];
+        if (!app) return;
+        onAuthStateChanged(getAuth(app), (user) => {
+            document.getElementById('ecra-login').classList.toggle('hidden', !!user);
+        });
+    } catch (e) {
+        console.log("Erro ao verificar sessão", e);
+    }
+}
         function aplicarTema(tema) {
             const html = document.documentElement;
             const icone = document.getElementById('icone-tema');
@@ -2643,7 +2642,6 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             carregarInventarioNuvem();
             carregarEPIsNuvem();
 
-            });
       async function carregarRequisicoesNuvem() {
             if (!window.dbFirebase) return;
             const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
@@ -2789,7 +2787,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                     g.options.scales.y.grid.color = grid;
                     g.update('none');
                 }  
-            });
+            });         
             if (graficoCircular) { graficoCircular.options.plugins.legend.labels.color = cor; graficoCircular.update('none'); }
             atualizarTemaMapa();
         }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
