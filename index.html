@@ -468,7 +468,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                     <p class="text-xs text-secondary-themed mt-1">Estrutura hierárquica Hanzolo.</p>
                 </div>
                 <div class="overflow-x-auto py-8 rounded-2xl border-themed border p-6" style="background: var(--bg-card);">
-                    <div class="tree min-w-[900px] text-xs">
+                    <div class="org-dinamico"></div>
                         <ul>
                             <li>
                                 <div class="bg-gradient-to-r from-blue-600 to-violet-600 text-white font-bold p-3 rounded-2xl shadow-xl inline-block w-56 text-center">
@@ -514,64 +514,62 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                 </div>
             </div>
 
-                        <!-- TAB: DGP + EPCs -->
-            <div id="tab-dgp" class="tab-content hidden space-y-6">
-                <div class="pb-4 border-b border-themed flex justify-between items-center">
-                    <div>
-                        <h2 class="text-2xl font-black tracking-tight text-primary-themed">DGP — Gestão de Projectos</h2>
-                        <p class="text-xs text-secondary-themed mt-1">Carteira de projetos em execução.</p>
-                    </div>
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2">
-                        <i class="fas fa-plus"></i> Novo Projeto
-                    </button>
-                </div>
+                        <!-- TAB: DGP -->
+<div id="tab-dgp" class="tab-content hidden space-y-6">
+    <div class="pb-4 border-b border-themed flex justify-between items-center flex-wrap gap-3">
+        <div>
+            <h2 class="text-2xl font-black tracking-tight text-primary-themed">DGP — Gestão de Projectos</h2>
+            <p class="text-xs text-secondary-themed mt-1">Carteira, organogramas, termos de entrega e planos de ação.</p>
+        </div>
+        <button onclick="abrirModalProjeto()" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2">
+            <i class="fas fa-plus"></i> Novo Projeto
+        </button>
+    </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Tabela de Projetos -->
-                    <div class="lg:col-span-2 card-themed rounded-2xl overflow-hidden">
-                        <div class="p-4 border-b border-themed">
-                            <h3 class="font-bold text-xs text-primary-themed uppercase tracking-wider">Projetos Ativos</h3>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-xs">
-                                <thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed">
-                                    <tr>
-                                        <th class="p-3 font-bold">Projecto</th>
-                                        <th class="p-3 font-bold">Cliente</th>
-                                        <th class="p-3 font-bold">Progresso</th>
-                                        <th class="p-3 font-bold">Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-themed">
-                                    <tr class="hover:bg-blue-500/5 transition-colors">
-                                        <td class="p-3 text-primary-themed font-medium">Nurs Call</td>
-                                        <td class="p-3 text-secondary-themed">Girasol</td>
-                                        <td class="p-3"><div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><div class="bg-blue-500 h-full w-[50%]"></div></div></td>
-                                        <td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Curso</span></td>
-                                    </tr>
-                                    <tr class="hover:bg-blue-500/5 transition-colors">
-                                        <td class="p-3 text-primary-themed font-medium">CCTV Porto de Luanda</td>
-                                        <td class="p-3 text-secondary-themed">Terminal Marítimo</td>
-                                        <td class="p-3"><div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><div class="bg-blue-500 h-full w-[85%]"></div></div></td>
-                                        <td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Curso</span></td>
-                                    </tr>
-                                    <tr class="hover:bg-blue-500/5 transition-colors">
-                                        <td class="p-3 text-primary-themed font-medium">Rede Corporativa BFA</td>
-                                        <td class="p-3 text-secondary-themed">BFA</td>
-                                        <td class="p-3"><div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full w-[100%]"></div></div></td>
-                                        <td class="p-3"><span class="badge-modern bg-emerald-500/15 text-emerald-500">Concluído</span></td>
-                                    </tr>
-                                    <tr class="hover:bg-blue-500/5 transition-colors">
-                                        <td class="p-3 text-primary-themed font-medium">Controlo Acessos SONANGOL</td>
-                                        <td class="p-3 text-secondary-themed">SONANGOL</td>
-                                        <td class="p-3"><div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><div class="bg-amber-500 h-full w-[40%]"></div></div></td>
-                                        <td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Curso</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+    <!-- KPIs -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="card-themed p-5 rounded-2xl"><p class="text-[10px] text-secondary-themed font-bold uppercase tracking-widest">Projectos</p><h3 class="text-3xl font-black text-primary-themed mt-2" id="dgp-kpi-total">0</h3></div>
+        <div class="card-themed p-5 rounded-2xl"><p class="text-[10px] text-secondary-themed font-bold uppercase tracking-widest">Em Curso</p><h3 class="text-3xl font-black text-amber-500 mt-2" id="dgp-kpi-curso">0</h3></div>
+        <div class="card-themed p-5 rounded-2xl"><p class="text-[10px] text-secondary-themed font-bold uppercase tracking-widest">Concluídos</p><h3 class="text-3xl font-black text-emerald-500 mt-2" id="dgp-kpi-conc">0</h3></div>
+        <div class="card-themed p-5 rounded-2xl"><p class="text-[10px] text-secondary-themed font-bold uppercase tracking-widest">Progresso Médio</p><h3 class="text-3xl font-black text-blue-500 mt-2" id="dgp-kpi-media">0%</h3></div>
+    </div>
 
+    <!-- Progresso + Fluxo -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="card-themed p-5 rounded-2xl">
+            <h3 class="text-xs font-bold text-primary-themed uppercase mb-4 tracking-wider">Progresso por Projecto</h3>
+            <div id="dgp-progresso" class="space-y-4 max-h-64 overflow-y-auto pr-1"></div>
+        </div>
+        <div class="lg:col-span-2 card-themed p-5 rounded-2xl">
+            <h3 class="text-xs font-bold text-primary-themed uppercase mb-4 tracking-wider">Fluxo dos Projectos</h3>
+            <div class="h-64"><canvas id="graficoFluxoProjetos"></canvas></div>
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="card-themed rounded-2xl overflow-hidden">
+        <div class="p-4 border-b border-themed flex justify-between items-center">
+            <h3 class="font-bold text-xs text-primary-themed uppercase tracking-wider">Projectos Ativos</h3>
+            <span class="text-[10px] text-secondary-themed">Clica num projecto para ver organograma, termos e plano de ação</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed">
+                    <tr>
+                        <th class="p-3 font-bold">Cód.</th><th class="p-3 font-bold">Projecto</th><th class="p-3 font-bold">Cliente</th>
+                        <th class="p-3 font-bold">Responsável</th><th class="p-3 font-bold">Entrega</th>
+                        <th class="p-3 font-bold">Progresso</th><th class="p-3 font-bold">Estado</th><th class="p-3 font-bold"></th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-projetos" class="divide-y divide-themed"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Detalhe do projecto (preenchido por JS) -->
+    <div id="dgp-detalhe" class="hidden card-themed rounded-2xl overflow-hidden"></div>
+</div>
+            
                     <!-- Gráfico de Distribuição -->
                     <div class="card-themed rounded-2xl p-4 flex flex-col justify-between">
                         <h3 class="font-bold text-xs text-primary-themed uppercase tracking-wider mb-2">Distribuição</h3>
@@ -1358,6 +1356,16 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                     <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Cargo / Função *</label>
                     <input type="text" id="novo-cargo" required class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed focus:outline-none focus:border-blue-500" style="background: var(--bg-app);" placeholder="Ex: Técnico de Redes">
                 </div>
+                <div>
+    <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Departamento</label>
+    <select id="novo-depto" class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);">
+        <option value="">Automático (pela função)</option>
+        <option value="direcao">Direção Geral</option><option value="chefia">Chefia de Departamento</option>
+        <option value="dgp">DGP — Projectos</option><option value="supervisao">Supervisão</option>
+        <option value="dse">DSE</option><option value="dl">DL — Lógico</option>
+        <option value="tecnico">Corpo Técnico</option><option value="apoio">Apoio (Logística & RH)</option>
+    </select>
+</div>
                 <div class="pt-3 flex justify-end gap-2">
                     <button type="button" onclick="fecharModalColaborador()" class="px-5 py-2.5 border-themed border rounded-xl font-semibold text-secondary-themed hover:bg-blue-500/10">Cancelar</button>
                     <button type="submit" class="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25">Salvar</button>
@@ -1629,6 +1637,70 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         </div>
     </div>
 
+    <datalist id="lista-colabs"></datalist>
+
+<div id="modal-projeto" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="modal-panel border-themed border rounded-3xl w-full max-w-lg shadow-2xl max-h-[92vh] overflow-y-auto" style="background: var(--bg-card);">
+        <div class="p-5 border-b border-themed flex justify-between items-center sticky top-0 z-10" style="background: var(--bg-card);">
+            <h3 class="font-bold text-sm text-primary-themed uppercase tracking-wider"><i class="fas fa-diagram-project text-blue-500 mr-2"></i><span id="proj-modal-titulo">Novo Projecto</span></h3>
+            <button onclick="fecharModalProjeto()" class="w-8 h-8 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500"><i class="fas fa-xmark"></i></button>
+        </div>
+        <form onsubmit="guardarProjetoForm(event)" class="p-5 space-y-4 text-xs">
+            <input type="hidden" id="proj-cod">
+            <div>
+                <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Nome do Projecto *</label>
+                <input type="text" id="proj-nome" required class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed focus:outline-none focus:border-blue-500" style="background: var(--bg-app);" placeholder="Ex: Manutenção BAI">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Cliente *</label>
+                    <input type="text" id="proj-cliente" required class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed focus:outline-none focus:border-blue-500" style="background: var(--bg-app);">
+                </div>
+                <div>
+                    <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Tipo</label>
+                    <select id="proj-tipo" class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);">
+                        <option>DSE</option><option>Redes</option><option>Acessos</option><option>Manutenção</option><option>Outro</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Início</label>
+                    <input type="date" id="proj-inicio" class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);">
+                </div>
+                <div>
+                    <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Entrega prevista</label>
+                    <input type="date" id="proj-entrega" class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Estado</label>
+                    <select id="proj-estado" class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);">
+                        <option>Planeado</option><option selected>Em Curso</option><option>Concluído</option><option>Suspenso</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Progresso: <span id="proj-prog-val">0%</span></label>
+                    <input type="range" id="proj-progresso" min="0" max="100" value="0" class="w-full mt-2" oninput="document.getElementById('proj-prog-val').innerText=this.value+'%'">
+                </div>
+            </div>
+            <div>
+                <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Gestor / Responsável</label>
+                <input type="text" id="proj-resp" list="lista-colabs" class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed focus:outline-none focus:border-blue-500" style="background: var(--bg-app);" placeholder="Escolhe da lista de RH">
+            </div>
+            <div>
+                <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Equipa do projecto</label>
+                <div id="proj-equipa" class="space-y-1.5 max-h-36 overflow-y-auto p-3 rounded-xl border border-themed" style="background: var(--bg-app);"></div>
+            </div>
+            <div class="pt-3 flex justify-end gap-2">
+                <button type="button" onclick="fecharModalProjeto()" class="px-5 py-2.5 border-themed border rounded-xl font-semibold text-secondary-themed hover:bg-blue-500/10">Cancelar</button>
+                <button type="submit" class="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+    
     <!-- Toasts -->
     <div id="toast-container" class="fixed bottom-4 right-4 z-[100] space-y-2"></div>
 
@@ -1747,6 +1819,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             if (tabId === 'frotas') {
                 setTimeout(() => {
                     if (window.mapaLeaflet) {
+                        if (tabId === 'dgp') setTimeout(() => { renderDGP(); graficoFluxo?.resize(); }, 60);
                         window.mapaLeaflet.invalidateSize();
                     } else if (typeof inicializarMapa === 'function') {
                         inicializarMapa();
@@ -2186,6 +2259,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
            ═══════════════════════════════════════════════════════ */
                 function adicionarColaborador(event) {
             event.preventDefault();
+            const depto = document.getElementById('novo-depto').value;
             const nome = document.getElementById('novo-nome').value.trim();
             const tel = document.getElementById('novo-telefone').value.trim();
             const email = document.getElementById('novo-email').value.trim();
@@ -2195,13 +2269,13 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             if (!/^\d{9}[A-Z]{2}\d{3}$/.test(nif)) { mostrarToast('NIF inválido. Formato: 000000000LA000', 'error'); return; }
 
             // INSERIR NA TELA IMEDIATAMENTE
-            inserirLinhaColaborador(nome, tel, email, nif, cargo, fotoColaboradorBase64);
+            inserirLinhaColaborador(nome, tel, email, nif, cargo, fotoColaboradorBase64, depto);
             
             // ENVIAR PARA O FIREBASE (NUVEM)
             if (window.dbFirebase) {
                 import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js").then(({ collection, addDoc }) => {
                     addDoc(collection(window.dbFirebase, "colaboradores"), {
-                        nome, tel, email, nif, cargo, foto: fotoColaboradorBase64,
+                        nome, tel, email, nif, cargo, depto, foto: fotoColaboradorBase64,
                         dataRegisto: new Date().toISOString()
                     }).then(() => {
                         console.log("Colaborador guardado na nuvem!");
@@ -2228,6 +2302,8 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                 
                 const tbody = document.getElementById('tabela-colaboradores-corpo');
                 if (tbody) tbody.innerHTML = '';
+                COLABORADORES = [];                                                
+                inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto, c.depto);   
 
                 let total = 0;
                 querySnapshot.forEach((doc) => {
@@ -2276,7 +2352,8 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                 console.error("Erro ao ler obras da nuvem:", e);
             }
         }
-        function inserirLinhaColaborador(nome, tel, email, nif, cargo, foto) {
+        function inserirLinhaColaborador(nome, tel, email, nif, cargo, foto, depto) {
+            COLABORADORES.push({ nome, tel, email, nif, cargo, depto }); 
             const tbody = document.getElementById('tabela-colaboradores-corpo');
             if (!tbody) return;
             const tr = document.createElement('tr');
@@ -2285,6 +2362,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             tr.innerHTML = `<td class="p-3"><div class="avatar-circle w-10 h-10 flex items-center justify-center" style="background: var(--bg-app);">${fotoHTML}</div></td><td class="p-3 font-medium text-primary-themed">${nome}</td><td class="p-3 font-mono text-blue-500">${tel}</td><td class="p-3 text-blue-500">${email}</td><td class="p-3 font-mono text-secondary-themed">${nif}</td><td class="p-3 text-secondary-themed">${cargo}</td>`;
             tbody.appendChild(tr);
             atualizarContadores();
+            renderOrganogramaRH();
         }
                  async function adicionarRequisicao(event) {
             event.preventDefault();
@@ -2637,6 +2715,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             configurarDropEvidencia();
             configurarPesquisaMapa();
             carregarColaboradoresNuvem();
+            carregarProjetos(); 
             carregarObrasNuvem();
             carregarRequisicoesNuvem();
             carregarInventarioNuvem();
@@ -2777,6 +2856,311 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
 
             setTimeout(() => mostrarToast('Bem-vindo ao HANZOLO OPS 24-7', 'info'), 800);
         });
+        /* ═══════════════════════════════════════════════════════
+   RH — ORGANOGRAMA DINÂMICO
+   ═══════════════════════════════════════════════════════ */
+const FS_URL = "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+let COLABORADORES = [];
+
+const DEPTOS = {
+    direcao:    { nome: 'DIREÇÃO GERAL',   sub: 'Administração',            cor: 'violet',  ic: 'fa-building' },
+    chefia:     { nome: 'CHEFIA',          sub: 'Chefes de Departamento',   cor: 'blue',    ic: 'fa-user-tie' },
+    dgp:        { nome: 'DGP',             sub: 'Coordenação de Projectos', cor: 'blue',    ic: 'fa-diagram-project' },
+    supervisao: { nome: 'SUPERVISÃO',      sub: 'Turnos & Obras',           cor: 'emerald', ic: 'fa-user-shield' },
+    dse:        { nome: 'DSE',             sub: 'Segurança Electrónica',    cor: 'cyan',    ic: 'fa-video' },
+    dl:         { nome: 'DL',              sub: 'Departamento Lógico',      cor: 'indigo',  ic: 'fa-network-wired' },
+    tecnico:    { nome: 'CORPO TÉCNICO',   sub: 'Execução de Campo',        cor: 'amber',   ic: 'fa-screwdriver-wrench' },
+    apoio:      { nome: 'APOIO',           sub: 'Logística & RH',           cor: 'violet',  ic: 'fa-briefcase' },
+    outros:     { nome: 'POR CLASSIFICAR', sub: 'Sem departamento',         cor: 'slate',   ic: 'fa-user' }
+};
+
+function classificarColab(c) {
+    if (c.depto && DEPTOS[c.depto]) return c.depto;          // escolha manual tem prioridade
+    const t = (c.cargo || '').toLowerCase();
+    if (/diretor|director|ceo|administra|direção|direcao/.test(t) && !/departamento/.test(t)) return 'direcao';
+    if (/chefe de dep/.test(t)) return 'chefia';
+    if (/coorden|gestor de proj|projec|projet/.test(t)) return 'dgp';
+    if (/supervis|chefe de turno/.test(t)) return 'supervisao';
+    if (/dse|cftv|alarme|seguran/.test(t)) return 'dse';
+    if (/rede|sistema|inform|\bti\b|l[óo]gic/.test(t)) return 'dl';
+    if (/armaz|log[íi]st|compras|\brh\b|recursos|administrativ|apoio/.test(t)) return 'apoio';
+    if (/t[ée]cnico|campo|instalador|el[ée]tric/.test(t)) return 'tecnico';
+    return 'outros';
+}
+
+function atualizarListaColabs() {
+    const dl = document.getElementById('lista-colabs');
+    if (dl) dl.innerHTML = COLABORADORES.map(c => `<option value="${esc(c.nome)}">`).join('');
+}
+
+function renderOrganogramaRH() {
+    atualizarListaColabs();
+    const alvos = document.querySelectorAll('.org-dinamico');
+    if (!alvos.length) return;
+    const g = {}; Object.keys(DEPTOS).forEach(k => g[k] = []);
+    COLABORADORES.forEach(c => g[classificarColab(c)].push(c));
+
+    const pessoa = (c, cor) => `<li><div class="border-2 border-${cor}-500/40 p-2 rounded-xl inline-block w-44 text-center text-[10px]" style="background: var(--bg-app);"><div class="font-semibold text-primary-themed">${esc(c.cargo)}</div><div class="text-[9px] text-${cor}-500 mt-0.5">${esc(c.nome)}</div></div></li>`;
+    const depto = k => {
+        const d = DEPTOS[k];
+        return `<li><div class="border-2 border-${d.cor}-500/60 text-${d.cor}-500 font-bold p-2.5 rounded-xl inline-block w-44 text-center" style="background: var(--bg-app);"><i class="fas ${d.ic} mr-1"></i><div>${d.nome}</div><div class="text-[9px] text-secondary-themed font-normal">${d.sub} • ${g[k].length}</div></div><ul>${g[k].map(c => pessoa(c, d.cor)).join('')}</ul></li>`;
+    };
+    const nomes = arr => arr.map(p => `<div class="text-[10px] text-white/80 font-normal">${esc(p.nome)}</div>`).join('');
+
+    const filhos = ['dgp','supervisao','dse','dl','tecnico','apoio','outros'].filter(k => g[k].length).map(depto).join('');
+    const raiz = `<div class="bg-gradient-to-r from-blue-600 to-violet-600 text-white font-bold p-3 rounded-2xl shadow-xl inline-block w-56 text-center"><i class="fas fa-building mr-2"></i><div>DIREÇÃO GERAL</div>${nomes(g.direcao)}</div>`;
+    const chefia = `<div class="border-2 border-blue-500/60 text-blue-500 font-bold p-2.5 rounded-xl inline-block w-56 text-center" style="background: var(--bg-app);"><i class="fas fa-user-tie mr-1"></i><div>CHEFIA DE DEPARTAMENTO</div>${g.chefia.map(p => `<div class="text-[10px] text-primary-themed font-normal">${esc(p.nome)} <span class="text-secondary-themed">— ${esc(p.cargo)}</span></div>`).join('')}</div>`;
+    const meio = g.chefia.length ? `<li>${chefia}<ul>${filhos}</ul></li>` : filhos;
+
+    const html = COLABORADORES.length
+        ? `<div class="tree min-w-max text-xs"><ul><li>${raiz}<ul>${meio}</ul></li></ul></div>`
+        : `<p class="text-xs text-secondary-themed text-center py-8">Sem colaboradores registados.</p>`;
+    alvos.forEach(el => el.innerHTML = html);
+}
+
+/* ═══════════════════════════════════════════════════════
+   DGP — PROJECTOS, ORGANOGRAMA, TERMOS, PLANO DE AÇÃO
+   ═══════════════════════════════════════════════════════ */
+const PROJ_KEY = 'hanzolo_projetos';
+let PROJETOS = [], projetoSel = null, abaDGP = 'org', graficoFluxo = null;
+
+const COR_ESTADO = { 'Planeado': 'blue', 'Em Curso': 'amber', 'Concluído': 'emerald', 'Suspenso': 'red' };
+const ESTADOS_ITEM = { termos: ['Pendente', 'Entregue', 'Aceite'], plano: ['Por fazer', 'Em curso', 'Concluída'] };
+const COR_ITEM = { 'Pendente': 'amber', 'Entregue': 'blue', 'Aceite': 'emerald', 'Por fazer': 'slate', 'Em curso': 'amber', 'Concluída': 'emerald' };
+
+// Dados iniciais (datas de exemplo: ajusta-as em "Editar")
+const PROJ_BASE = [
+    { cod: 'PRJ-001', nome: 'Nurs Call', cliente: 'Girasol', tipo: 'Redes', responsavel: '', equipa: [], inicio: '2026-05-01', entrega: '2026-12-20', progresso: 50, estado: 'Em Curso', termos: [], plano: [] },
+    { cod: 'PRJ-002', nome: 'CCTV Porto de Luanda', cliente: 'Terminal Marítimo', tipo: 'DSE', responsavel: '', equipa: [], inicio: '2026-03-01', entrega: '2026-11-30', progresso: 85, estado: 'Em Curso', termos: [], plano: [] },
+    { cod: 'PRJ-003', nome: 'Rede Corporativa BFA', cliente: 'BFA', tipo: 'Redes', responsavel: '', equipa: [], inicio: '2026-02-01', entrega: '2026-08-30', progresso: 100, estado: 'Concluído', termos: [], plano: [] },
+    { cod: 'PRJ-004', nome: 'Controlo Acessos SONANGOL', cliente: 'SONANGOL', tipo: 'Acessos', responsavel: '', equipa: [], inicio: '2026-07-01', entrega: '2027-02-28', progresso: 40, estado: 'Em Curso', termos: [], plano: [] },
+    { cod: 'PRJ-005', nome: 'Manutenção BAI', cliente: 'Banco BAI', tipo: 'Manutenção', responsavel: '', equipa: [], inicio: '2026-09-01', entrega: '2026-12-15', progresso: 70, estado: 'Em Curso', termos: [], plano: [] }
+];
+
+async function gravarProjeto(p) {
+    localStorage.setItem(PROJ_KEY, JSON.stringify(PROJETOS));
+    if (!window.dbFirebase) return;
+    try {
+        const { doc, setDoc } = await import(FS_URL);
+        await setDoc(doc(window.dbFirebase, 'projetos', p.cod), p);
+    } catch (e) { console.error('Erro Firestore (projetos):', e); mostrarToast('Guardado só localmente', 'warn'); }
+}
+
+async function carregarProjetos() {
+    let lista = null, semente = false;
+    try {
+        if (window.dbFirebase) {
+            const { collection, getDocs } = await import(FS_URL);
+            const snap = await getDocs(collection(window.dbFirebase, 'projetos'));
+            if (!snap.empty) lista = snap.docs.map(d => d.data());
+        }
+    } catch (e) { console.error('Erro a ler projetos:', e); }
+    if (!lista) lista = JSON.parse(localStorage.getItem(PROJ_KEY) || 'null');
+    if (!lista || !lista.length) { lista = JSON.parse(JSON.stringify(PROJ_BASE)); semente = true; }
+    PROJETOS = lista;
+    if (semente) PROJETOS.forEach(gravarProjeto);   // evita que a nuvem fique só com 1 projecto
+    renderDGP();
+}
+
+const getP = () => PROJETOS.find(x => x.cod === projetoSel);
+
+function renderDGP() {
+    atualizarListaColabs();
+    const n = PROJETOS.length;
+    const media = n ? Math.round(PROJETOS.reduce((a, p) => a + (+p.progresso || 0), 0) / n) : 0;
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
+    set('dgp-kpi-total', n);
+    set('dgp-kpi-curso', PROJETOS.filter(p => p.estado === 'Em Curso').length);
+    set('dgp-kpi-conc', PROJETOS.filter(p => p.estado === 'Concluído').length);
+    set('dgp-kpi-media', media + '%');
+
+    const corBarra = v => v >= 100 ? 'emerald' : v >= 50 ? 'blue' : 'amber';
+    const prog = document.getElementById('dgp-progresso');
+    if (prog) prog.innerHTML = PROJETOS.map(p => `<div class="cursor-pointer" onclick="selecionarProjeto('${p.cod}')"><div class="flex justify-between text-[11px] mb-1"><span class="text-primary-themed font-semibold">${esc(p.nome)}</span><span class="text-secondary-themed font-mono">${p.progresso}%</span></div><div class="stock-bar"><div class="bg-${corBarra(p.progresso)}-500" style="width:${p.progresso}%"></div></div></div>`).join('') || '<p class="text-xs text-secondary-themed">Sem projectos.</p>';
+
+    const tb = document.getElementById('tabela-projetos');
+    if (tb) tb.innerHTML = PROJETOS.map(p => {
+        const c = COR_ESTADO[p.estado] || 'blue';
+        return `<tr onclick="selecionarProjeto('${p.cod}')" class="hover:bg-blue-500/5 cursor-pointer ${p.cod === projetoSel ? 'bg-blue-500/10' : ''}">
+            <td class="p-3 font-mono text-blue-500">${p.cod}</td>
+            <td class="p-3 text-primary-themed font-medium">${esc(p.nome)}</td>
+            <td class="p-3 text-secondary-themed">${esc(p.cliente)}</td>
+            <td class="p-3 text-secondary-themed">${esc(p.responsavel) || '—'}</td>
+            <td class="p-3 font-mono text-secondary-themed">${esc(p.entrega) || '—'}</td>
+            <td class="p-3"><div class="stock-bar w-24"><div class="bg-${corBarra(p.progresso)}-500" style="width:${p.progresso}%"></div></div></td>
+            <td class="p-3"><span class="badge-modern bg-${c}-500/15 text-${c}-500">${p.estado}</span></td>
+            <td class="p-3"><button onclick="event.stopPropagation();removerProjeto('${p.cod}')" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`;
+    }).join('');
+
+    renderGraficoFluxo();
+    renderDetalhe();
+}
+
+function renderGraficoFluxo() {
+    const c = document.getElementById('graficoFluxoProjetos');
+    if (!c || !window.Chart) return;
+    const ano = new Date().getFullYear(), ini = Array(12).fill(0), ent = Array(12).fill(0);
+    PROJETOS.forEach(p => {
+        if (p.inicio && +p.inicio.slice(0, 4) === ano) ini[+p.inicio.slice(5, 7) - 1]++;
+        if (p.entrega && +p.entrega.slice(0, 4) === ano) ent[+p.entrega.slice(5, 7) - 1]++;
+    });
+    if (graficoFluxo) { graficoFluxo.data.datasets[0].data = ini; graficoFluxo.data.datasets[1].data = ent; graficoFluxo.update('none'); return; }
+    const eixo = { grid: { color: corGrid() }, ticks: { color: corGrafico(), font: { size: 10 } } };
+    graficoFluxo = new Chart(c, {
+        type: 'line',
+        data: { labels: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'], datasets: [
+            { label: 'Iniciados', data: ini, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.15)', fill: true, tension: 0.4 },
+            { label: 'Entregas previstas', data: ent, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.15)', fill: true, tension: 0.4 }
+        ] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: corGrafico(), font: { size: 10 }, usePointStyle: true } } },
+            scales: { x: eixo, y: { ...eixo, beginAtZero: true, ticks: { ...eixo.ticks, stepSize: 1 } } } }
+    });
+}
+
+function selecionarProjeto(cod) {
+    projetoSel = cod; abaDGP = 'org'; renderDGP();
+    document.getElementById('dgp-detalhe')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderDetalhe() {
+    const box = document.getElementById('dgp-detalhe');
+    const p = getP();
+    if (!box) return;
+    if (!p) { box.classList.add('hidden'); return; }
+    p.termos = p.termos || []; p.plano = p.plano || []; p.equipa = p.equipa || [];
+    const c = COR_ESTADO[p.estado] || 'blue';
+    const abas = [['org', 'fa-sitemap', 'Organograma'], ['termos', 'fa-file-circle-check', 'Termos de Entrega'], ['plano', 'fa-list-check', 'Plano de Ação']];
+    const tabs = abas.map(([k, ic, t]) => `<button onclick="abaDGP='${k}';renderDetalhe()" class="px-4 py-2 rounded-xl text-xs font-semibold ${abaDGP === k ? 'bg-blue-500 text-white' : 'text-secondary-themed hover:bg-blue-500/10'}"><i class="fas ${ic} mr-1.5"></i>${t}</button>`).join('');
+    const conc = p.plano.filter(x => x.estado === 'Concluída').length, ace = p.termos.filter(x => x.estado === 'Aceite').length;
+    const corpo = abaDGP === 'org' ? htmlOrgProjeto(p) : abaDGP === 'termos' ? htmlTermos(p) : htmlPlano(p);
+
+    box.classList.remove('hidden');
+    box.innerHTML = `
+        <div class="p-4 border-b border-themed flex justify-between items-start flex-wrap gap-3">
+            <div>
+                <div class="flex items-center gap-2 flex-wrap"><h3 class="font-black text-primary-themed">${esc(p.nome)}</h3><span class="badge-modern bg-${c}-500/15 text-${c}-500">${p.estado}</span></div>
+                <p class="text-[11px] text-secondary-themed mt-1">${p.cod} • ${esc(p.cliente)} • ${esc(p.tipo)} • Entrega: ${esc(p.entrega) || '—'}</p>
+                <p class="text-[11px] text-secondary-themed mt-1">Ações concluídas: <strong class="text-primary-themed">${conc}/${p.plano.length}</strong> • Termos aceites: <strong class="text-primary-themed">${ace}/${p.termos.length}</strong></p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="abrirModalProjeto('${p.cod}')" class="px-3 py-2 border-themed border rounded-xl text-xs font-semibold text-secondary-themed hover:bg-blue-500/10"><i class="fas fa-pen mr-1"></i> Editar</button>
+                <button onclick="projetoSel=null;renderDGP()" class="w-9 h-9 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500"><i class="fas fa-xmark"></i></button>
+            </div>
+        </div>
+        <div class="p-4 flex gap-2 flex-wrap border-b border-themed">${tabs}</div>
+        <div class="p-4">${corpo}</div>`;
+}
+
+function htmlOrgProjeto(p) {
+    const eq = p.equipa.map(n => {
+        const col = COLABORADORES.find(x => x.nome === n);
+        return `<li><div class="border-2 border-amber-500/40 p-2 rounded-xl inline-block w-40 text-center text-[10px]" style="background: var(--bg-app);"><div class="font-semibold text-primary-themed">${esc(col?.cargo || 'Membro da equipa')}</div><div class="text-[9px] text-amber-500 mt-0.5">${esc(n)}</div></div></li>`;
+    }).join('');
+    const gestor = p.responsavel
+        ? `<li><div class="border-2 border-emerald-500/60 p-2.5 rounded-xl inline-block w-48 text-center" style="background: var(--bg-app);"><div class="text-[9px] text-secondary-themed">Gestor do Projecto</div><div class="font-bold text-emerald-500 text-[11px]">${esc(p.responsavel)}</div></div>${eq ? `<ul>${eq}</ul>` : ''}</li>`
+        : (eq || '');
+    return `<div class="overflow-x-auto py-4"><div class="tree min-w-max text-xs"><ul><li>
+        <div class="border-2 border-violet-500/50 p-2.5 rounded-xl inline-block w-48 text-center" style="background: var(--bg-app);"><div class="text-[9px] text-secondary-themed">Cliente</div><div class="font-bold text-violet-500">${esc(p.cliente)}</div></div>
+        <ul><li><div class="bg-gradient-to-r from-blue-600 to-violet-600 text-white font-bold p-3 rounded-2xl shadow-xl inline-block w-56 text-center">${esc(p.nome)}<div class="text-[10px] text-white/70 font-normal">${p.cod} • ${p.progresso}%</div></div>
+        ${gestor ? `<ul>${gestor}</ul>` : ''}</li></ul></li></ul></div></div>
+        ${!p.responsavel && !p.equipa.length ? '<p class="text-[11px] text-secondary-themed text-center">Define o gestor e a equipa em “Editar”.</p>' : ''}`;
+}
+
+function htmlTermos(p) {
+    const linhas = p.termos.map((t, i) => `<tr><td class="p-3 text-primary-themed">${esc(t.descricao)}</td><td class="p-3 font-mono text-secondary-themed">${esc(t.data) || '—'}</td><td class="p-3"><button onclick="avancarItem('termos',${i})" class="badge-modern bg-${COR_ITEM[t.estado]}-500/15 text-${COR_ITEM[t.estado]}-500">${t.estado}</button></td><td class="p-3"><button onclick="removerItem('termos',${i})" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+    return `<div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed"><tr><th class="p-3">Termo / Entregável</th><th class="p-3">Data limite</th><th class="p-3">Estado (clica p/ avançar)</th><th class="p-3"></th></tr></thead><tbody class="divide-y divide-themed">${linhas || '<tr><td colspan="4" class="p-4 text-center text-secondary-themed">Sem termos de entrega.</td></tr>'}</tbody></table></div>
+        <div class="flex gap-2 flex-wrap mt-4">
+            <input id="ter-desc" class="flex-1 min-w-[200px] border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);" placeholder="Ex: Entrega de equipamentos e manuais">
+            <input id="ter-data" type="date" class="border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);">
+            <button onclick="adicionarItem('termos')" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-xl"><i class="fas fa-plus mr-1"></i> Adicionar</button>
+        </div>`;
+}
+
+function htmlPlano(p) {
+    const linhas = p.plano.map((t, i) => `<tr><td class="p-3 text-primary-themed">${esc(t.acao)}</td><td class="p-3 text-secondary-themed">${esc(t.responsavel) || '—'}</td><td class="p-3 font-mono text-secondary-themed">${esc(t.prazo) || '—'}</td><td class="p-3"><button onclick="avancarItem('plano',${i})" class="badge-modern bg-${COR_ITEM[t.estado]}-500/15 text-${COR_ITEM[t.estado]}-500">${t.estado}</button></td><td class="p-3"><button onclick="removerItem('plano',${i})" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+    return `<div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed"><tr><th class="p-3">Ação</th><th class="p-3">Responsável</th><th class="p-3">Prazo</th><th class="p-3">Estado (clica p/ avançar)</th><th class="p-3"></th></tr></thead><tbody class="divide-y divide-themed">${linhas || '<tr><td colspan="5" class="p-4 text-center text-secondary-themed">Sem ações no plano.</td></tr>'}</tbody></table></div>
+        <div class="flex gap-2 flex-wrap mt-4">
+            <input id="pl-acao" class="flex-1 min-w-[200px] border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);" placeholder="Ex: Testar câmeras do piso 2">
+            <input id="pl-resp" list="lista-colabs" class="w-44 border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);" placeholder="Responsável">
+            <input id="pl-prazo" type="date" class="border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);">
+            <button onclick="adicionarItem('plano')" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-xl"><i class="fas fa-plus mr-1"></i> Adicionar</button>
+        </div>`;
+}
+
+function adicionarItem(tipo) {
+    const p = getP(); if (!p) return;
+    const v = id => document.getElementById(id).value.trim();
+    if (tipo === 'termos') {
+        if (!v('ter-desc')) return mostrarToast('Descreve o termo de entrega', 'warn');
+        p.termos.push({ descricao: v('ter-desc'), data: v('ter-data'), estado: 'Pendente' });
+    } else {
+        if (!v('pl-acao')) return mostrarToast('Descreve a ação', 'warn');
+        p.plano.push({ acao: v('pl-acao'), responsavel: v('pl-resp'), prazo: v('pl-prazo'), estado: 'Por fazer' });
+    }
+    gravarProjeto(p); renderDGP();
+}
+function avancarItem(tipo, i) {
+    const p = getP(); if (!p) return;
+    const lista = ESTADOS_ITEM[tipo], it = p[tipo][i];
+    it.estado = lista[(lista.indexOf(it.estado) + 1) % lista.length];
+    gravarProjeto(p); renderDGP();
+}
+function removerItem(tipo, i) {
+    const p = getP(); if (!p || !confirm('Remover este item?')) return;
+    p[tipo].splice(i, 1); gravarProjeto(p); renderDGP();
+}
+
+/* ── Modal Novo / Editar projecto ── */
+function abrirModalProjeto(cod) {
+    const p = cod ? PROJETOS.find(x => x.cod === cod) : null;
+    const f = (id, v) => document.getElementById(id).value = v;
+    f('proj-cod', p?.cod || ''); f('proj-nome', p?.nome || ''); f('proj-cliente', p?.cliente || '');
+    f('proj-tipo', p?.tipo || 'DSE'); f('proj-estado', p?.estado || 'Em Curso');
+    f('proj-inicio', p?.inicio || ''); f('proj-entrega', p?.entrega || '');
+    f('proj-progresso', p?.progresso ?? 0); f('proj-resp', p?.responsavel || '');
+    document.getElementById('proj-prog-val').innerText = (p?.progresso ?? 0) + '%';
+    document.getElementById('proj-modal-titulo').innerText = p ? 'Editar Projecto' : 'Novo Projecto';
+    atualizarListaColabs();
+    const eq = p?.equipa || [];
+    document.getElementById('proj-equipa').innerHTML = COLABORADORES.length
+        ? COLABORADORES.map(c => `<label class="flex items-center gap-2 text-[11px] text-primary-themed"><input type="checkbox" value="${esc(c.nome)}" ${eq.includes(c.nome) ? 'checked' : ''}> ${esc(c.nome)} <span class="text-secondary-themed">— ${esc(c.cargo)}</span></label>`).join('')
+        : '<p class="text-[11px] text-secondary-themed">Sem colaboradores registados no RH.</p>';
+    document.getElementById('modal-projeto').classList.remove('hidden');
+}
+function fecharModalProjeto() { document.getElementById('modal-projeto').classList.add('hidden'); }
+
+async function guardarProjetoForm(ev) {
+    ev.preventDefault();
+    const g = id => document.getElementById(id).value.trim();
+    const dados = {
+        nome: g('proj-nome'), cliente: g('proj-cliente'), tipo: g('proj-tipo'), estado: g('proj-estado'),
+        inicio: g('proj-inicio'), entrega: g('proj-entrega'), progresso: +g('proj-progresso'), responsavel: g('proj-resp'),
+        equipa: [...document.querySelectorAll('#proj-equipa input:checked')].map(i => i.value)
+    };
+    if (dados.estado === 'Concluído') dados.progresso = 100;
+    let p = PROJETOS.find(x => x.cod === g('proj-cod'));
+    if (p) Object.assign(p, dados);
+    else {
+        const n = PROJETOS.reduce((m, x) => Math.max(m, parseInt(String(x.cod).split('-')[1]) || 0), 0) + 1;
+        p = { cod: 'PRJ-' + String(n).padStart(3, '0'), ...dados, termos: [], plano: [] };
+        PROJETOS.push(p); projetoSel = p.cod; abaDGP = 'org';
+    }
+    await gravarProjeto(p);
+    fecharModalProjeto(); renderDGP();
+    mostrarToast(`Projecto ${p.cod} guardado!`, 'success');
+}
+
+async function removerProjeto(cod) {
+    if (!confirm('Remover este projecto?')) return;
+    PROJETOS = PROJETOS.filter(p => p.cod !== cod);
+    if (projetoSel === cod) projetoSel = null;
+    localStorage.setItem(PROJ_KEY, JSON.stringify(PROJETOS));
+    try {
+        if (window.dbFirebase) { const { doc, deleteDoc } = await import(FS_URL); await deleteDoc(doc(window.dbFirebase, 'projetos', cod)); }
+    } catch (e) { console.error(e); }
+    renderDGP(); mostrarToast('Projecto removido', 'warn');
+}
          new MutationObserver(() => {
             const cor = corGrafico(), grid = corGrid();
             [graficoLinhas, graficoBarras].forEach(g => {
