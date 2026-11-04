@@ -54,10 +54,10 @@
     <!-- 2. Ligar o Firebase à página -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        
-        const app = initializeApp(window.firebaseConfig);
-        const db = getFirestore(app);
+import { initializeFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const app = initializeApp(window.firebaseConfig);
+const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
         
         window.dbFirebase = db;
         console.log("Firebase ligado com sucesso!");
@@ -570,20 +570,6 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
     <div id="dgp-detalhe" class="hidden card-themed rounded-2xl overflow-hidden"></div>
 </div>
             
-                    <!-- Gráfico de Distribuição -->
-                    <div class="card-themed rounded-2xl p-4 flex flex-col justify-between">
-                        <h3 class="font-bold text-xs text-primary-themed uppercase tracking-wider mb-2">Distribuição</h3>
-                        <div class="h-56 relative flex justify-center items-center">
-                            <canvas id="graficoDGP"></canvas>
-                        </div>
-                        <div class="flex justify-center gap-4 text-[10px] text-secondary-themed mt-2">
-                            <span><i class="fas fa-square text-blue-500 mr-1"></i>DSE</span>
-                            <span><i class="fas fa-square text-purple-500 mr-1"></i>Redes</span>
-                            <span><i class="fas fa-square text-emerald-500 mr-1"></i>Acessos</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
             
             <!-- TAB: GCQ -->
             <div id="tab-gcq" class="tab-content hidden space-y-6">
@@ -1069,12 +1055,14 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                     </button>
                 </div>
                 <div class="card-themed rounded-2xl p-4">
-                    <div class="flex justify-between items-center border-b border-themed pb-3 mb-4">
-                        <h3 class="font-bold text-xs text-blue-500 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fas fa-sitemap"></i> Organograma Hierárquico
-                        </h3>
-                        <span class="text-[10px] text-secondary-themed">Cargos &amp; Funções</span>
-                    </div>
+    <div class="flex justify-between items-center border-b border-themed pb-3 mb-4">
+        <h3 class="font-bold text-xs text-blue-500 uppercase tracking-wider flex items-center gap-2">
+            <i class="fas fa-sitemap"></i> Organograma Hierárquico
+        </h3>
+        <span class="text-[10px] text-secondary-themed">Gerado a partir do cadastro</span>
+    </div>
+    <div class="overflow-x-auto py-4"><div class="org-dinamico"></div></div>
+</div>
                     <div class="overflow-x-auto py-4">
                         <div class="tree min-w-[900px] text-xs">
                             <ul>
@@ -1809,24 +1797,23 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
            3. NAVEGAÇÃO
            ═══════════════════════════════════════════════════════ */
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            const target = document.getElementById('tab-' + tabId);
-            if (target) target.classList.remove('hidden');
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.getElementById('btn-' + tabId);
-            if (activeBtn) activeBtn.classList.add('active');
-                        if (window.innerWidth < 768) fecharSidebarMobile();
-            if (tabId === 'frotas') {
-                setTimeout(() => {
-                    if (window.mapaLeaflet) {
-                        if (tabId === 'dgp') setTimeout(() => { renderDGP(); graficoFluxo?.resize(); }, 60);
-                        window.mapaLeaflet.invalidateSize();
-                    } else if (typeof inicializarMapa === 'function') {
-                        inicializarMapa();
-                    }
-                }, 350);
-            }
-        } // <--- ESTA É A CHAVETA QUE FALTAVA PARA FECHAR A switchTab
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.getElementById('tab-' + tabId)?.classList.remove('hidden');
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('btn-' + tabId)?.classList.add('active');
+    if (window.innerWidth < 768) fecharSidebarMobile();
+
+    if (tabId === 'dgp') setTimeout(() => { renderDGP(); graficoFluxo?.resize(); }, 60);
+    if (tabId === 'rh')  renderOrganogramaRH();
+
+    if (tabId === 'frotas') {
+        setTimeout(() => {
+            if (window.mapaLeaflet) window.mapaLeaflet.invalidateSize();
+            else if (typeof inicializarMapa === 'function') inicializarMapa();
+        }, 350);
+    }
+} 
+        // <--- ESTA É A CHAVETA QUE FALTAVA PARA FECHAR A switchTab
 
                 /* ═══════════════════════════════════════════════════════
            4. SIDEBAR MOBILE
@@ -2295,32 +2282,26 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
         }
                                 // Função para Ler os Colaboradores da Nuvem
         async function carregarColaboradoresNuvem() {
-            if (!window.dbFirebase) return;
-            try {
-                const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
-                const querySnapshot = await getDocs(collection(window.dbFirebase, "colaboradores"));
-                
-                const tbody = document.getElementById('tabela-colaboradores-corpo');
-                if (tbody) tbody.innerHTML = '';
-                COLABORADORES = [];                                                
-                inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto, c.depto);   
+    if (!window.dbFirebase) return;
+    try {
+        const { collection, getDocs } = await import(FS_URL);
+        const snap = await getDocs(collection(window.dbFirebase, "colaboradores"));
+        if (snap.empty) return;                       // mantém as linhas fixas se a nuvem estiver vazia
 
-                let total = 0;
-                querySnapshot.forEach((doc) => {
-                    const c = doc.data();
-                    inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto);
-                    total++;
-                });
-                console.log(`Carregados ${total} colaboradores da nuvem!`);
-                
-                // Atualiza o KPI do Efetivo Ativo no Dashboard
-                const kpi = document.getElementById('kpi-efetivo');
-                if (kpi) kpi.innerText = total;
-                
-            } catch (e) {
-                console.error("Erro ao ler colaboradores da nuvem:", e);
-            }
-        }
+        const tbody = document.getElementById('tabela-colaboradores-corpo');
+        if (tbody) tbody.innerHTML = '';
+        COLABORADORES = [];
+
+        snap.forEach(d => {
+            const c = d.data();
+            inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto, c.depto);
+        });
+        const kpi = document.getElementById('kpi-efetivo');
+        if (kpi) kpi.innerText = snap.size;
+    } catch (e) {
+        console.error("Erro ao ler colaboradores da nuvem:", e);
+    }
+}
 
         // Função para Ler as Obras da Nuvem
         async function carregarObrasNuvem() {
@@ -2329,7 +2310,7 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
                 const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
                 const querySnapshot = await getDocs(collection(window.dbFirebase, "obras"));
                 
-                const tbody = document.getElementById('tabela-obras');
+                const tbody = document.getElementById();
                 if (!tbody) return;
 
                 querySnapshot.forEach((doc) => {
@@ -2412,8 +2393,6 @@ html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95
             tr.onclick = () => abrirDetalhesObra(cliente, servico, tecnico, ref, dataHora, evidenciasObra);
             
             tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${ref}</td><td class="p-3 text-primary-themed font-medium">${cliente}</td><td class="p-3 text-secondary-themed">${servico}</td><td class="p-3 text-secondary-themed">${tecnico}</td><td class="p-3">${badgeEvid}</td><td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Execução</span></td>`;
-            
-            document.getElementById('tabela-obras').appendChild(tr);
             
             guardar(STORAGE_KEYS.obras, { ref, cliente, servico, tecnico, data: dataHora });
             
