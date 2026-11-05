@@ -468,7 +468,7 @@
                 <div id="dgp-detalhe" class="hidden card-themed rounded-2xl overflow-hidden"></div>
             </div>
 
-            <!-- TAB: GCQ -->
+            <!-- TAB: GCQ (Funcional) -->
             <div id="tab-gcq" class="tab-content hidden space-y-6">
                 <div class="pb-4 border-b border-themed flex justify-between items-center flex-wrap gap-3">
                     <div>
@@ -503,7 +503,7 @@
                 </div>
             </div>
 
-            <!-- TAB: HSST -->
+            <!-- TAB: HSST (Funcional) -->
             <div id="tab-hsst" class="tab-content hidden space-y-6">
                 <div class="pb-4 border-b border-themed flex justify-between items-end">
                     <div>
@@ -885,7 +885,12 @@
                                     <th class="p-3 font-bold">Cargo</th>
                                 </tr>
                             </thead>
-                            <tbody id="tabela-colaboradores-corpo" class="divide-y divide-themed"></tbody>
+                            <tbody id="tabela-colaboradores-corpo" class="divide-y divide-themed">
+                                <!-- DADOS BASE PARA O ORGANOGRAMA NÃO FICAR VAZIO -->
+                                <tr class="hover:bg-blue-500/5 transition-colors"><td class="p-3"><div class="avatar-circle w-10 h-10 flex items-center justify-center" style="background: var(--bg-app);"><i class="fas fa-user-tie text-blue-500 text-xs"></i></div></td><td class="p-3 font-medium text-primary-themed">Luther Matamba</td><td class="p-3 font-mono text-blue-500">923827618</td><td class="p-3 text-blue-500">luther.matamba@hanzolo.co.ao</td><td class="p-3 font-mono text-secondary-themed">003062276LA035</td><td class="p-3 text-secondary-themed">Chefe de Departamento</td></tr>
+                                <tr class="hover:bg-blue-500/5 transition-colors"><td class="p-3"><div class="avatar-circle w-10 h-10 flex items-center justify-center" style="background: var(--bg-app);"><i class="fas fa-user text-secondary-themed text-xs"></i></div></td><td class="p-3 font-medium text-primary-themed">Hélder Verissimo</td><td class="p-3 font-mono text-blue-500">+244938186914</td><td class="p-3 text-blue-500">helder.verissimo@hanzolo.co.ao</td><td class="p-3 font-mono text-secondary-themed">002337569LA031</td><td class="p-3 text-secondary-themed">coordenador</td></tr>
+                                <tr class="hover:bg-blue-500/5 transition-colors"><td class="p-3"><div class="avatar-circle w-10 h-10 flex items-center justify-center" style="background: var(--bg-app);"><i class="fas fa-user text-secondary-themed text-xs"></i></div></td><td class="p-3 font-medium text-primary-themed">Jorge Panda</td><td class="p-3 font-mono text-blue-500">+244 928 186 778</td><td class="p-3 text-blue-500">jorge.panda@hanzolo.co.ao</td><td class="p-3 font-mono text-secondary-themed">000364258LA039</td><td class="p-3 text-secondary-themed">Técnico Sénior</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -1001,7 +1006,7 @@
         </div>
     </div>
 
-    <!-- Modal: Adicionar/Editar Viatura (NOVO) -->
+    <!-- Modal: Adicionar/Editar Viatura -->
     <div id="modal-viatura" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md modal-viatura-fix flex items-center justify-center p-4">
         <div class="modal-panel border-themed border rounded-3xl w-full max-w-md shadow-2xl" style="background: var(--bg-card);">
             <div class="p-5 border-b border-themed flex justify-between items-center">
