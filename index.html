@@ -101,7 +101,6 @@
         html.light .border-themed { border-color: #cbd5e1 !important; }
         html.light .sidebar-themed { background: #f1f5f9 !important; border-right: 1px solid #cbd5e1 !important; }
         
-        /* MELHORIA DA QUALIDADE DAS LETRAS NO MENU (Print 8) */
         .nav-btn { transition: all 0.25s; font-size: 13px; }
         .nav-btn i { font-size: 14px; }
         .nav-btn.active { background: var(--accent); color: white; box-shadow: 0 8px 20px -4px rgba(59,130,246,0.4); }
@@ -127,8 +126,9 @@
         .import-box { border: 2px dashed var(--border); border-radius: 16px; padding: 32px; text-align: center; transition: all 0.3s; cursor: pointer; }
         .import-box:hover { border-color: var(--accent); background: rgba(59,130,246,0.05); }
         
-        /* CORREÇÃO DO Z-INDEX DO MODAL DE FROTAS */
-        .modal-frotas-fix { z-index: 9999 !important; }
+        /* CORREÇÃO DO Z-INDEX DOS MODAIS */
+        .modal-frotas-fix { z-index: 9990 !important; }
+        .modal-viatura-fix { z-index: 9999 !important; }
         
         @media (max-width: 768px) { main[style] { left: 0 !important; } }
         
@@ -142,7 +142,6 @@
         html.light #painel-notificacoes i, html.light #export-dropdown i { color: var(--text-secondary) !important; }
         #painel-notificacoes.hidden, #export-dropdown.hidden { display: none !important; }
         
-        /* MELHORIA DO ORGANOGRAMA (Print 7) */
         .tree ul { padding-top: 20px; position: relative; transition: all 0.5s; display: flex; justify-content: center; }
         .tree li { float: left; text-align: center; list-style-type: none; position: relative; padding: 20px 10px 0 10px; }
         .tree li::before, .tree li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 2px solid var(--border); width: 50%; height: 20px; }
@@ -169,7 +168,6 @@
                 <h1 class="text-2xl font-black text-white tracking-wide">HANZOLO OPS</h1>
                 <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">Acesso Restrito</p>
             </div>
-
             <form id="form-login" onsubmit="fazerLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-1.5">E-mail Corporativo</label>
@@ -803,8 +801,8 @@
                         </div>
                     </div>
 
-                    <div class="space-y-3 xl:max-h-[600px] xl:overflow-y-auto pr-1">
-                        <!-- Viaturas preenchidas dinamicamente ou fixas -->
+                    <div class="space-y-3 xl:max-h-[600px] xl:overflow-y-auto pr-1" id="lista-viaturas-lateral">
+                        <!-- Viaturas preenchidas dinamicamente -->
                     </div>
                 </div>
             </div>
@@ -980,7 +978,7 @@
         </div>
     </div>
 
-    <!-- Modal: Gestão de Frotas (Corrigido para não sobrepor o mapa) -->
+    <!-- Modal: Gestão de Frotas -->
     <div id="modal-gestao-frotas" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md modal-frotas-fix flex items-center justify-center p-4">
         <div class="modal-panel border-themed border rounded-3xl w-full max-w-3xl shadow-2xl max-h-[92vh] overflow-y-auto" style="background: var(--bg-card);">
             <div class="p-5 border-b border-themed flex justify-between items-center sticky top-0 z-10" style="background: var(--bg-card);">
@@ -992,7 +990,7 @@
             <div class="p-5 space-y-4 text-xs">
                 <div class="flex justify-between items-center mb-2">
                     <p class="text-secondary-themed">Lista atual de viaturas registadas no sistema.</p>
-                    <button onclick="mostrarToast('Formulário de nova viatura em breve', 'info')" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-3 py-1.5 rounded-lg"><i class="fas fa-plus"></i> Adicionar Viatura</button>
+                    <button onclick="abrirModalViatura()" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-3 py-1.5 rounded-lg flex items-center gap-2"><i class="fas fa-plus"></i> Adicionar Viatura</button>
                 </div>
                 <div class="overflow-x-auto rounded-xl border border-themed">
                     <table class="w-full text-left">
@@ -1005,6 +1003,53 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal: Adicionar/Editar Viatura (NOVO) -->
+    <div id="modal-viatura" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md modal-viatura-fix flex items-center justify-center p-4">
+        <div class="modal-panel border-themed border rounded-3xl w-full max-w-md shadow-2xl" style="background: var(--bg-card);">
+            <div class="p-5 border-b border-themed flex justify-between items-center">
+                <h3 class="font-bold text-sm text-primary-themed uppercase tracking-wider flex items-center gap-2">
+                    <i class="fas fa-truck text-blue-500"></i> <span id="viatura-modal-titulo">Adicionar Viatura</span>
+                </h3>
+                <button onclick="fecharModalViatura()" class="w-8 h-8 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500"><i class="fas fa-xmark"></i></button>
+            </div>
+            <form id="form-viatura" onsubmit="guardarViatura(event)" class="p-5 space-y-4 text-xs">
+                <input type="hidden" id="viat-id">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Matrícula *</label>
+                        <input type="text" id="viat-matricula" required class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);" placeholder="LD-00-00-XX">
+                    </div>
+                    <div>
+                        <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Modelo *</label>
+                        <input type="text" id="viat-modelo" required class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);" placeholder="Ex: Toyota Hilux">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Cor *</label>
+                        <input type="text" id="viat-cor" required class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);" placeholder="Ex: Branco">
+                    </div>
+                    <div>
+                        <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Condutor *</label>
+                        <input type="text" id="viat-condutor" required class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);" placeholder="Nome do condutor">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Estado *</label>
+                    <select id="viat-estado" required class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);">
+                        <option value="Em Movimento">Em Movimento</option>
+                        <option value="Estacionado">Estacionado</option>
+                        <option value="Em Intervenção">Em Intervenção</option>
+                    </select>
+                </div>
+                <div class="pt-3 flex justify-end gap-2">
+                    <button type="button" onclick="fecharModalViatura()" class="px-5 py-2.5 border-themed border rounded-xl font-semibold text-secondary-themed hover:bg-blue-500/10">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1465,25 +1510,7 @@
         let graficoLinhas, graficoBarras, graficoCircular, graficoFluxoStock;
         let totalFiscalizacoes = 4; 
         
-        const STORAGE_KEYS = {
-            colab: 'hanzolo_colaboradores', dse: 'hanzolo_dse_tecnicos', obras: 'hanzolo_obras',
-            req: 'hanzolo_requisicoes', epiGeral: 'hanzolo_epi_geral', epiDse: 'hanzolo_epi_dse',
-            epc: 'hanzolo_epc', inv: 'hanzolo_inventario', auditorias: 'hanzolo_auditorias'
-        };
-
-        const DEPTOS = {
-            direcao:    { nome: 'DIREÇÃO GERAL',   sub: 'Administração',            cor: 'violet',  ic: 'fa-building' },
-            chefia:     { nome: 'CHEFIA',          sub: 'Chefes de Departamento',   cor: 'blue',    ic: 'fa-user-tie' },
-            dgp:        { nome: 'DGP',             sub: 'Coordenação de Projectos', cor: 'blue',    ic: 'fa-diagram-project' },
-            supervisao: { nome: 'SUPERVISÃO',      sub: 'Turnos & Obras',           cor: 'emerald', ic: 'fa-user-shield' },
-            dse:        { nome: 'DSE',             sub: 'Segurança Electrónica',    cor: 'cyan',    ic: 'fa-video' },
-            dl:         { nome: 'DL',              sub: 'Departamento Lógico',      cor: 'indigo',  ic: 'fa-network-wired' },
-            tecnico:    { nome: 'CORPO TÉCNICO',   sub: 'Execução de Campo',        cor: 'amber',   ic: 'fa-screwdriver-wrench' },
-            apoio:      { nome: 'APOIO',           sub: 'Logística & RH',           cor: 'violet',  ic: 'fa-briefcase' },
-            outros:     { nome: 'POR CLASSIFICAR', sub: 'Sem departamento',         cor: 'slate',   ic: 'fa-user' }
-        };
-
-        const VIATURAS = [
+        let VIATURAS = [
             { id: 'H-01', nome: 'Toyota Hilux', matricula: 'LD-88-21-GX', cor: 'Branco', condutor: 'Mateus Silva', pos: { lat: -8.9174, lng: 13.1836 }, status: 'Em Movimento', velocidade: 65, rota: 'Talatona → Viana', corHex: '#3b82f6' },
             { id: 'H-02', nome: 'Nissan Hardbody', matricula: 'LD-12-44-HY', cor: 'Cinza', condutor: 'João Pedro', pos: { lat: -8.9070, lng: 13.1830 }, status: 'Estacionado', velocidade: 0, rota: 'Base Talatona', corHex: '#10b981' },
             { id: 'H-03', nome: 'Mitsubishi L200', matricula: 'LD-55-90-ZZ', cor: 'Azul', condutor: 'António Banza', pos: { lat: -8.9050, lng: 13.3700 }, status: 'Em Intervenção', velocidade: 42, rota: 'Viana Industrial', corHex: '#f59e0b' }
@@ -1649,7 +1676,8 @@
         function exportarBackupJSON() {
             document.getElementById('export-dropdown')?.classList.add('hidden');
             const backup = { meta: { empresa: 'HANZOLO, LDA', nif: '5417271608', geradoEm: new Date().toISOString(), versao: '2.1' }, dados: {} };
-            Object.keys(STORAGE_KEYS).forEach(k => { backup.dados[k] = JSON.parse(localStorage.getItem(STORAGE_KEYS[k]) || '[]'); });
+            const keys = ['colab', 'dse', 'obras', 'req', 'epiGeral', 'epiDse', 'epc', 'inv', 'auditorias']; // Ajuste para as chaves reais
+            keys.forEach(k => { backup.dados[k] = JSON.parse(localStorage.getItem(STORAGE_KEYS[k]) || '[]'); });
             const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
@@ -1746,6 +1774,114 @@
         /* ═══════════════════════════════════════════════════════
            MODAIS E FUNÇÕES DE ADIÇÃO
            ═══════════════════════════════════════════════════════ */
+        
+        // --- GCQ / HSST ---
+        function abrirModalAuditoria() { document.getElementById('modal-auditoria').classList.remove('hidden'); }
+        function fecharModalAuditoria() { document.getElementById('modal-auditoria').classList.add('hidden'); document.getElementById('form-auditoria').reset(); }
+        function adicionarAuditoria(event) {
+            event.preventDefault();
+            const data = document.getElementById('aud-data').value;
+            const projeto = document.getElementById('aud-projeto').value;
+            const auditor = document.getElementById('aud-auditor').value;
+            const conformidade = document.getElementById('aud-conformidade').value;
+            const estado = document.getElementById('aud-estado').value;
+            
+            let dataFormatada = data.split('-').reverse().join('/');
+            let corEstado = estado === 'Aprovado' ? 'emerald' : 'amber';
+            
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="p-3 text-secondary-themed">${dataFormatada}</td>
+                <td class="p-3 text-primary-themed font-medium">${projeto}</td>
+                <td class="p-3 text-secondary-themed">${auditor}</td>
+                <td class="p-3 font-bold text-${conformidade == 100 ? 'emerald' : 'amber'}-500">${conformidade}%</td>
+                <td class="p-3"><span class="badge-modern bg-${corEstado}-500/15 text-${corEstado}-500">${estado}</span></td>
+            `;
+            document.getElementById('tabela-auditorias').prepend(tr);
+            fecharModalAuditoria();
+            mostrarToast('Auditoria registada com sucesso!', 'success');
+        }
+
+        function abrirModalFiscalizacao() { document.getElementById('modal-fiscalizacao').classList.remove('hidden'); }
+        function fecharModalFiscalizacao() { document.getElementById('modal-fiscalizacao').classList.add('hidden'); document.getElementById('form-fiscalizacao').reset(); }
+        function adicionarFiscalizacao(event) {
+            event.preventDefault();
+            totalFiscalizacoes++;
+            document.getElementById('kpi-fiscalizacoes').innerText = totalFiscalizacoes;
+            fecharModalFiscalizacao();
+            mostrarToast('Fiscalização registada! O contador foi atualizado.', 'success');
+        }
+
+        // --- GESTÃO DE FROTAS E VIATURAS ---
+        function abrirModalGestaoFrotas() {
+            const tbody = document.getElementById('tabela-gestao-frotas');
+            tbody.innerHTML = VIATURAS.map(v => `
+                <tr class="border-b border-themed last:border-0 hover:bg-blue-500/5">
+                    <td class="p-3 font-mono text-primary-themed font-bold">${v.id}</td>
+                    <td class="p-3 font-mono text-blue-500">${v.matricula}</td>
+                    <td class="p-3 text-primary-themed">${v.nome} <span class="text-secondary-themed text-[10px]">(${v.cor})</span></td>
+                    <td class="p-3 text-secondary-themed">${v.condutor}</td>
+                    <td class="p-3"><span class="badge-modern bg-${v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber'}-500/15 text-${v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber'}-500">${v.status}</span></td>
+                    <td class="p-3"><button onclick="abrirModalViatura('${v.id}')" class="text-blue-500 hover:text-blue-700 p-1"><i class="fas fa-pen"></i></button></td>
+                </tr>
+            `).join('');
+            document.getElementById('modal-gestao-frotas').classList.remove('hidden');
+        }
+        function fecharModalGestaoFrotas() { document.getElementById('modal-gestao-frotas').classList.add('hidden'); }
+
+        function abrirModalViatura(id = null) {
+            const f = (elId, val) => document.getElementById(elId).value = val;
+            if (id) {
+                const v = VIATURAS.find(x => x.id === id);
+                if (!v) return;
+                document.getElementById('viatura-modal-titulo').innerText = 'Editar Viatura';
+                f('viat-id', v.id); f('viat-matricula', v.matricula); f('viat-modelo', v.nome);
+                f('viat-cor', v.cor); f('viat-condutor', v.condutor); f('viat-estado', v.status);
+            } else {
+                document.getElementById('viatura-modal-titulo').innerText = 'Adicionar Viatura';
+                document.getElementById('form-viatura').reset();
+                f('viat-id', '');
+            }
+            document.getElementById('modal-viatura').classList.remove('hidden');
+        }
+        function fecharModalViatura() { document.getElementById('modal-viatura').classList.add('hidden'); }
+
+        function guardarViatura(event) {
+            event.preventDefault();
+            const id = document.getElementById('viat-id').value;
+            const matricula = document.getElementById('viat-matricula').value.trim();
+            const nome = document.getElementById('viat-modelo').value.trim();
+            const cor = document.getElementById('viat-cor').value.trim();
+            const condutor = document.getElementById('viat-condutor').value.trim();
+            const status = document.getElementById('viat-estado').value;
+
+            if (id) {
+                const idx = VIATURAS.findIndex(x => x.id === id);
+                if (idx > -1) {
+                    VIATURAS[idx].matricula = matricula;
+                    VIATURAS[idx].nome = nome;
+                    VIATURAS[idx].cor = cor;
+                    VIATURAS[idx].condutor = condutor;
+                    VIATURAS[idx].status = status;
+                }
+            } else {
+                const novoId = 'H-0' + (VIATURAS.length + 1);
+                VIATURAS.push({
+                    id: novoId, nome, matricula, cor, condutor, status,
+                    pos: { lat: -8.9070 + (Math.random()-0.5)*0.01, lng: 13.2400 + (Math.random()-0.5)*0.01 },
+                    velocidade: status === 'Em Movimento' ? 60 : 0,
+                    rota: status === 'Estacionado' ? 'Base Talatona' : 'Em trânsito',
+                    corHex: status === 'Em Movimento' ? '#3b82f6' : status === 'Estacionado' ? '#10b981' : '#f59e0b'
+                });
+            }
+
+            fecharModalViatura();
+            abrirModalGestaoFrotas(); // Atualiza a tabela do modal
+            renderizarViaturasMapa(); // Atualiza o mapa e a lista lateral
+            mostrarToast('Viatura guardada com sucesso!', 'success');
+        }
+
+        // --- OUTROS MODAIS ---
         function abrirModalColaborador() { document.getElementById('modal-colaborador')?.classList.remove('hidden'); }
         function fecharModalColaborador() { document.getElementById('modal-colaborador')?.classList.add('hidden'); }
         function abrirModalRequisicao() { 
@@ -1779,23 +1915,10 @@
         function fecharModalEPC() { document.getElementById('modal-epc').classList.add('hidden'); document.getElementById('form-epc').reset(); }
         function abrirModalInventario() { document.getElementById('modal-inventario').classList.remove('hidden'); }
         function fecharModalInventario() { document.getElementById('modal-inventario').classList.add('hidden'); document.getElementById('form-inventario').reset(); }
-        
-        function abrirModalGestaoFrotas() {
-            const tbody = document.getElementById('tabela-gestao-frotas');
-            tbody.innerHTML = VIATURAS.map(v => `
-                <tr>
-                    <td class="p-3 font-mono text-primary-themed">${v.id}</td>
-                    <td class="p-3 font-mono text-blue-500">${v.matricula}</td>
-                    <td class="p-3 text-primary-themed">${v.nome} (${v.cor})</td>
-                    <td class="p-3 text-secondary-themed">${v.condutor}</td>
-                    <td class="p-3"><span class="badge-modern bg-${v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber'}-500/15 text-${v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber'}-500">${v.status}</span></td>
-                    <td class="p-3"><button onclick="mostrarToast('Edição em breve', 'info')" class="text-blue-500"><i class="fas fa-pen"></i></button></td>
-                </tr>
-            `).join('');
-            document.getElementById('modal-gestao-frotas').classList.remove('hidden');
-        }
-        function fecharModalGestaoFrotas() { document.getElementById('modal-gestao-frotas').classList.add('hidden'); }
 
+        /* ═══════════════════════════════════════════════════════
+           ADIÇÃO DE DADOS NAS TABELAS
+           ═══════════════════════════════════════════════════════ */
         function adicionarEPI(event) {
             event.preventDefault();
             const nome = document.getElementById('epi-nome').value.trim();
@@ -2297,6 +2420,17 @@
             const tileLayer = L.tileLayer(temaMapaLeaflet(), { maxZoom: 19, subdomains: 'abcd' }).addTo(mapaLeaflet);
             window.tileLayerAtual = tileLayer;
             
+            renderizarViaturasMapa(); // Chama a função para criar os marcadores
+            window.mapaLeaflet = mapaLeaflet;
+        }
+
+        function renderizarViaturasMapa() {
+            if (!mapaLeaflet) return;
+            
+            // Limpar marcadores antigos
+            Object.values(marcadoresLeaflet).forEach(m => mapaLeaflet.removeLayer(m));
+            marcadoresLeaflet = {};
+
             VIATURAS.forEach(v => {
                 const icone = L.divIcon({ className: 'mapa-uber-marker-custom', html: `<div class="mapa-uber-marker ${v.status === 'Estacionado' ? 'parked' : v.status === 'Em Intervenção' ? 'intervention' : ''}" style="background:${v.corHex}"><i class="fas fa-truck"></i></div>`, iconSize: [44, 44], iconAnchor: [22, 22] });
                 const marker = L.marker([v.pos.lat, v.pos.lng], { icon: icone }).addTo(mapaLeaflet);
@@ -2304,8 +2438,28 @@
                 marcadoresLeaflet[v.id] = marker;
             });
             
-            rotaLeaflet = L.polyline([[VIATURAS[0].pos.lat, VIATURAS[0].pos.lng], [-8.9100, 13.2500], [VIATURAS[2].pos.lat, VIATURAS[2].pos.lng]], { color: '#3b82f6', weight: 4, opacity: 0.7, dashArray: '10, 8' }).addTo(mapaLeaflet);
-            window.mapaLeaflet = mapaLeaflet;
+            // Atualizar a lista lateral de viaturas
+            const listaEl = document.getElementById('lista-viaturas-lateral');
+            if (listaEl) {
+                listaEl.innerHTML = VIATURAS.map(v => {
+                    const corStatus = v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber';
+                    return `
+                    <div class="card-themed p-4 rounded-2xl cursor-pointer transition-all hover:border-${corStatus}-500/50" onclick="focarViatura('${v.id}')">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-9 h-9 rounded-xl bg-${corStatus}-500/15 flex items-center justify-center"><i class="fas fa-truck text-${corStatus}-500"></i></div>
+                                <div><p class="font-bold text-xs text-primary-themed">${v.id}</p><p class="text-[10px] text-secondary-themed">${v.nome}</p></div>
+                            </div>
+                            <span class="badge-modern bg-${corStatus}-500/15 text-${corStatus}-500"><i class="fas fa-circle text-[5px] ${v.status === 'Em Movimento' ? 'animate-pulse-soft' : ''}"></i> ${v.status.substring(0, 5)}.</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-y-1.5 text-[10px]">
+                            <div class="text-secondary-themed">Matrícula:</div><div class="text-primary-themed font-mono text-right">${v.matricula}</div>
+                            <div class="text-secondary-themed">Condutor:</div><div class="text-primary-themed text-right">${v.condutor}</div>
+                            <div class="text-secondary-themed">Velocidade:</div><div class="text-${corStatus}-500 font-bold text-right">${v.velocidade} km/h</div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
         }
 
         function atualizarTemaMapa() { if (window.tileLayerAtual) window.tileLayerAtual.setUrl(temaMapaLeaflet()); }
@@ -2356,13 +2510,12 @@
             });
         }
         setInterval(() => {
-            const v = VIATURAS[0];
-            if (v.status !== 'Em Movimento' || !mapaLeaflet) return;
+            const v = VIATURAS.find(x => x.status === 'Em Movimento');
+            if (!v || !mapaLeaflet) return;
             v.pos.lat += (Math.random() - 0.5) * 0.0008;
             v.pos.lng += (Math.random() - 0.5) * 0.0008;
             const m = marcadoresLeaflet[v.id];
             if (m) m.setLatLng([v.pos.lat, v.pos.lng]);
-            if (rotaLeaflet) rotaLeaflet.setLatLngs([[v.pos.lat, v.pos.lng], [-8.9100, 13.2500], [VIATURAS[2].pos.lat, VIATURAS[2].pos.lng]]);
         }, 4000);
 
         /* ═══════════════════════════════════════════════════════
@@ -2759,13 +2912,13 @@
             carregarInventarioNuvem();
             carregarEPIsNuvem();
 
-            ['modal-colaborador','modal-requisicao','modal-intervencao','modal-tecnico-dse','modal-alerta','modal-epi','modal-epc','modal-inventario','modal-importar','modal-projeto','modal-gestao-frotas','modal-auditoria','modal-fiscalizacao'].forEach(id => {
+            ['modal-colaborador','modal-requisicao','modal-intervencao','modal-tecnico-dse','modal-alerta','modal-epi','modal-epc','modal-inventario','modal-importar','modal-projeto','modal-gestao-frotas','modal-auditoria','modal-fiscalizacao','modal-viatura'].forEach(id => {
                 const m = document.getElementById(id);
                 if (m) m.addEventListener('click', (e) => { if (e.target.id === id) m.classList.add('hidden'); });
             });
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
-                    ['modal-colaborador','modal-requisicao','modal-intervencao','modal-tecnico-dse','modal-alerta','modal-epi','modal-epc','modal-inventario','modal-importar','modal-projeto','modal-gestao-frotas','modal-auditoria','modal-fiscalizacao'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+                    ['modal-colaborador','modal-requisicao','modal-intervencao','modal-tecnico-dse','modal-alerta','modal-epi','modal-epc','modal-inventario','modal-importar','modal-projeto','modal-gestao-frotas','modal-auditoria','modal-fiscalizacao','modal-viatura'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
                     document.getElementById('painel-notificacoes')?.classList.add('hidden');
                 }
             });
