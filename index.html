@@ -30,10 +30,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Bibliotecas Chart e PDF -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
+    <!-- Firebase -->
     <script type="module">
         const firebaseConfig = {
             apiKey: "AIzaSyAWgdR8hOmpMvb3cBXAljaPnDryo5hqFWQ",
@@ -55,8 +57,10 @@
         const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
         
         window.dbFirebase = db;
+        console.log("Firebase ligado com sucesso!");
     </script>
 
+    <!-- Leaflet Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
@@ -97,6 +101,7 @@
         html.light .border-themed { border-color: #cbd5e1 !important; }
         html.light .sidebar-themed { background: #f1f5f9 !important; border-right: 1px solid #cbd5e1 !important; }
         
+        /* MELHORIA DA QUALIDADE DAS LETRAS NO MENU (Print 8) */
         .nav-btn { transition: all 0.25s; font-size: 13px; }
         .nav-btn i { font-size: 14px; }
         .nav-btn.active { background: var(--accent); color: white; box-shadow: 0 8px 20px -4px rgba(59,130,246,0.4); }
@@ -110,7 +115,7 @@
         .preview-thumb { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; border: 2px solid var(--border); }
         .avatar-circle { border-radius: 12px; overflow: hidden; border: 2px solid var(--border); }
         .badge-modern { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: 10px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
-        #mapa-frotas { width: 100%; height: 520px; border-radius: 20px; border: 1px solid var(--border); z-index: 0; }
+        #mapa-frotas { width: 100%; height: 520px; border-radius: 20px; border: 1px solid var(--border); }
         
         html.dark .leaflet-layer { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
         .leaflet-container { background: var(--map-bg) !important; border-radius: 20px; }
@@ -122,11 +127,9 @@
         .import-box { border: 2px dashed var(--border); border-radius: 16px; padding: 32px; text-align: center; transition: all 0.3s; cursor: pointer; }
         .import-box:hover { border-color: var(--accent); background: rgba(59,130,246,0.05); }
         
-        /* Correção do Layout do Mapa e Z-index */
-        .map-wrapper { position: relative; z-index: 1; }
+        /* CORREÇÃO DO Z-INDEX DO MODAL DE FROTAS */
         .modal-frotas-fix { z-index: 9999 !important; }
-        .modal-frotas-fix .modal-panel { background: var(--bg-card) !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-
+        
         @media (max-width: 768px) { main[style] { left: 0 !important; } }
         
         html.light aside#sidebar .text-secondary-themed, html.light aside#sidebar .text-primary-themed { color: #334155 !important; }
@@ -139,6 +142,7 @@
         html.light #painel-notificacoes i, html.light #export-dropdown i { color: var(--text-secondary) !important; }
         #painel-notificacoes.hidden, #export-dropdown.hidden { display: none !important; }
         
+        /* MELHORIA DO ORGANOGRAMA (Print 7) */
         .tree ul { padding-top: 20px; position: relative; transition: all 0.5s; display: flex; justify-content: center; }
         .tree li { float: left; text-align: center; list-style-type: none; position: relative; padding: 20px 10px 0 10px; }
         .tree li::before, .tree li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 2px solid var(--border); width: 50%; height: 20px; }
@@ -165,6 +169,7 @@
                 <h1 class="text-2xl font-black text-white tracking-wide">HANZOLO OPS</h1>
                 <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">Acesso Restrito</p>
             </div>
+
             <form id="form-login" onsubmit="fazerLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-1.5">E-mail Corporativo</label>
@@ -180,6 +185,33 @@
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </form>
+        </div>
+    </div>
+
+    <!-- CABEÇALHO DE IMPRESSÃO -->
+    <div class="print-header bg-white text-gray-900 px-10 py-6 border-b-2 border-blue-600 items-center justify-between">
+        <div class="flex items-center gap-6">
+            <div class="flex-shrink-0">
+                <svg class="h-14 w-auto" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M190 10L10 120L190 230V165H260V75H190V10Z" fill="#3B82F6"/>
+                    <circle cx="130" cy="120" r="14" fill="#2563EB"/>
+                    <path d="M130 114H220V75H250V165H220V126H130V114Z" fill="#2563EB"/>
+                    <text x="320" y="150" fill="#0F172A" font-family="Inter, Arial" font-weight="900" font-size="110" letter-spacing="4">HANZOLO</text>
+                    <text x="325" y="195" fill="#2563EB" font-family="Inter, Arial" font-weight="700" font-size="28" letter-spacing="2">TECNOLOGIA, SISTEMAS &amp; SEGURANÇA</text>
+                </svg>
+            </div>
+            <div class="border-l-2 border-gray-300 pl-6">
+                <h1 class="text-base font-black uppercase text-gray-900 tracking-tight leading-tight">HANZOLO — Tecnologia, Sistemas &amp; Segurança, LDA</h1>
+                <p class="text-[10px] text-gray-600 font-mono font-semibold mt-1">NIF: 5417271608</p>
+                <p class="text-[10px] text-gray-600 font-medium">Base Talatona, Luanda, Angola</p>
+            </div>
+        </div>
+        <div class="text-right">
+            <div class="inline-block bg-blue-50 border border-blue-200 rounded-lg px-4 py-2">
+                <p class="text-[9px] font-black text-blue-700 uppercase tracking-widest">Relatório Operacional</p>
+                <p class="text-xs font-bold text-gray-800 mt-0.5" id="print-date">Data: —</p>
+                <p class="text-[9px] text-gray-500 font-mono mt-0.5">OPS 24-7</p>
+            </div>
         </div>
     </div>
 
@@ -720,17 +752,17 @@
                         <p class="text-xs text-secondary-themed mt-1">Monitorização de viaturas, rotas e gestão de motoristas.</p>
                     </div>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <button onclick="abrirModalGestaoFrotas()" class="bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-lg flex items-center gap-2 z-10 relative">
+                        <button onclick="abrirModalGestaoFrotas()" class="bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-lg flex items-center gap-2">
                             <i class="fas fa-cogs"></i> Gestão de Viaturas
                         </button>
-                        <button onclick="centralizarTodasViaturas()" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2 z-10 relative">
+                        <button onclick="centralizarTodasViaturas()" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2">
                             <i class="fas fa-crosshairs"></i> Centralizar Tudo
                         </button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 xl:grid-cols-4 gap-4">
-                    <div class="xl:col-span-3 relative map-wrapper">
+                    <div class="xl:col-span-3 relative">
                         <div id="mapa-frotas" class="relative overflow-hidden">
                             <div id="mapa-fallback" class="hidden w-full h-full flex flex-col items-center justify-center p-8 text-center" style="background: var(--bg-app);">
                                 <i class="fas fa-map-location-dot text-4xl text-blue-500 mb-4"></i>
@@ -771,7 +803,7 @@
                         </div>
                     </div>
 
-                    <div class="space-y-3 xl:max-h-[600px] xl:overflow-y-auto pr-1 map-wrapper">
+                    <div class="space-y-3 xl:max-h-[600px] xl:overflow-y-auto pr-1">
                         <!-- Viaturas preenchidas dinamicamente ou fixas -->
                     </div>
                 </div>
@@ -1416,9 +1448,13 @@
         </div>
     </div>
     
+    <!-- Toasts -->
     <div id="toast-container" class="fixed bottom-4 right-4 z-[100] space-y-2"></div>
 
     <script>
+        /* ═══════════════════════════════════════════════════════
+           CONSTANTES GLOBAIS E VARIÁVEIS DE ESTADO
+           ═══════════════════════════════════════════════════════ */
         const FS_URL = "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         let COLABORADORES = [];
         let epiContextoAtual = 'geral';
@@ -1427,7 +1463,7 @@
         let obraAtualAberta = null;
         let mapaLeaflet, marcadoresLeaflet = {}, rotaLeaflet;
         let graficoLinhas, graficoBarras, graficoCircular, graficoFluxoStock;
-        let totalFiscalizacoes = 4; // Variável para o contador do HSST
+        let totalFiscalizacoes = 4; 
         
         const STORAGE_KEYS = {
             colab: 'hanzolo_colaboradores', dse: 'hanzolo_dse_tecnicos', obras: 'hanzolo_obras',
@@ -1463,6 +1499,9 @@
             { cod: 'PRJ-001', nome: 'Nurs Call', cliente: 'Girasol', tipo: 'Redes', responsavel: '', equipa: [], inicio: '2026-05-01', entrega: '2026-12-20', progresso: 50, estado: 'Em Curso', termos: [], plano: [] }
         ];
 
+        /* ═══════════════════════════════════════════════════════
+           LOGIN E SEGURANÇA
+           ═══════════════════════════════════════════════════════ */
         async function fazerLogin(event) {
             event.preventDefault();
             const email = document.getElementById('login-email').value;
@@ -1524,14 +1563,19 @@
             mostrarToast('Tema ' + (atual === 'dark' ? 'claro' : 'escuro') + ' ativado', 'info');
         }
 
+        /* ═══════════════════════════════════════════════════════
+           RELÓGIO E NAVEGAÇÃO
+           ═══════════════════════════════════════════════════════ */
         function atualizarRelogio() {
             const agora = new Date();
             const dataStr = agora.toLocaleDateString('pt-AO');
             const horaStr = agora.toLocaleTimeString('pt-AO');
             const liveEl = document.getElementById('live-clock');
             const headerEl = document.getElementById('relogio-header');
+            const printEl = document.getElementById('print-date');
             if (liveEl) liveEl.innerText = dataStr + ' ' + horaStr;
             if (headerEl) headerEl.innerText = horaStr;
+            if (printEl) printEl.innerText = 'Data: ' + dataStr;
         }
         setInterval(atualizarRelogio, 1000);
 
@@ -1565,6 +1609,106 @@
             if (window.innerWidth < 768 && s && o) { s.classList.add('hidden'); o.classList.add('hidden'); }
         }
 
+        /* ═══════════════════════════════════════════════════════
+           EXPORTAÇÃO E BACKUP
+           ═══════════════════════════════════════════════════════ */
+        function toggleExportMenu() { document.getElementById('export-dropdown')?.classList.toggle('hidden'); }
+        window.addEventListener('click', (e) => {
+            const menu = document.getElementById('export-dropdown');
+            if (menu && !e.target.closest('button[onclick="toggleExportMenu()"]') && !e.target.closest('#export-dropdown')) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        function exportarRelatorio(tipo) {
+            document.getElementById('export-dropdown')?.classList.add('hidden');
+            if (tipo === 'pdf') window.print();
+            else if (tipo === 'excel') exportarCSV();
+        }
+
+        function exportarCSV() {
+            const linhas = [
+                ['HANZOLO — Tecnologia, Sistemas & Segurança, LDA'],
+                ['NIF', '5417271608'],
+                ['Relatório gerado em', new Date().toLocaleString('pt-AO')],
+                [], ['EFETIVOS'], ['Nome', 'Telefone', 'E-mail', 'NIF', 'Cargo']
+            ];
+            document.querySelectorAll('#tabela-colaboradores-corpo tr').forEach(tr => {
+                const c = tr.querySelectorAll('td');
+                if (c.length >= 6) linhas.push([c[1]?.innerText.trim() || '', c[2]?.innerText.trim() || '', c[3]?.innerText.trim() || '', c[4]?.innerText.trim() || '', c[5]?.innerText.trim() || '']);
+            });
+            const csv = linhas.map(l => l.map(x => `"${String(x).replace(/"/g,'""')}"`).join(';')).join('\n');
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `HANZOLO_Relatorio_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            mostrarToast('CSV exportado!', 'success');
+        }
+
+        function exportarBackupJSON() {
+            document.getElementById('export-dropdown')?.classList.add('hidden');
+            const backup = { meta: { empresa: 'HANZOLO, LDA', nif: '5417271608', geradoEm: new Date().toISOString(), versao: '2.1' }, dados: {} };
+            Object.keys(STORAGE_KEYS).forEach(k => { backup.dados[k] = JSON.parse(localStorage.getItem(STORAGE_KEYS[k]) || '[]'); });
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `HANZOLO_Backup_${new Date().toISOString().slice(0,10)}.json`;
+            link.click();
+            mostrarToast('Backup JSON gerado!', 'success');
+        }
+
+        function abrirModalImportar() {
+            document.getElementById('export-dropdown')?.classList.add('hidden');
+            document.getElementById('modal-importar').classList.remove('hidden');
+        }
+        function fecharModalImportar() {
+            document.getElementById('modal-importar').classList.add('hidden');
+            document.getElementById('preview-import').innerHTML = '';
+        }
+
+        function configurarImportacao() {
+            const drop = document.getElementById('drop-import');
+            const input = document.getElementById('input-import');
+            if (!drop || !input) return;
+            drop.addEventListener('click', () => input.click());
+            drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.style.borderColor = 'var(--accent)'; });
+            drop.addEventListener('dragleave', () => drop.style.borderColor = '');
+            drop.addEventListener('drop', (e) => {
+                e.preventDefault(); drop.style.borderColor = '';
+                if (e.dataTransfer.files[0]) lerFicheiroBackup(e.dataTransfer.files[0]);
+            });
+            input.addEventListener('change', (e) => { if (e.target.files[0]) lerFicheiroBackup(e.target.files[0]); });
+        }
+
+        function lerFicheiroBackup(file) {
+            if (!file.name.endsWith('.json')) { mostrarToast('Ficheiro deve ser .json', 'error'); return; }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    if (!backup.dados) throw new Error('Formato inválido');
+                    let total = 0;
+                    Object.values(backup.dados).forEach(arr => { if (Array.isArray(arr)) total += arr.length; });
+                    document.getElementById('preview-import').innerHTML = `<div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30"><p class="text-xs text-emerald-500 font-bold mb-1"><i class="fas fa-circle-check mr-1"></i> Ficheiro válido</p><p class="text-[11px] text-secondary-themed">${backup.meta?.empresa || 'Backup'}</p><p class="text-[11px] text-primary-themed mt-2"><strong>${total}</strong> registos</p><button onclick='confirmarImportacao(${JSON.stringify(JSON.stringify(backup))})' class="mt-3 w-full bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold py-2.5 rounded-xl"><i class="fas fa-check mr-1"></i> Confirmar Restauração</button></div>`;
+                } catch (err) { mostrarToast('Ficheiro inválido: ' + err.message, 'error'); }
+            };
+            reader.readAsText(file);
+        }
+
+        function confirmarImportacao(str) {
+            try {
+                const backup = JSON.parse(str);
+                Object.keys(backup.dados).forEach(k => { if (STORAGE_KEYS[k]) localStorage.setItem(STORAGE_KEYS[k], JSON.stringify(backup.dados[k])); });
+                fecharModalImportar();
+                mostrarToast('Backup restaurado!', 'success');
+                setTimeout(() => location.reload(), 900);
+            } catch (err) { mostrarToast('Erro: ' + err.message, 'error'); }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           TOASTS E NOTIFICAÇÕES
+           ═══════════════════════════════════════════════════════ */
         function mostrarToast(msg, tipo = 'info') {
             const cores = { info: 'bg-blue-500', success: 'bg-emerald-500', error: 'bg-red-500', warn: 'bg-amber-500' };
             const icones = { info: 'fa-circle-info', success: 'fa-circle-check', error: 'fa-circle-xmark', warn: 'fa-triangle-exclamation' };
@@ -1577,10 +1721,199 @@
             setTimeout(() => { t.style.transition = 'all 0.3s'; t.style.opacity = '0'; t.style.transform = 'translateX(20px)'; setTimeout(() => t.remove(), 300); }, 3200);
         }
 
-        function guardar(chave, obj) {
-            const dados = JSON.parse(localStorage.getItem(chave) || '[]');
-            dados.push(obj);
-            localStorage.setItem(chave, JSON.stringify(dados));
+        function toggleNotificacoes() { document.getElementById('painel-notificacoes')?.classList.toggle('hidden'); }
+
+        const ALERTAS = [
+            { icone: 'fa-circle-check', cor: 'emerald', titulo: 'Sistema Operacional', resumo: 'Todos os serviços online há 24h.', detalhe: 'Stack completo a funcionar sem interrupções. APIs REST a responder em < 15ms.' },
+            { icone: 'fa-truck-fast', cor: 'blue', titulo: 'Frota 03 em intervenção', resumo: 'Viana Industrial • 42 km/h', detalhe: 'Mitsubishi L200 (LD-55-90-ZZ) em intervenção técnica em Viana. Técnico: António Banza.' }
+        ];
+
+        function renderizarAlertas() {
+            const lista = document.getElementById('lista-alertas');
+            if (!lista) return;
+            lista.innerHTML = ALERTAS.map((a, i) => `<button onclick="abrirDetalhesAlerta(${i})" class="w-full text-left p-4 border-b border-themed hover:bg-blue-500/10 flex items-start gap-3 group"><i class="fas ${a.icone} text-${a.cor}-500 mt-0.5"></i><div class="flex-1"><p class="text-primary-themed font-medium">${a.titulo}</p><p class="text-[10px] text-secondary-themed mt-0.5">${a.resumo}</p></div><i class="fas fa-chevron-right text-secondary-themed text-[10px] mt-1"></i></button>`).join('');
+        }
+
+        function abrirDetalhesAlerta(idx) {
+            const a = ALERTAS[idx]; if (!a) return;
+            const conteudo = document.getElementById('alerta-conteudo'); if (!conteudo) return;
+            conteudo.innerHTML = `<div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 rounded-2xl bg-${a.cor}-500/15 flex items-center justify-center"><i class="fas ${a.icone} text-${a.cor}-500 text-lg"></i></div><div><p class="font-bold text-primary-themed">${a.titulo}</p><p class="text-[10px] text-secondary-themed">${a.resumo}</p></div></div><div class="p-4 rounded-xl border-themed border" style="background: var(--bg-app);"><p class="text-xs text-primary-themed leading-relaxed">${a.detalhe}</p></div><p class="text-[10px] text-secondary-themed text-center"><i class="fas fa-clock mr-1"></i> ${new Date().toLocaleString('pt-AO')}</p>`;
+            document.getElementById('modal-alerta')?.classList.remove('hidden');
+            document.getElementById('painel-notificacoes')?.classList.add('hidden');
+        }
+        function fecharModalAlerta() { document.getElementById('modal-alerta')?.classList.add('hidden'); }
+
+        /* ═══════════════════════════════════════════════════════
+           MODAIS E FUNÇÕES DE ADIÇÃO
+           ═══════════════════════════════════════════════════════ */
+        function abrirModalColaborador() { document.getElementById('modal-colaborador')?.classList.remove('hidden'); }
+        function fecharModalColaborador() { document.getElementById('modal-colaborador')?.classList.add('hidden'); }
+        function abrirModalRequisicao() { 
+            document.getElementById('modal-requisicao')?.classList.remove('hidden');
+            document.getElementById('lista-materiais-req').innerHTML = `<div class="flex gap-2 item-material"><input type="text" placeholder="Nome do material" class="flex-1 border-themed border rounded-xl px-3 py-2 text-primary-themed mat-nome" style="background: var(--bg-app);" required><input type="text" placeholder="Qtd (ex: 5 Un)" class="w-24 border-themed border rounded-xl px-3 py-2 text-primary-themed mat-qtd" style="background: var(--bg-app);" required><button type="button" onclick="this.parentElement.remove()" class="w-9 h-9 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 flex items-center justify-center flex-shrink-0"><i class="fas fa-xmark"></i></button></div>`;
+        }
+        function fecharModalRequisicao() { document.getElementById('modal-requisicao')?.classList.add('hidden'); }
+        
+        function adicionarLinhaMaterial() {
+            const container = document.getElementById('lista-materiais-req');
+            const div = document.createElement('div');
+            div.className = 'flex gap-2 item-material';
+            div.innerHTML = `<input type="text" placeholder="Nome do material" class="flex-1 border-themed border rounded-xl px-3 py-2 text-primary-themed mat-nome" style="background: var(--bg-app);" required>
+                             <input type="text" placeholder="Qtd" class="w-24 border-themed border rounded-xl px-3 py-2 text-primary-themed mat-qtd" style="background: var(--bg-app);" required>
+                             <button type="button" onclick="this.parentElement.remove()" class="w-9 h-9 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 flex items-center justify-center flex-shrink-0"><i class="fas fa-xmark"></i></button>`;
+            container.appendChild(div);
+        }
+
+        function abrirModalIntervencao() { document.getElementById('modal-intervencao')?.classList.remove('hidden'); }
+        function fecharModalIntervencao() { document.getElementById('modal-intervencao')?.classList.add('hidden'); }
+        function abrirModalTecnicoDSE() { document.getElementById('modal-tecnico-dse')?.classList.remove('hidden'); }
+        function fecharModalTecnicoDSE() { document.getElementById('modal-tecnico-dse')?.classList.add('hidden'); }
+        function abrirModalEPI(ctx) {
+            epiContextoAtual = ctx;
+            document.getElementById('epi-contexto').value = ctx;
+            document.getElementById('epi-titulo').innerText = ctx === 'dse' ? 'Adicionar EPI DSE' : 'Adicionar EPI Geral';
+            document.getElementById('modal-epi').classList.remove('hidden');
+        }
+        function fecharModalEPI() { document.getElementById('modal-epi').classList.add('hidden'); document.getElementById('form-epi').reset(); }
+        function abrirModalEPC() { document.getElementById('modal-epc').classList.remove('hidden'); }
+        function fecharModalEPC() { document.getElementById('modal-epc').classList.add('hidden'); document.getElementById('form-epc').reset(); }
+        function abrirModalInventario() { document.getElementById('modal-inventario').classList.remove('hidden'); }
+        function fecharModalInventario() { document.getElementById('modal-inventario').classList.add('hidden'); document.getElementById('form-inventario').reset(); }
+        
+        function abrirModalGestaoFrotas() {
+            const tbody = document.getElementById('tabela-gestao-frotas');
+            tbody.innerHTML = VIATURAS.map(v => `
+                <tr>
+                    <td class="p-3 font-mono text-primary-themed">${v.id}</td>
+                    <td class="p-3 font-mono text-blue-500">${v.matricula}</td>
+                    <td class="p-3 text-primary-themed">${v.nome} (${v.cor})</td>
+                    <td class="p-3 text-secondary-themed">${v.condutor}</td>
+                    <td class="p-3"><span class="badge-modern bg-${v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber'}-500/15 text-${v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber'}-500">${v.status}</span></td>
+                    <td class="p-3"><button onclick="mostrarToast('Edição em breve', 'info')" class="text-blue-500"><i class="fas fa-pen"></i></button></td>
+                </tr>
+            `).join('');
+            document.getElementById('modal-gestao-frotas').classList.remove('hidden');
+        }
+        function fecharModalGestaoFrotas() { document.getElementById('modal-gestao-frotas').classList.add('hidden'); }
+
+        function adicionarEPI(event) {
+            event.preventDefault();
+            const nome = document.getElementById('epi-nome').value.trim();
+            const qtd = parseInt(document.getElementById('epi-qtd').value);
+            const min = parseInt(document.getElementById('epi-min').value);
+            const validade = document.getElementById('epi-validade').value || '—';
+            let estado, cor;
+            if (qtd < min * 0.5) { estado = 'Crítico'; cor = 'red'; }
+            else if (qtd < min) { estado = 'Stock Baixo'; cor = 'amber'; }
+            else { estado = 'OK'; cor = 'emerald'; }
+            const tbody = document.getElementById(epiContextoAtual === 'dse' ? 'tabela-epi-dse' : 'tabela-epi-geral');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td class="p-3 text-primary-themed font-medium">${nome}</td><td class="p-3 font-mono">${qtd}</td><td class="p-3 font-mono text-secondary-themed">${min}</td><td class="p-3 font-mono text-secondary-themed">${validade}</td><td class="p-3"><span class="badge-modern bg-${cor}-500/15 text-${cor}-500">${estado}</span></td><td class="p-3"><button onclick="removerLinha(this,'epi')" class="text-red-500"><i class="fas fa-trash"></i></button></td>`;
+            tbody.appendChild(tr);
+            guardar(epiContextoAtual === 'dse' ? STORAGE_KEYS.epiDse : STORAGE_KEYS.epiGeral, { nome, qtd, min, validade });
+            fecharModalEPI();
+            mostrarToast(`EPI "${nome}" adicionado!`, 'success');
+        }
+
+        function adicionarEPC(event) {
+            event.preventDefault();
+            const nome = document.getElementById('epc-nome').value.trim();
+            const qtd = parseInt(document.getElementById('epc-qtd').value);
+            const min = parseInt(document.getElementById('epc-min').value);
+            const local = document.getElementById('epc-local').value.trim() || '—';
+            let estado, cor;
+            if (qtd < min * 0.5) { estado = 'Crítico'; cor = 'red'; }
+            else if (qtd < min) { estado = 'Stock Baixo'; cor = 'amber'; }
+            else { estado = 'OK'; cor = 'emerald'; }
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td class="p-3 text-primary-themed font-medium">${nome}</td><td class="p-3 font-mono">${qtd}</td><td class="p-3 font-mono text-secondary-themed">${min}</td><td class="p-3"><span class="badge-modern bg-${cor}-500/15 text-${cor}-500">${estado}</span></td><td class="p-3 text-secondary-themed">${local}</td><td class="p-3"><button onclick="removerLinha(this,'epc')" class="text-red-500"><i class="fas fa-trash"></i></button></td>`;
+            document.getElementById('tabela-epc').appendChild(tr);
+            guardar(STORAGE_KEYS.epc, { nome, qtd, min, local });
+            fecharModalEPC();
+            mostrarToast(`EPC "${nome}" adicionado!`, 'success');
+        }
+
+        function adicionarInventario(event) {
+            event.preventDefault();
+            const nome = document.getElementById('inv-nome').value.trim();
+            const cat = document.getElementById('inv-categoria').value;
+            const qtd = parseInt(document.getElementById('inv-qtd').value);
+            const min = parseInt(document.getElementById('inv-min').value);
+            const local = document.getElementById('inv-local').value.trim() || '—';
+            
+            const pct = Math.min(100, Math.round((qtd / Math.max(min, 1)) * 100));
+            let cor = 'emerald'; if (qtd < min * 0.5) cor = 'red'; else if (qtd < min) cor = 'amber';
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td class="p-3 text-primary-themed font-medium">${nome}</td><td class="p-3 text-secondary-themed">${cat}</td><td class="p-3 font-mono">${qtd}</td><td class="p-3 font-mono text-secondary-themed">${min}</td><td class="p-3 text-secondary-themed">${local}</td><td class="p-3"><div class="stock-bar w-20"><div class="bg-${cor}-500" style="width:${pct}%"></div></div></td><td class="p-3"><button onclick="removerLinha(this,'inv')" class="text-red-500"><i class="fas fa-trash"></i></button></td>`;
+            document.getElementById('tabela-inventario').appendChild(tr);
+
+            guardar(STORAGE_KEYS.inv, { nome, cat, qtd, min, local });
+            atualizarKPIsInventario();
+            fecharModalInventario();
+            mostrarToast(`Item "${nome}" adicionado!`, 'success');
+
+            if (window.dbFirebase) {
+                import(FS_URL).then(({ collection, addDoc }) => {
+                    addDoc(collection(window.dbFirebase, "inventario"), { nome, cat, qtd, min, local });
+                });
+            }
+        }
+      
+        function atualizarKPIsInventario() {
+            const linhas = document.querySelectorAll('#tabela-inventario tr');
+            let alertas = 0;
+            linhas.forEach(tr => {
+                const c = tr.querySelectorAll('td');
+                const qtd = parseInt(c[2]?.innerText) || 0;
+                const min = parseInt(c[3]?.innerText) || 0;
+                if (qtd < min) alertas++;
+            });
+            const elTotal = document.getElementById('inv-total-itens');
+            const elAlertas = document.getElementById('inv-alertas');
+            if (elTotal) elTotal.innerText = linhas.length;
+            if (elAlertas) elAlertas.innerText = alertas;
+        }
+
+        function atualizarAcoesRequisicao(tr) {
+            const cod = tr.dataset.req;
+            if (!cod) return;
+            const tdEstado = tr.querySelector('.td-estado');
+            const tdAcoes = tr.querySelector('.td-acoes');
+            if (!tdEstado || !tdAcoes) return;
+            const estado = (tdEstado.innerText || '').trim();
+            const mapa = {
+                'Aprovado': { cor: 'emerald', icone: 'fa-check' },
+                'Rejeitado': { cor: 'red', icone: 'fa-xmark' },
+                'Em Análise': { cor: 'amber', icone: 'fa-clock' }
+            };
+            const info = mapa[estado] || mapa['Em Análise'];
+            tdEstado.innerHTML = `<span class="badge-modern bg-${info.cor}-500/15 text-${info.cor}-500"><i class="fas ${info.icone} text-[8px]"></i> ${estado}</span>`;
+            if (estado === 'Em Análise') {
+                tdAcoes.innerHTML = `<button onclick="mudarEstadoReq('${cod}', 'Aprovado')" class="text-emerald-500 hover:text-emerald-400 mr-2"><i class="fas fa-check"></i></button><button onclick="mudarEstadoReq('${cod}', 'Rejeitado')" class="text-red-500 hover:text-red-400"><i class="fas fa-xmark"></i></button>`;
+            } else if (estado === 'Aprovado') {
+                tdAcoes.innerHTML = `<button onclick="mudarEstadoReq('${cod}', 'Rejeitado')" class="text-red-500 hover:text-red-400"><i class="fas fa-xmark"></i></button>`;
+            } else {
+                tdAcoes.innerHTML = `<button onclick="mudarEstadoReq('${cod}', 'Aprovado')" class="text-emerald-500 hover:text-emerald-400"><i class="fas fa-check"></i></button>`;
+            }
+        }
+
+        async function mudarEstadoReq(cod, novoEstado) {
+            const tr = document.querySelector(`tr[data-req="${cod}"]`);
+            if (!tr) return;
+            tr.querySelector('.td-estado').innerText = novoEstado;
+            atualizarAcoesRequisicao(tr);
+
+            if (window.dbFirebase) {
+                const { collection, getDocs, updateDoc, doc } = await import(FS_URL);
+                const querySnapshot = await getDocs(collection(window.dbFirebase, "requisicoes"));
+                querySnapshot.forEach(async (documento) => {
+                    if (documento.data().cod === cod) {
+                        await updateDoc(doc(window.dbFirebase, "requisicoes", documento.id), { estado: novoEstado });
+                    }
+                });
+            }
+            mostrarToast(`Requisição ${cod} → ${novoEstado}`, 'success');
         }
         
         function removerLinha(btn, tipo) {
@@ -1590,87 +1923,368 @@
             mostrarToast('Registo removido', 'warn');
         }
 
+        function guardar(chave, obj) {
+            const dados = JSON.parse(localStorage.getItem(chave) || '[]');
+            dados.push(obj);
+            localStorage.setItem(chave, JSON.stringify(dados));
+        }
+
         /* ═══════════════════════════════════════════════════════
-           NOVAS FUNÇÕES: GCQ E HSST
+           UPLOADS E EVIDÊNCIAS
            ═══════════════════════════════════════════════════════ */
-        function abrirModalAuditoria() { document.getElementById('modal-auditoria').classList.remove('hidden'); }
-        function fecharModalAuditoria() { document.getElementById('modal-auditoria').classList.add('hidden'); document.getElementById('form-auditoria').reset(); }
-        
-        function adicionarAuditoria(event) {
+        function configurarDropFoto() {
+            const drop = document.getElementById('drop-foto');
+            const input = document.getElementById('nova-foto');
+            const box = document.getElementById('foto-preview-box');
+            if (!drop || !input) return;
+            drop.addEventListener('click', () => input.click());
+            drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('dragover'); });
+            drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+            drop.addEventListener('drop', (e) => { e.preventDefault(); drop.classList.remove('dragover'); if (e.dataTransfer.files[0]) processar(e.dataTransfer.files[0]); });
+            input.addEventListener('change', (e) => { if (e.target.files[0]) processar(e.target.files[0]); });
+            function processar(file) {
+                if (file.size > 2 * 1024 * 1024) { mostrarToast('Foto máx 2 MB', 'error'); return; }
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    fotoColaboradorBase64 = ev.target.result;
+                    box.innerHTML = `<img src="${ev.target.result}" class="preview-thumb mx-auto"><p class="text-[11px] text-emerald-500 font-semibold mt-2"><i class="fas fa-circle-check mr-1"></i>Foto carregada</p><p class="text-[10px] text-secondary-themed mt-1">Clique para substituir</p>`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function configurarDropEvidencia() {
+            const drop = document.getElementById('drop-evidencia');
+            const input = document.getElementById('int-evidencia');
+            const preview = document.getElementById('int-evidencia-preview');
+            if (!drop || !input) return;
+            drop.addEventListener('click', () => input.click());
+            drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('dragover'); });
+            drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+            drop.addEventListener('drop', (e) => { e.preventDefault(); drop.classList.remove('dragover'); processar([...e.dataTransfer.files]); });
+            input.addEventListener('change', (e) => processar([...e.target.files]));
+            function processar(files) {
+                files.forEach(file => {
+                    if (file.size > 5 * 1024 * 1024) { mostrarToast(`${file.name} excede 5 MB`, 'warn'); return; }
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        const tipo = file.type.startsWith('video') ? 'video' : 'image';
+                        evidenciasObra.push({ nome: file.name, tipo, base64: ev.target.result });
+                        renderPreview();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            function renderPreview() {
+                preview.innerHTML = evidenciasObra.map((e, i) => `<div class="relative">${e.tipo === 'image' ? `<img src="${e.base64}" class="preview-thumb w-full h-20 object-cover">` : `<div class="preview-thumb w-full h-20 flex items-center justify-center bg-blue-500/15"><i class="fas fa-play-circle text-blue-500 text-2xl"></i></div>`}<button type="button" onclick="removerEvidencia(${i})" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center"><i class="fas fa-xmark"></i></button></div>`).join('');
+            }
+        }
+        function removerEvidencia(idx) {
+            evidenciasObra.splice(idx, 1);
+            const preview = document.getElementById('int-evidencia-preview');
+            if (preview) preview.innerHTML = evidenciasObra.map((e, i) => `<div class="relative">${e.tipo === 'image' ? `<img src="${e.base64}" class="preview-thumb w-full h-20 object-cover">` : `<div class="preview-thumb w-full h-20 flex items-center justify-center bg-blue-500/15"><i class="fas fa-play-circle text-blue-500 text-2xl"></i></div>`}<button type="button" onclick="removerEvidencia(${i})" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center"><i class="fas fa-xmark"></i></button></div>`).join('');
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           ADICIONAR DADOS (FIREBASE + LOCAL)
+           ═══════════════════════════════════════════════════════ */
+        function adicionarColaborador(event) {
             event.preventDefault();
-            const data = document.getElementById('aud-data').value;
-            const projeto = document.getElementById('aud-projeto').value;
-            const auditor = document.getElementById('aud-auditor').value;
-            const conformidade = document.getElementById('aud-conformidade').value;
-            const estado = document.getElementById('aud-estado').value;
+            const depto = document.getElementById('novo-depto').value;
+            const nome = document.getElementById('novo-nome').value.trim();
+            const tel = document.getElementById('novo-telefone').value.trim();
+            const email = document.getElementById('novo-email').value.trim();
+            const nif = document.getElementById('novo-nif').value.trim().toUpperCase();
+            const cargo = document.getElementById('novo-cargo').value.trim();
+
+            if (!/^\d{9}[A-Z]{2}\d{3}$/.test(nif)) { mostrarToast('NIF inválido. Formato: 000000000LA000', 'error'); return; }
+
+            inserirLinhaColaborador(nome, tel, email, nif, cargo, fotoColaboradorBase64, depto);
             
-            let dataFormatada = data.split('-').reverse().join('/');
-            let corEstado = estado === 'Aprovado' ? 'emerald' : 'amber';
-            
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="p-3 text-secondary-themed">${dataFormatada}</td>
-                <td class="p-3 text-primary-themed font-medium">${projeto}</td>
-                <td class="p-3 text-secondary-themed">${auditor}</td>
-                <td class="p-3 font-bold text-${conformidade == 100 ? 'emerald' : 'amber'}-500">${conformidade}%</td>
-                <td class="p-3"><span class="badge-modern bg-${corEstado}-500/15 text-${corEstado}-500">${estado}</span></td>
-            `;
-            document.getElementById('tabela-auditorias').prepend(tr);
-            
-            fecharModalAuditoria();
-            mostrarToast('Auditoria registada com sucesso!', 'success');
+            if (window.dbFirebase) {
+                import(FS_URL).then(({ collection, addDoc }) => {
+                    addDoc(collection(window.dbFirebase, "colaboradores"), { nome, tel, email, nif, cargo, depto, foto: fotoColaboradorBase64, dataRegisto: new Date().toISOString() })
+                    .then(() => mostrarToast('Guardado na nuvem!', 'success'))
+                    .catch(err => mostrarToast('Guardado localmente (sem internet)', 'warn'));
+                });
+            }
+
+            fecharModalColaborador();
+            document.getElementById('form-colaborador').reset();
+            const box = document.getElementById('foto-preview-box');
+            if (box) box.innerHTML = `<i class="fas fa-cloud-arrow-up text-3xl text-blue-500 mb-3"></i><p class="text-sm text-primary-themed font-semibold">Arrasta a foto ou clica</p><p class="text-[10px] text-secondary-themed mt-1">PNG, JPG — máx 2 MB</p>`;
+            fotoColaboradorBase64 = null;
         }
 
-        function abrirModalFiscalizacao() { document.getElementById('modal-fiscalizacao').classList.remove('hidden'); }
-        function fecharModalFiscalizacao() { document.getElementById('modal-fiscalizacao').classList.add('hidden'); document.getElementById('form-fiscalizacao').reset(); }
-        
-        function adicionarFiscalizacao(event) {
+        async function adicionarRequisicao(event) {
             event.preventDefault();
-            totalFiscalizacoes++;
-            document.getElementById('kpi-fiscalizacoes').innerText = totalFiscalizacoes;
-            fecharModalFiscalizacao();
-            mostrarToast('Fiscalização registada! O contador foi atualizado.', 'success');
-        }
+            const desc = document.getElementById('req-desc').value.trim();
+            const sol = document.getElementById('req-solicitante').value.trim();
+            const cod = 'REQ-DL-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-3);
 
-        /* ═══════════════════════════════════════════════════════
-           CORREÇÃO DO MODAL DE FROTAS
-           ═══════════════════════════════════════════════════════ */
-        function abrirModalGestaoFrotas() {
-            const tbody = document.getElementById('tabela-gestao-frotas');
-            tbody.innerHTML = VIATURAS.map(v => `
-                <tr class="border-b border-themed last:border-0 hover:bg-blue-500/5">
-                    <td class="p-3 font-mono text-primary-themed font-bold">${v.id}</td>
-                    <td class="p-3 font-mono text-blue-500">${v.matricula}</td>
-                    <td class="p-3 text-primary-themed">${v.nome} <span class="text-secondary-themed text-[10px]">(${v.cor})</span></td>
-                    <td class="p-3 text-secondary-themed">${v.condutor}</td>
-                    <td class="p-3"><span class="badge-modern bg-${v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber'}-500/15 text-${v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber'}-500">${v.status}</span></td>
-                    <td class="p-3"><button onclick="mostrarToast('Edição em breve', 'info')" class="text-blue-500 hover:text-blue-700"><i class="fas fa-pen"></i></button></td>
-                </tr>
-            `).join('');
-            document.getElementById('modal-gestao-frotas').classList.remove('hidden');
-        }
-        function fecharModalGestaoFrotas() { document.getElementById('modal-gestao-frotas').classList.add('hidden'); }
-
-        /* ═══════════════════════════════════════════════════════
-           FUNÇÕES RESTANTES (MANTIDAS E INTEGRADAS)
-           ═══════════════════════════════════════════════════════ */
-        // [O resto das funções JavaScript (EPI, EPC, Inventário, Mapas, RH, etc) mantêm-se exatamente iguais ao código anterior]
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            verificarSessao();
-            aplicarTema(localStorage.getItem('hanzolo_tema') || 'dark');
-            atualizarRelogio();
-            
-            ['modal-auditoria','modal-fiscalizacao','modal-gestao-frotas'].forEach(id => {
-                const m = document.getElementById(id);
-                if (m) m.addEventListener('click', (e) => { if (e.target.id === id) m.classList.add('hidden'); });
+            let materiaisArr = [];
+            document.querySelectorAll('.item-material').forEach(div => {
+                const n = div.querySelector('.mat-nome').value.trim();
+                const q = div.querySelector('.mat-qtd').value.trim();
+                if(n && q) materiaisArr.push(`${q} - ${n}`);
             });
+            const materiaisStr = materiaisArr.join(', ');
+
+            const tr = document.createElement('tr');
+            tr.dataset.req = cod;
+            tr.className = 'hover:bg-blue-500/5 transition-colors';
+            tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${cod}</td><td class="p-3 text-primary-themed">${desc}</td><td class="p-3 text-secondary-themed text-[10px]">${materiaisStr}</td><td class="p-3 text-secondary-themed">${sol}</td><td class="p-3 td-estado"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Análise</span></td><td class="p-3 td-acoes"></td>`;
+            document.getElementById('tabela-requisicoes').appendChild(tr);
+            atualizarAcoesRequisicao(tr);
+
+            if (window.dbFirebase) {
+                import(FS_URL).then(({ collection, addDoc }) => {
+                    addDoc(collection(window.dbFirebase, "requisicoes"), { cod, desc, materiais: materiaisStr, sol, estado: 'Em Análise' });
+                });
+            }
+
+            fecharModalRequisicao();
+            document.getElementById('form-requisicao').reset();
+            mostrarToast(`Requisição ${cod} submetida!`, 'success');
+        }        
+
+        function adicionarIntervencao(event) {
+            event.preventDefault();
+            const cliente = document.getElementById('int-cliente').value.trim();
+            const servico = document.getElementById('int-servico').value.trim();
+            const tecnico = document.getElementById('int-tecnico').value.trim();
+            const ref = '#OBR-24-' + String(Date.now()).slice(-3);
+            const dataHora = new Date().toLocaleDateString('pt-AO') + ' ' + new Date().toLocaleTimeString('pt-AO');
             
-            // Iniciar Mapa
-            setTimeout(() => { inicializarMapa(); }, 300);
-        });
+            const chaveEvidencias = 'hanzolo_evid_' + ref.replace('#', '_');
+            localStorage.setItem(chaveEvidencias, JSON.stringify(evidenciasObra));
+
+            const numEvid = evidenciasObra.length;
+            const badgeEvid = numEvid > 0 ? `<button class="badge-modern bg-blue-500/15 text-blue-500"><i class="fas fa-paperclip"></i> ${numEvid}</button>` : `<span class="text-secondary-themed text-[10px]">—</span>`;
+
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-blue-500/5 transition-colors cursor-pointer';
+            tr.onclick = () => abrirDetalhesObra(cliente, servico, tecnico, ref, dataHora, evidenciasObra);
+            tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${ref}</td><td class="p-3 text-primary-themed font-medium">${cliente}</td><td class="p-3 text-secondary-themed">${servico}</td><td class="p-3 text-secondary-themed">${tecnico}</td><td class="p-3">${badgeEvid}</td><td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Execução</span></td>`;
+            
+            document.getElementById('tabela-obras').appendChild(tr);
+            guardar(STORAGE_KEYS.obras, { ref, cliente, servico, tecnico, data: dataHora });
+            
+            fecharModalIntervencao();
+            document.getElementById('form-intervencao').reset();
+            document.getElementById('int-evidencia-preview').innerHTML = '';
+            evidenciasObra = [];
+            mostrarToast(`Intervenção ${ref} registada!`, 'success');
+        }
+
+        function abrirDetalhesObra(cliente, servico, tecnico, ref, data, evidencias) {
+            obraAtualAberta = { cliente, servico, tecnico, ref, data, evidencias };
+            document.getElementById('det-ref').innerText = ref;
+            document.getElementById('det-data').innerText = data;
+            document.getElementById('det-cliente').innerText = cliente;
+            document.getElementById('det-servico').innerText = servico + " (Técnico: " + tecnico + ")";
+            
+            const galeria = document.getElementById('det-galeria');
+            const semFotos = document.getElementById('det-sem-fotos');
+
+            let fotosParaMostrar = evidencias;
+            if (!fotosParaMostrar || fotosParaMostrar.length === 0) {
+                const salvas = localStorage.getItem('hanzolo_evid_' + ref.replace('#', '_'));
+                if (salvas) fotosParaMostrar = JSON.parse(salvas);
+            }
+
+            if (fotosParaMostrar && fotosParaMostrar.length > 0) {
+                semFotos.classList.add('hidden');
+                galeria.innerHTML = fotosParaMostrar.map(e => `<div class="border border-themed rounded-xl overflow-hidden cursor-pointer hover:opacity-80 transition-opacity" onclick="window.open('${e.base64}', '_blank')">${e.tipo === 'image' ? `<img src="${e.base64}" class="w-full h-24 object-cover">` : `<div class="w-full h-24 flex items-center justify-center bg-blue-500/15"><i class="fas fa-play-circle text-blue-500 text-2xl"></i></div>`}</div>`).join('');
+            } else {
+                semFotos.classList.remove('hidden');
+                galeria.innerHTML = '';
+            }
+            document.getElementById('modal-detalhes-obra').classList.remove('hidden');
+        }
+
+        function fecharDetalhesObra() { document.getElementById('modal-detalhes-obra').classList.add('hidden'); }
+
+        async function exportarObraPDF() {
+            if (!obraAtualAberta) return;
+            const btn = document.getElementById('btn-exportar-pdf-obra');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> A gerar...';
+            
+            const { cliente, servico, tecnico, ref, data, evidencias } = obraAtualAberta;
+            let fotos = evidencias;
+            if (!fotos || fotos.length === 0) {
+                const salvas = localStorage.getItem('hanzolo_evid_' + ref.replace('#', '_'));
+                if (salvas) fotos = JSON.parse(salvas);
+            }
+
+            document.getElementById('pdf-ref').innerText = ref;
+            document.getElementById('pdf-cliente').innerText = cliente;
+            document.getElementById('pdf-data').innerText = data;
+            document.getElementById('pdf-tecnico').innerText = tecnico;
+            document.getElementById('pdf-servico').innerText = servico;
+            document.getElementById('pdf-descricao').innerText = "Serviço executado conforme solicitado. Verificações realizadas e sistema testado em pleno funcionamento.";
+
+            const galeriaPdf = document.getElementById('pdf-galeria');
+            const containerFotos = document.getElementById('pdf-fotos-container');
+            if (fotos && fotos.length > 0) {
+                containerFotos.style.display = 'block';
+                galeriaPdf.innerHTML = fotos.filter(f => f.tipo === 'image').map(f => `<img src="${f.base64}" style="width: 180px; height: 130px; object-fit: cover; border: 1px solid #ccc;">`).join('');
+            } else {
+                containerFotos.style.display = 'none';
+            }
+
+            const elemento = document.getElementById('pdf-folha-obra');
+            elemento.classList.remove('hidden');
+
+            try {
+                const canvas = await html2canvas(elemento, { scale: 2, useCORS: true });
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save(`Relatorio_${ref.replace('#', '')}_${cliente}.pdf`);
+                mostrarToast('PDF gerado com sucesso!', 'success');
+            } catch (error) {
+                console.error(error);
+                mostrarToast('Erro ao gerar o PDF.', 'error');
+            } finally {
+                elemento.classList.add('hidden');
+                btn.innerHTML = '<i class="fas fa-file-pdf"></i> Descarregar PDF';
+            }
+        }
+
+        function adicionarTecnicoDSE(event) {
+            event.preventDefault();
+            const nome = document.getElementById('dse-nome').value.trim();
+            const esp = document.getElementById('dse-especialidade').value;
+            const zona = document.getElementById('dse-zona').value.trim();
+            const contacto = document.getElementById('dse-contacto').value.trim();
+            const estado = Math.random() > 0.5 ? 'Em Serviço' : 'Standby';
+            
+            const localizacao = `Zona: ${zona}`;
+            const acao = 'Em deslocamento';
+            
+            inserirLinhaDSE(nome, esp, localizacao, contacto, estado, acao);
+            guardar(STORAGE_KEYS.dse, { nome, esp, zona, contacto, estado });
+            fecharModalTecnicoDSE();
+            document.getElementById('form-tecnico-dse').reset();
+            mostrarToast(`Técnico ${nome} adicionado!`, 'success');
+        }
+
+        function inserirLinhaDSE(nome, esp, zona, contacto, estado, acao = 'Aguardando...') {
+            const tbody = document.getElementById('tabela-dse-tecnicos');
+            if (!tbody) return;
+            const badge = estado === 'Em Serviço' ? 'bg-emerald-500/15 text-emerald-500' : 'bg-amber-500/15 text-amber-500';
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-blue-500/5 transition-colors';
+            tr.innerHTML = `
+                <td class="p-3 font-medium text-primary-themed">${nome}</td>
+                <td class="p-3"><span class="badge-modern bg-blue-500/15 text-blue-500">${esp}</span></td>
+                <td class="p-3 text-secondary-themed"><i class="fas fa-location-dot mr-1 text-red-400"></i>${zona}</td>
+                <td class="p-3 font-mono text-blue-500">${contacto}</td>
+                <td class="p-3"><span class="badge-modern ${badge}">${estado}</span></td>
+                <td class="p-3 text-secondary-themed text-[10px]">${acao}</td>
+            `;
+            tbody.appendChild(tr);
+            atualizarContadoresDSE();
+        }
+
+        function inserirLinhaColaborador(nome, tel, email, nif, cargo, foto, depto) {
+            COLABORADORES.push({ nome, tel, email, nif, cargo, depto }); 
+            const tbody = document.getElementById('tabela-colaboradores-corpo');
+            if (!tbody) return;
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-blue-500/5 transition-colors';
+            const fotoHTML = foto ? `<img src="${foto}" class="w-full h-full object-cover">` : `<i class="fas fa-user text-secondary-themed text-xs"></i>`;
+            tr.innerHTML = `<td class="p-3"><div class="avatar-circle w-10 h-10 flex items-center justify-center" style="background: var(--bg-app);">${fotoHTML}</div></td><td class="p-3 font-medium text-primary-themed">${nome}</td><td class="p-3 font-mono text-blue-500">${tel}</td><td class="p-3 text-blue-500">${email}</td><td class="p-3 font-mono text-secondary-themed">${nif}</td><td class="p-3 text-secondary-themed">${cargo}</td>`;
+            tbody.appendChild(tr);
+            atualizarContadores();
+            renderOrganogramaRH();
+        }
+
+        function atualizarContadores() {
+            const total = document.querySelectorAll('#tabela-colaboradores-corpo tr').length;
+            const el = document.getElementById('total-colaboradores');
+            if (el) el.innerText = 'Total: ' + total;
+            const kpi = document.getElementById('kpi-efetivo');
+            if (kpi) kpi.innerText = total;
+        }
+
+        function atualizarContadoresDSE() {
+            const linhas = document.querySelectorAll('#tabela-dse-tecnicos tr');
+            let emServico = 0, standby = 0;
+            linhas.forEach(tr => {
+                const estado = tr.querySelector('td:nth-child(5)')?.innerText.trim();
+                if (estado === 'Em Serviço') emServico++; else standby++;
+            });
+            const elS = document.getElementById('dse-em-servico');
+            const elB = document.getElementById('dse-standby');
+            const elT = document.getElementById('dse-total-tecnicos');
+            const elC = document.getElementById('dse-contador');
+            if (elS) elS.innerText = emServico;
+            if (elB) elB.innerText = standby;
+            if (elT) elT.innerText = linhas.length;
+            if (elC) elC.innerText = linhas.length + ' técnicos';
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           GRÁFICOS E MAPA
+           ═══════════════════════════════════════════════════════ */
+        function corGrafico() { return document.documentElement.classList.contains('light') ? '#64748b' : '#94a3b8'; }
+        function corGrid() { return document.documentElement.classList.contains('light') ? 'rgba(100,116,139,0.15)' : 'rgba(148,163,184,0.1)'; }
         
-        // Funções simplificadas de Mapas e Gráficos para não quebrar
+        function inicializarGraficos() {
+            if (!window.Chart) return;
+            const commonOpts = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: corGrid() }, ticks: { color: corGrafico(), font: { size: 10 } } }, y: { grid: { color: corGrid() }, ticks: { color: corGrafico(), font: { size: 10 } } } } };
+            
+            const g1 = document.getElementById('graficoLinhas');
+            if (g1) graficoLinhas = new Chart(g1, { type: 'line', data: { labels: ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'], datasets: [{ label: 'Ops', data: [12,19,15,22,28,24,30], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.15)', fill: true, tension: 0.4, pointBackgroundColor: '#3b82f6', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5, pointHoverRadius: 7 }] }, options: commonOpts });
+            
+            const g2 = document.getElementById('graficoVelasFinas');
+            if (g2) graficoBarras = new Chart(g2, { type: 'bar', data: { labels: ['Jan','Fev','Mar','Abr','Mai','Jun'], datasets: [{ label: 'Int.', data: [45,59,80,81,56,95], backgroundColor: 'rgba(16,185,129,0.8)', borderRadius: 8 }] }, options: commonOpts });
+            
+            const g3 = document.getElementById('graficoCircular');
+            if (g3) graficoCircular = new Chart(g3, { type: 'doughnut', data: { labels: ['Ativos','Manutenção','Standby'], datasets: [{ data: [75,15,10], backgroundColor: ['#3b82f6','#f59e0b','#64748b'], borderWidth: 0, hoverOffset: 10 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { color: corGrafico(), font: { size: 10 }, padding: 12, usePointStyle: true } } } } });
+            
+            const gStock = document.getElementById('graficoFluxoStock');
+            if (gStock) {
+                graficoFluxoStock = new Chart(gStock, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                        datasets: [
+                            { label: 'Entradas', data: [120, 150, 80, 200, 90, 160], backgroundColor: '#10b981', borderRadius: 4 },
+                            { label: 'Saídas', data: [80, 100, 110, 150, 120, 90], backgroundColor: '#ef4444', borderRadius: 4 }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top', labels: { color: corGrafico(), font: { size: 10 }, usePointStyle: true } } },
+                        scales: { x: { grid: { display: false }, ticks: { color: corGrafico() } }, y: { grid: { color: corGrid() }, ticks: { color: corGrafico() } } }
+                    }
+                });
+            }
+
+            const ctxDGP = document.getElementById('graficoDGP');
+            if (ctxDGP) {
+                new Chart(ctxDGP, {
+                    type: 'pie',
+                    data: { labels: ['DSE', 'Redes', 'Acessos'], datasets: [{ data: [30, 45, 25], backgroundColor: ['#3b82f6', '#8b5cf6', '#10b981'], borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            }
+        }
+
+        function atualizarGraficos() {
+            if (graficoLinhas) { graficoLinhas.data.datasets[0].data = graficoLinhas.data.datasets[0].data.map(v => Math.max(5, Math.min(40, v + Math.floor(Math.random() * 7 - 3)))); graficoLinhas.update('none'); }
+            if (graficoBarras) { graficoBarras.data.datasets[0].data = graficoBarras.data.datasets[0].data.map(v => Math.max(30, Math.min(120, v + Math.floor(Math.random() * 11 - 5)))); graficoBarras.update('none'); }
+        }
+
+        function temaMapaLeaflet() { return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'; }
+        
         function inicializarMapa() {
             const el = document.getElementById('mapa-frotas');
             if (!el) return;
@@ -1680,21 +2294,510 @@
             }
             document.getElementById('mapa-fallback')?.classList.add('hidden');
             mapaLeaflet = L.map('mapa-frotas', { zoomControl: false, attributionControl: false }).setView([-8.9070, 13.2400], 12);
-            const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, subdomains: 'abcd' }).addTo(mapaLeaflet);
+            const tileLayer = L.tileLayer(temaMapaLeaflet(), { maxZoom: 19, subdomains: 'abcd' }).addTo(mapaLeaflet);
             window.tileLayerAtual = tileLayer;
             
             VIATURAS.forEach(v => {
                 const icone = L.divIcon({ className: 'mapa-uber-marker-custom', html: `<div class="mapa-uber-marker ${v.status === 'Estacionado' ? 'parked' : v.status === 'Em Intervenção' ? 'intervention' : ''}" style="background:${v.corHex}"><i class="fas fa-truck"></i></div>`, iconSize: [44, 44], iconAnchor: [22, 22] });
                 const marker = L.marker([v.pos.lat, v.pos.lng], { icon: icone }).addTo(mapaLeaflet);
+                marker.on('click', () => abrirUberPanel(v));
                 marcadoresLeaflet[v.id] = marker;
             });
+            
+            rotaLeaflet = L.polyline([[VIATURAS[0].pos.lat, VIATURAS[0].pos.lng], [-8.9100, 13.2500], [VIATURAS[2].pos.lat, VIATURAS[2].pos.lng]], { color: '#3b82f6', weight: 4, opacity: 0.7, dashArray: '10, 8' }).addTo(mapaLeaflet);
             window.mapaLeaflet = mapaLeaflet;
         }
-        function centralizarTodasViaturas() { if (mapaLeaflet) mapaLeaflet.fitBounds(L.featureGroup(Object.values(marcadoresLeaflet)).getBounds().pad(0.2)); }
+
+        function atualizarTemaMapa() { if (window.tileLayerAtual) window.tileLayerAtual.setUrl(temaMapaLeaflet()); }
+        
+        function centralizarTodasViaturas() {
+            if (!mapaLeaflet) return;
+            const grupo = L.featureGroup(Object.values(marcadoresLeaflet));
+            mapaLeaflet.fitBounds(grupo.getBounds().pad(0.2));
+        }
+        function focarViatura(id) {
+            const v = VIATURAS.find(x => x.id === id);
+            if (!v || !mapaLeaflet) return;
+            mapaLeaflet.flyTo([v.pos.lat, v.pos.lng], 15, { duration: 1.2 });
+            abrirUberPanel(v);
+        }
+        function abrirUberPanel(v) {
+            const painel = document.getElementById('uber-panel');
+            if (!painel) return;
+            const corStatus = v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber';
+            const iconeStatus = v.status === 'Em Movimento' ? 'fa-circle' : v.status === 'Estacionado' ? 'fa-parking' : 'fa-screwdriver-wrench';
+            document.getElementById('uber-titulo').innerText = `${v.id} — ${v.nome}`;
+            const estadoEl = document.getElementById('uber-estado');
+            estadoEl.className = `badge-modern bg-${corStatus}-500/15 text-${corStatus}-500`;
+            estadoEl.innerHTML = `<i class="fas ${iconeStatus} text-[6px]"></i> ${v.status}`;
+            document.getElementById('uber-info').innerText = `${v.condutor} • ${v.rota}`;
+            document.getElementById('uber-icon').style.background = v.corHex;
+            document.getElementById('uber-detalhes').innerHTML = `<div><p class="text-[9px] text-secondary-themed uppercase">Matrícula</p><p class="text-xs font-mono font-bold text-primary-themed">${v.matricula}</p></div><div><p class="text-[9px] text-secondary-themed uppercase">Cor</p><p class="text-xs font-bold text-primary-themed">${v.cor}</p></div><div><p class="text-[9px] text-secondary-themed uppercase">Condutor</p><p class="text-xs font-bold text-primary-themed">${v.condutor}</p></div><div><p class="text-[9px] text-secondary-themed uppercase">Velocidade</p><p class="text-xs font-bold text-${corStatus}-500">${v.velocidade} km/h</p></div>`;
+            painel.classList.remove('hidden');
+        }
+        function fecharUberPanel() { document.getElementById('uber-panel')?.classList.add('hidden'); }
         function mapaZoomIn() { mapaLeaflet?.zoomIn(); }
         function mapaZoomOut() { mapaLeaflet?.zoomOut(); }
-        function mapaMinhaLocalizacao() { mostrarToast('Geolocalização não configurada.', 'info'); }
-        function fecharUberPanel() { document.getElementById('uber-panel')?.classList.add('hidden'); }
+        function mapaMinhaLocalizacao() {
+            if (!navigator.geolocation || !mapaLeaflet) { mostrarToast('Geolocalização indisponível', 'warn'); return; }
+            navigator.geolocation.getCurrentPosition(
+                (pos) => { mapaLeaflet.flyTo([pos.coords.latitude, pos.coords.longitude], 15, { duration: 1.5 }); L.marker([pos.coords.latitude, pos.coords.longitude]).addTo(mapaLeaflet).bindPopup('📍 Você está aqui').openPopup(); },
+                () => mostrarToast('Não foi possível obter localização', 'error')
+            );
+        }
+        function configurarPesquisaMapa() {
+            const input = document.getElementById('mapa-search');
+            if (!input) return;
+            input.addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase().trim();
+                if (!q) return;
+                const v = VIATURAS.find(x => x.id.toLowerCase().includes(q) || x.nome.toLowerCase().includes(q) || x.matricula.toLowerCase().includes(q) || x.condutor.toLowerCase().includes(q));
+                if (v) focarViatura(v.id);
+            });
+        }
+        setInterval(() => {
+            const v = VIATURAS[0];
+            if (v.status !== 'Em Movimento' || !mapaLeaflet) return;
+            v.pos.lat += (Math.random() - 0.5) * 0.0008;
+            v.pos.lng += (Math.random() - 0.5) * 0.0008;
+            const m = marcadoresLeaflet[v.id];
+            if (m) m.setLatLng([v.pos.lat, v.pos.lng]);
+            if (rotaLeaflet) rotaLeaflet.setLatLngs([[v.pos.lat, v.pos.lng], [-8.9100, 13.2500], [VIATURAS[2].pos.lat, VIATURAS[2].pos.lng]]);
+        }, 4000);
+
+        /* ═══════════════════════════════════════════════════════
+           RH E ORGANOGRAMA DINÂMICO
+           ═══════════════════════════════════════════════════════ */
+        const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+        function classificarColab(c) {
+            if (c.depto && DEPTOS[c.depto]) return c.depto;
+            const t = (c.cargo || '').toLowerCase();
+            if (/diretor|director|ceo|administra|direção|direcao/.test(t) && !/departamento/.test(t)) return 'direcao';
+            if (/chefe de dep/.test(t)) return 'chefia';
+            if (/coorden|gestor de proj|projec|projet/.test(t)) return 'dgp';
+            if (/supervis|chefe de turno/.test(t)) return 'supervisao';
+            if (/dse|cftv|alarme|seguran/.test(t)) return 'dse';
+            if (/rede|sistema|inform|\bti\b|l[óo]gic/.test(t)) return 'dl';
+            if (/armaz|log[íi]st|compras|\brh\b|recursos|administrativ|apoio/.test(t)) return 'apoio';
+            if (/t[ée]cnico|campo|instalador|el[ée]tric/.test(t)) return 'tecnico';
+            return 'outros';
+        }
+
+        function lerColabsDaTabela() {
+            return [...document.querySelectorAll('#tabela-colaboradores-corpo tr')].map(tr => {
+                const c = tr.querySelectorAll('td');
+                return { nome: c[1]?.innerText.trim(), tel: c[2]?.innerText.trim(), email: c[3]?.innerText.trim(), nif: c[4]?.innerText.trim(), cargo: c[5]?.innerText.trim() };
+            }).filter(c => c.nome);
+        }
+
+        function atualizarListaColabs() {
+            const dl = document.getElementById('lista-colabs');
+            if (dl) dl.innerHTML = COLABORADORES.map(c => `<option value="${esc(c.nome)}">`).join('');
+        }
+
+        function renderOrganogramaRH() {
+            atualizarListaColabs();
+            const lista = COLABORADORES.length ? COLABORADORES : lerColabsDaTabela();
+            const alvos = document.querySelectorAll('.org-dinamico');
+            if (!alvos.length) return;
+            const g = {}; Object.keys(DEPTOS).forEach(k => g[k] = []);
+            lista.forEach(c => g[classificarColab(c)].push(c));
+            
+            const pessoa = (c, cor) => `<li><div class="card-node !min-w-[160px] border-${cor}-500/40"><div class="font-bold text-[11px] text-primary-themed mb-1">${esc(c.nome)}</div><div class="text-[10px] text-${cor}-500">${esc(c.cargo)}</div></div></li>`;
+            const depto = k => {
+                const d = DEPTOS[k];
+                return `<li><div class="card-node border-${d.cor}-500/60 text-${d.cor}-500 mb-2"><i class="fas ${d.ic} mr-1"></i><span class="font-bold">${d.nome}</span><div class="text-[9px] text-secondary-themed font-normal mt-1">${d.sub} • ${g[k].length}</div></div><ul>${g[k].map(c => pessoa(c, d.cor)).join('')}</ul></li>`;
+            };
+            const nomes = arr => arr.map(p => `<div class="text-[10px] text-white/90 font-medium bg-white/10 px-2 py-1 rounded mt-1">${esc(p.nome)}</div>`).join('');
+
+            const filhos = ['dgp','supervisao','dse','dl','tecnico','apoio','outros'].filter(k => g[k].length).map(depto).join('');
+            const raiz = `<div class="card-node root min-w-[220px]"><i class="fas fa-building mr-2 mb-2 text-lg"></i><div class="font-black tracking-wider text-sm">DIREÇÃO GERAL</div>${nomes(g.direcao)}</div>`;
+            const chefia = `<div class="card-node border-blue-500/60 text-blue-500 min-w-[200px]"><i class="fas fa-user-tie mr-1 mb-1"></i><div class="font-bold">CHEFIA</div>${g.chefia.map(p => `<div class="text-[10px] text-primary-themed font-normal bg-gray-500/10 px-2 py-1 rounded mt-1">${esc(p.nome)} <br><span class="text-secondary-themed text-[9px]">${esc(p.cargo)}</span></div>`).join('')}</div>`;
+            const meio = g.chefia.length ? `<li>${chefia}<ul>${filhos}</ul></li>` : filhos;
+
+            const html = lista.length
+                ? `<div class="tree min-w-max text-xs"><ul><li>${raiz}<ul>${meio}</ul></li></ul></div>`
+                : `<p class="text-xs text-secondary-themed text-center py-8">Sem colaboradores registados.</p>`;
+            alvos.forEach(el => el.innerHTML = html);
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           DGP — PROJECTOS
+           ═══════════════════════════════════════════════════════ */
+        async function gravarProjeto(p) {
+            localStorage.setItem(PROJ_KEY, JSON.stringify(PROJETOS));
+            if (!window.dbFirebase) return;
+            try {
+                const { doc, setDoc } = await import(FS_URL);
+                await setDoc(doc(window.dbFirebase, 'projetos', p.cod), p);
+            } catch (e) { console.error('Erro Firestore (projetos):', e); }
+        }
+
+        async function carregarProjetos() {
+            let lista = null, semente = false;
+            try {
+                if (window.dbFirebase) {
+                    const { collection, getDocs } = await import(FS_URL);
+                    const snap = await getDocs(collection(window.dbFirebase, 'projetos'));
+                    if (!snap.empty) lista = snap.docs.map(d => d.data());
+                }
+            } catch (e) { console.error('Erro a ler projetos:', e); }
+            if (!lista) lista = JSON.parse(localStorage.getItem(PROJ_KEY) || 'null');
+            if (!lista || !lista.length) { lista = JSON.parse(JSON.stringify(PROJ_BASE)); semente = true; }
+            PROJETOS = lista;
+            if (semente) PROJETOS.forEach(gravarProjeto);
+            renderDGP();
+        }
+
+        const getP = () => PROJETOS.find(x => x.cod === projetoSel);
+
+        function renderDGP() {
+            atualizarListaColabs();
+            const n = PROJETOS.length;
+            const media = n ? Math.round(PROJETOS.reduce((a, p) => a + (+p.progresso || 0), 0) / n) : 0;
+            const set = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
+            set('dgp-kpi-total', n);
+            set('dgp-kpi-curso', PROJETOS.filter(p => p.estado === 'Em Curso').length);
+            set('dgp-kpi-conc', PROJETOS.filter(p => p.estado === 'Concluído').length);
+            set('dgp-kpi-media', media + '%');
+
+            const corBarra = v => v >= 100 ? 'emerald' : v >= 50 ? 'blue' : 'amber';
+            const prog = document.getElementById('dgp-progresso');
+            if (prog) prog.innerHTML = PROJETOS.map(p => `<div class="cursor-pointer" onclick="selecionarProjeto('${p.cod}')"><div class="flex justify-between text-[11px] mb-1"><span class="text-primary-themed font-semibold">${esc(p.nome)}</span><span class="text-secondary-themed font-mono">${p.progresso}%</span></div><div class="stock-bar"><div class="bg-${corBarra(p.progresso)}-500" style="width:${p.progresso}%"></div></div></div>`).join('') || '<p class="text-xs text-secondary-themed">Sem projectos.</p>';
+
+            const tb = document.getElementById('tabela-projetos');
+            if (tb) tb.innerHTML = PROJETOS.map(p => {
+                const c = COR_ESTADO[p.estado] || 'blue';
+                return `<tr onclick="selecionarProjeto('${p.cod}')" class="hover:bg-blue-500/5 cursor-pointer ${p.cod === projetoSel ? 'bg-blue-500/10' : ''}">
+                    <td class="p-3 font-mono text-blue-500">${p.cod}</td>
+                    <td class="p-3 text-primary-themed font-medium">${esc(p.nome)}</td>
+                    <td class="p-3 text-secondary-themed">${esc(p.cliente)}</td>
+                    <td class="p-3 text-secondary-themed">${esc(p.responsavel) || '—'}</td>
+                    <td class="p-3 font-mono text-secondary-themed">${esc(p.entrega) || '—'}</td>
+                    <td class="p-3"><div class="stock-bar w-24"><div class="bg-${corBarra(p.progresso)}-500" style="width:${p.progresso}%"></div></div></td>
+                    <td class="p-3"><span class="badge-modern bg-${c}-500/15 text-${c}-500">${p.estado}</span></td>
+                    <td class="p-3"><button onclick="event.stopPropagation();removerProjeto('${p.cod}')" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`;
+            }).join('');
+
+            renderGraficoFluxo();
+            renderDetalhe();
+        }
+
+        function renderGraficoFluxo() {
+            const c = document.getElementById('graficoFluxoProjetos');
+            if (!c || !window.Chart) return;
+            const ano = new Date().getFullYear(), ini = Array(12).fill(0), ent = Array(12).fill(0);
+            PROJETOS.forEach(p => {
+                if (p.inicio && +p.inicio.slice(0, 4) === ano) ini[+p.inicio.slice(5, 7) - 1]++;
+                if (p.entrega && +p.entrega.slice(0, 4) === ano) ent[+p.entrega.slice(5, 7) - 1]++;
+            });
+            if (graficoFluxo) { graficoFluxo.data.datasets[0].data = ini; graficoFluxo.data.datasets[1].data = ent; graficoFluxo.update('none'); return; }
+            const eixo = { grid: { color: corGrid() }, ticks: { color: corGrafico(), font: { size: 10 } } };
+            graficoFluxo = new Chart(c, {
+                type: 'line',
+                data: { labels: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'], datasets: [
+                    { label: 'Iniciados', data: ini, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.15)', fill: true, tension: 0.4 },
+                    { label: 'Entregas previstas', data: ent, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.15)', fill: true, tension: 0.4 }
+                ] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: corGrafico(), font: { size: 10 }, usePointStyle: true } } },
+                    scales: { x: eixo, y: { ...eixo, beginAtZero: true, ticks: { ...eixo.ticks, stepSize: 1 } } } }
+            });
+        }
+
+        function selecionarProjeto(cod) {
+            projetoSel = cod; abaDGP = 'org'; renderDGP();
+            document.getElementById('dgp-detalhe')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function renderDetalhe() {
+            const box = document.getElementById('dgp-detalhe');
+            const p = getP();
+            if (!box) return;
+            if (!p) { box.classList.add('hidden'); return; }
+            p.termos = p.termos || []; p.plano = p.plano || []; p.equipa = p.equipa || [];
+            const c = COR_ESTADO[p.estado] || 'blue';
+            const abas = [['org', 'fa-sitemap', 'Organograma'], ['termos', 'fa-file-circle-check', 'Termos de Entrega'], ['plano', 'fa-list-check', 'Plano de Ação']];
+            const tabs = abas.map(([k, ic, t]) => `<button onclick="abaDGP='${k}';renderDetalhe()" class="px-4 py-2 rounded-xl text-xs font-semibold ${abaDGP === k ? 'bg-blue-500 text-white' : 'text-secondary-themed hover:bg-blue-500/10'}"><i class="fas ${ic} mr-1.5"></i>${t}</button>`).join('');
+            const conc = p.plano.filter(x => x.estado === 'Concluída').length, ace = p.termos.filter(x => x.estado === 'Aceite').length;
+            const corpo = abaDGP === 'org' ? htmlOrgProjeto(p) : abaDGP === 'termos' ? htmlTermos(p) : htmlPlano(p);
+
+            box.classList.remove('hidden');
+            box.innerHTML = `
+                <div class="p-4 border-b border-themed flex justify-between items-start flex-wrap gap-3">
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap"><h3 class="font-black text-primary-themed">${esc(p.nome)}</h3><span class="badge-modern bg-${c}-500/15 text-${c}-500">${p.estado}</span></div>
+                        <p class="text-[11px] text-secondary-themed mt-1">${p.cod} • ${esc(p.cliente)} • ${esc(p.tipo)} • Entrega: ${esc(p.entrega) || '—'}</p>
+                        <p class="text-[11px] text-secondary-themed mt-1">Ações concluídas: <strong class="text-primary-themed">${conc}/${p.plano.length}</strong> • Termos aceites: <strong class="text-primary-themed">${ace}/${p.termos.length}</strong></p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="abrirModalProjeto('${p.cod}')" class="px-3 py-2 border-themed border rounded-xl text-xs font-semibold text-secondary-themed hover:bg-blue-500/10"><i class="fas fa-pen mr-1"></i> Editar</button>
+                        <button onclick="projetoSel=null;renderDGP()" class="w-9 h-9 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500"><i class="fas fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="p-4 flex gap-2 flex-wrap border-b border-themed">${tabs}</div>
+                <div class="p-4">${corpo}</div>`;
+        }
+
+        function htmlOrgProjeto(p) {
+            const eq = p.equipa.map(n => {
+                const col = COLABORADORES.find(x => x.nome === n);
+                return `<li><div class="card-node border-amber-500/40 !min-w-[150px]"><div class="font-bold text-[11px] text-primary-themed">${esc(n)}</div><div class="text-[9px] text-amber-500 mt-0.5">${esc(col?.cargo || 'Membro')}</div></div></li>`;
+            }).join('');
+            const gestor = p.responsavel ? `<li><div class="card-node border-emerald-500/60 !min-w-[180px]"><div class="text-[9px] text-secondary-themed uppercase">Gestor</div><div class="font-bold text-emerald-500 text-[11px]">${esc(p.responsavel)}</div></div>${eq ? `<ul>${eq}</ul>` : ''}</li>` : (eq || '');
+            return `<div class="overflow-x-auto py-4"><div class="tree min-w-max text-xs"><ul><li>
+                <div class="card-node border-violet-500/50 !min-w-[180px]"><div class="text-[9px] text-secondary-themed uppercase">Cliente</div><div class="font-bold text-violet-500">${esc(p.cliente)}</div></div>
+                <ul><li><div class="card-node root !min-w-[200px]">${esc(p.nome)}<div class="text-[10px] text-white/70 font-normal mt-1">${p.cod} • ${p.progresso}%</div></div>
+                ${gestor ? `<ul>${gestor}</ul>` : ''}</li></ul></li></ul></div></div>`;
+        }
+
+        function htmlTermos(p) {
+            const linhas = p.termos.map((t, i) => `<tr><td class="p-3 text-primary-themed">${esc(t.descricao)}</td><td class="p-3 font-mono text-secondary-themed">${esc(t.data) || '—'}</td><td class="p-3"><button onclick="avancarItem('termos',${i})" class="badge-modern bg-${COR_ITEM[t.estado]}-500/15 text-${COR_ITEM[t.estado]}-500">${t.estado}</button></td><td class="p-3"><button onclick="removerItem('termos',${i})" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+            return `<div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed"><tr><th class="p-3">Termo</th><th class="p-3">Data</th><th class="p-3">Estado</th><th class="p-3"></th></tr></thead><tbody class="divide-y divide-themed">${linhas || '<tr><td colspan="4" class="p-4 text-center text-secondary-themed">Sem termos.</td></tr>'}</tbody></table></div>
+                <div class="flex gap-2 flex-wrap mt-4"><input id="ter-desc" class="flex-1 min-w-[200px] border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);" placeholder="Novo termo..."><input id="ter-data" type="date" class="border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);"><button onclick="adicionarItem('termos')" class="bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl"><i class="fas fa-plus"></i></button></div>`;
+        }
+
+        function htmlPlano(p) {
+            const linhas = p.plano.map((t, i) => `<tr><td class="p-3 text-primary-themed">${esc(t.acao)}</td><td class="p-3 text-secondary-themed">${esc(t.responsavel) || '—'}</td><td class="p-3 font-mono text-secondary-themed">${esc(t.prazo) || '—'}</td><td class="p-3"><button onclick="avancarItem('plano',${i})" class="badge-modern bg-${COR_ITEM[t.estado]}-500/15 text-${COR_ITEM[t.estado]}-500">${t.estado}</button></td><td class="p-3"><button onclick="removerItem('plano',${i})" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+            return `<div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed"><tr><th class="p-3">Ação</th><th class="p-3">Resp.</th><th class="p-3">Prazo</th><th class="p-3">Estado</th><th class="p-3"></th></tr></thead><tbody class="divide-y divide-themed">${linhas || '<tr><td colspan="5" class="p-4 text-center text-secondary-themed">Sem ações.</td></tr>'}</tbody></table></div>
+                <div class="flex gap-2 flex-wrap mt-4"><input id="pl-acao" class="flex-1 min-w-[200px] border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);" placeholder="Nova ação..."><input id="pl-resp" list="lista-colabs" class="w-44 border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);" placeholder="Responsável"><input id="pl-prazo" type="date" class="border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);"><button onclick="adicionarItem('plano')" class="bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl"><i class="fas fa-plus"></i></button></div>`;
+        }
+
+        function adicionarItem(tipo) {
+            const p = getP(); if (!p) return;
+            const v = id => document.getElementById(id).value.trim();
+            if (tipo === 'termos') {
+                if (!v('ter-desc')) return mostrarToast('Descreve o termo', 'warn');
+                p.termos.push({ descricao: v('ter-desc'), data: v('ter-data'), estado: 'Pendente' });
+            } else {
+                if (!v('pl-acao')) return mostrarToast('Descreve a ação', 'warn');
+                p.plano.push({ acao: v('pl-acao'), responsavel: v('pl-resp'), prazo: v('pl-prazo'), estado: 'Por fazer' });
+            }
+            gravarProjeto(p); renderDGP();
+        }
+        function avancarItem(tipo, i) {
+            const p = getP(); if (!p) return;
+            const lista = ESTADOS_ITEM[tipo], it = p[tipo][i];
+            it.estado = lista[(lista.indexOf(it.estado) + 1) % lista.length];
+            gravarProjeto(p); renderDGP();
+        }
+        function removerItem(tipo, i) {
+            const p = getP(); if (!p || !confirm('Remover este item?')) return;
+            p[tipo].splice(i, 1); gravarProjeto(p); renderDGP();
+        }
+
+        function abrirModalProjeto(cod) {
+            const p = cod ? PROJETOS.find(x => x.cod === cod) : null;
+            const f = (id, v) => document.getElementById(id).value = v;
+            f('proj-cod', p?.cod || ''); f('proj-nome', p?.nome || ''); f('proj-cliente', p?.cliente || '');
+            f('proj-tipo', p?.tipo || 'DSE'); f('proj-estado', p?.estado || 'Em Curso');
+            f('proj-inicio', p?.inicio || ''); f('proj-entrega', p?.entrega || '');
+            f('proj-progresso', p?.progresso ?? 0); f('proj-resp', p?.responsavel || '');
+            document.getElementById('proj-prog-val').innerText = (p?.progresso ?? 0) + '%';
+            document.getElementById('proj-modal-titulo').innerText = p ? 'Editar Projecto' : 'Novo Projecto';
+            atualizarListaColabs();
+            const eq = p?.equipa || [];
+            document.getElementById('proj-equipa').innerHTML = COLABORADORES.length
+                ? COLABORADORES.map(c => `<label class="flex items-center gap-2 text-[11px] text-primary-themed"><input type="checkbox" value="${esc(c.nome)}" ${eq.includes(c.nome) ? 'checked' : ''}> ${esc(c.nome)} <span class="text-secondary-themed">— ${esc(c.cargo)}</span></label>`).join('')
+                : '<p class="text-[11px] text-secondary-themed">Sem colaboradores registados.</p>';
+            document.getElementById('modal-projeto').classList.remove('hidden');
+        }
+        function fecharModalProjeto() { document.getElementById('modal-projeto').classList.add('hidden'); }
+
+        async function guardarProjetoForm(ev) {
+            ev.preventDefault();
+            const g = id => document.getElementById(id).value.trim();
+            const dados = {
+                nome: g('proj-nome'), cliente: g('proj-cliente'), tipo: g('proj-tipo'), estado: g('proj-estado'),
+                inicio: g('proj-inicio'), entrega: g('proj-entrega'), progresso: +g('proj-progresso'), responsavel: g('proj-resp'),
+                equipa: [...document.querySelectorAll('#proj-equipa input:checked')].map(i => i.value)
+            };
+            if (dados.estado === 'Concluído') dados.progresso = 100;
+            let p = PROJETOS.find(x => x.cod === g('proj-cod'));
+            if (p) Object.assign(p, dados);
+            else {
+                const n = PROJETOS.reduce((m, x) => Math.max(m, parseInt(String(x.cod).split('-')[1]) || 0), 0) + 1;
+                p = { cod: 'PRJ-' + String(n).padStart(3, '0'), ...dados, termos: [], plano: [] };
+                PROJETOS.push(p); projetoSel = p.cod; abaDGP = 'org';
+            }
+            await gravarProjeto(p);
+            fecharModalProjeto(); renderDGP();
+            mostrarToast(`Projecto ${p.cod} guardado!`, 'success');
+        }
+
+        async function removerProjeto(cod) {
+            if (!confirm('Remover este projecto?')) return;
+            PROJETOS = PROJETOS.filter(p => p.cod !== cod);
+            if (projetoSel === cod) projetoSel = null;
+            localStorage.setItem(PROJ_KEY, JSON.stringify(PROJETOS));
+            try {
+                if (window.dbFirebase) { const { doc, deleteDoc } = await import(FS_URL); await deleteDoc(doc(window.dbFirebase, 'projetos', cod)); }
+            } catch (e) { console.error(e); }
+            renderDGP(); mostrarToast('Projecto removido', 'warn');
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           CARREGAR DADOS DA NUVEM
+           ═══════════════════════════════════════════════════════ */
+        async function carregarColaboradoresNuvem() {
+            if (!window.dbFirebase) return;
+            try {
+                const { collection, getDocs } = await import(FS_URL);
+                const snap = await getDocs(collection(window.dbFirebase, "colaboradores"));
+                if (snap.empty) return;
+                const tbody = document.getElementById('tabela-colaboradores-corpo');
+                if (tbody) tbody.innerHTML = '';
+                COLABORADORES = [];
+                snap.forEach(d => {
+                    const c = d.data();
+                    inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto, c.depto);
+                });
+                const kpi = document.getElementById('kpi-efetivo');
+                if (kpi) kpi.innerText = snap.size;
+            } catch (e) { console.error("Erro ao ler colaboradores da nuvem:", e); }
+        }
+
+        async function carregarObrasNuvem() {
+            if (!window.dbFirebase) return;
+            try {
+                const { collection, getDocs } = await import(FS_URL);
+                const querySnapshot = await getDocs(collection(window.dbFirebase, "obras"));
+                const tbody = document.getElementById('tabela-obras');
+                if (!tbody) return;
+
+                querySnapshot.forEach((doc) => {
+                    const o = doc.data();
+                    if (tbody.innerHTML.includes(o.ref)) return;
+                    const badgeEvid = o.numEvid > 0 ? `<button class="badge-modern bg-blue-500/15 text-blue-500"><i class="fas fa-paperclip"></i> ${o.numEvid}</button>` : `<span class="text-secondary-themed text-[10px]">—</span>`;
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-blue-500/5 transition-colors cursor-pointer';
+                    tr.onclick = () => abrirDetalhesObra(o.cliente, o.servico, o.tecnico, o.ref, o.dataHora, []);
+                    tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${o.ref}</td><td class="p-3 text-primary-themed font-medium">${o.cliente}</td><td class="p-3 text-secondary-themed">${o.servico}</td><td class="p-3 text-secondary-themed">${o.tecnico}</td><td class="p-3">${badgeEvid}</td><td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Execução</span></td>`;
+                    tbody.appendChild(tr);
+                });
+            } catch (e) { console.error("Erro ao ler obras da nuvem:", e); }
+        }
+
+        async function carregarRequisicoesNuvem() {
+            if (!window.dbFirebase) return;
+            try {
+                const { collection, getDocs } = await import(FS_URL);
+                const querySnapshot = await getDocs(collection(window.dbFirebase, "requisicoes"));
+                const tbody = document.getElementById('tabela-requisicoes');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const r = doc.data();
+                    const tr = document.createElement('tr');
+                    tr.dataset.req = r.cod;
+                    tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${r.cod}</td><td class="p-3 text-primary-themed">${r.desc}</td><td class="p-3 text-secondary-themed text-[10px]">${r.materiais || ''}</td><td class="p-3 text-secondary-themed">${r.sol}</td><td class="p-3 td-estado">${r.estado}</td><td class="p-3 td-acoes"></td>`;
+                    tbody.appendChild(tr);
+                    atualizarAcoesRequisicao(tr);
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        async function carregarInventarioNuvem() {
+            if (!window.dbFirebase) return;
+            try {
+                const { collection, getDocs } = await import(FS_URL);
+                const querySnapshot = await getDocs(collection(window.dbFirebase, "inventario"));
+                const tbody = document.getElementById('tabela-inventario');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                let totalItens = 0;
+                querySnapshot.forEach((doc) => {
+                    const e = doc.data();
+                    totalItens++;
+                    const pct = Math.min(100, Math.round((e.qtd / Math.max(e.min, 1)) * 100));
+                    let cor = 'emerald'; if (e.qtd < e.min * 0.5) cor = 'red'; else if (e.qtd < e.min) cor = 'amber';
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td class="p-3 text-primary-themed font-medium">${e.nome}</td><td class="p-3 text-secondary-themed">${e.cat}</td><td class="p-3 font-mono">${e.qtd}</td><td class="p-3 font-mono text-secondary-themed">${e.min}</td><td class="p-3 text-secondary-themed">${e.local}</td><td class="p-3"><div class="stock-bar w-20"><div class="bg-${cor}-500" style="width:${pct}%"></div></div></td><td class="p-3"><button onclick="removerLinha(this,'inv')" class="text-red-500"><i class="fas fa-trash"></i></button></td>`;
+                    tbody.appendChild(tr);
+                });
+                const elTotal = document.getElementById('inv-total-itens');
+                if (elTotal) elTotal.innerText = totalItens;
+            } catch(e) { console.error(e); }
+        }
+
+        async function carregarEPIsNuvem() {
+            if (!window.dbFirebase) return;
+            try {
+                const { collection, getDocs } = await import(FS_URL);
+                const querySnapshot = await getDocs(collection(window.dbFirebase, "epis"));
+                const tbody = document.getElementById('tabela-epi-geral');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const e = doc.data();
+                    let cor = 'emerald'; if (e.qtd < e.min * 0.5) cor = 'red'; else if (e.qtd < e.min) cor = 'amber';
+                    const estado = e.qtd < e.min * 0.5 ? 'Crítico' : e.qtd < e.min ? 'Stock Baixo' : 'OK';
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td class="p-3 text-primary-themed font-medium">${e.nome}</td><td class="p-3 font-mono">${e.qtd}</td><td class="p-3 font-mono text-secondary-themed">${e.min}</td><td class="p-3 font-mono text-secondary-themed">${e.validade}</td><td class="p-3"><span class="badge-modern bg-${cor}-500/15 text-${cor}-500">${estado}</span></td><td class="p-3"><button onclick="removerLinha(this,'epi')" class="text-red-500"><i class="fas fa-trash"></i></button></td>`;
+                    tbody.appendChild(tr);
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           INICIALIZAÇÃO
+           ═══════════════════════════════════════════════════════ */
+        document.addEventListener('DOMContentLoaded', () => {
+            verificarSessao();
+            aplicarTema(localStorage.getItem('hanzolo_tema') || 'dark');
+            atualizarRelogio();
+            renderizarAlertas();
+            configurarImportacao();
+            configurarDropFoto();
+            configurarDropEvidencia();
+            configurarPesquisaMapa();
+            
+            carregarColaboradoresNuvem();
+            carregarProjetos(); 
+            carregarObrasNuvem();
+            carregarRequisicoesNuvem();
+            carregarInventarioNuvem();
+            carregarEPIsNuvem();
+
+            ['modal-colaborador','modal-requisicao','modal-intervencao','modal-tecnico-dse','modal-alerta','modal-epi','modal-epc','modal-inventario','modal-importar','modal-projeto','modal-gestao-frotas','modal-auditoria','modal-fiscalizacao'].forEach(id => {
+                const m = document.getElementById(id);
+                if (m) m.addEventListener('click', (e) => { if (e.target.id === id) m.classList.add('hidden'); });
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    ['modal-colaborador','modal-requisicao','modal-intervencao','modal-tecnico-dse','modal-alerta','modal-epi','modal-epc','modal-inventario','modal-importar','modal-projeto','modal-gestao-frotas','modal-auditoria','modal-fiscalizacao'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+                    document.getElementById('painel-notificacoes')?.classList.add('hidden');
+                }
+            });
+
+            atualizarContadores();
+            atualizarContadoresDSE();
+            atualizarKPIsInventario();
+
+            setTimeout(() => {
+                inicializarGraficos();
+                setInterval(atualizarGraficos, 8000);
+                inicializarMapa();
+            }, 300);
+
+            setTimeout(() => mostrarToast('Bem-vindo ao HANZOLO OPS 24-7', 'info'), 800);
+        });
+
+        // Observador de tema
+        new MutationObserver(() => {
+            const cor = corGrafico(), grid = corGrid();
+            [graficoLinhas, graficoBarras, graficoFluxoStock].forEach(g => {
+                if (g && g.options.scales) {
+                    g.options.scales.x.ticks.color = cor;
+                    g.options.scales.y.ticks.color = cor;
+                    g.options.scales.x.grid.color = grid;
+                    g.options.scales.y.grid.color = grid;
+                    g.update('none');
+                }  
+            });         
+            if (graficoCircular) { graficoCircular.options.plugins.legend.labels.color = cor; graficoCircular.update('none'); }
+            atualizarTemaMapa();
+        }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
     </script>
 </body>
