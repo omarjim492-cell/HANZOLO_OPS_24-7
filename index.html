@@ -30,12 +30,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Bibliotecas Chart e PDF -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    <!-- Firebase -->
     <script type="module">
         const firebaseConfig = {
             apiKey: "AIzaSyAWgdR8hOmpMvb3cBXAljaPnDryo5hqFWQ",
@@ -57,10 +55,8 @@
         const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
         
         window.dbFirebase = db;
-        console.log("Firebase ligado com sucesso!");
     </script>
 
-    <!-- Leaflet Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
@@ -126,7 +122,6 @@
         .import-box { border: 2px dashed var(--border); border-radius: 16px; padding: 32px; text-align: center; transition: all 0.3s; cursor: pointer; }
         .import-box:hover { border-color: var(--accent); background: rgba(59,130,246,0.05); }
         
-        /* CORREÇÃO DO Z-INDEX DOS MODAIS */
         .modal-frotas-fix { z-index: 9990 !important; }
         .modal-viatura-fix { z-index: 9999 !important; }
         
@@ -473,7 +468,7 @@
                 <div id="dgp-detalhe" class="hidden card-themed rounded-2xl overflow-hidden"></div>
             </div>
 
-            <!-- TAB: GCQ (Funcional) -->
+            <!-- TAB: GCQ -->
             <div id="tab-gcq" class="tab-content hidden space-y-6">
                 <div class="pb-4 border-b border-themed flex justify-between items-center flex-wrap gap-3">
                     <div>
@@ -508,7 +503,7 @@
                 </div>
             </div>
 
-            <!-- TAB: HSST (Funcional) -->
+            <!-- TAB: HSST -->
             <div id="tab-hsst" class="tab-content hidden space-y-6">
                 <div class="pb-4 border-b border-themed flex justify-between items-end">
                     <div>
@@ -802,7 +797,7 @@
                     </div>
 
                     <div class="space-y-3 xl:max-h-[600px] xl:overflow-y-auto pr-1" id="lista-viaturas-lateral">
-                        <!-- Viaturas preenchidas dinamicamente -->
+                        <!-- Preenchido dinamicamente -->
                     </div>
                 </div>
             </div>
@@ -1497,9 +1492,6 @@
     <div id="toast-container" class="fixed bottom-4 right-4 z-[100] space-y-2"></div>
 
     <script>
-        /* ═══════════════════════════════════════════════════════
-           CONSTANTES GLOBAIS E VARIÁVEIS DE ESTADO
-           ═══════════════════════════════════════════════════════ */
         const FS_URL = "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         let COLABORADORES = [];
         let epiContextoAtual = 'geral';
@@ -1526,9 +1518,6 @@
             { cod: 'PRJ-001', nome: 'Nurs Call', cliente: 'Girasol', tipo: 'Redes', responsavel: '', equipa: [], inicio: '2026-05-01', entrega: '2026-12-20', progresso: 50, estado: 'Em Curso', termos: [], plano: [] }
         ];
 
-        /* ═══════════════════════════════════════════════════════
-           LOGIN E SEGURANÇA
-           ═══════════════════════════════════════════════════════ */
         async function fazerLogin(event) {
             event.preventDefault();
             const email = document.getElementById('login-email').value;
@@ -1590,9 +1579,6 @@
             mostrarToast('Tema ' + (atual === 'dark' ? 'claro' : 'escuro') + ' ativado', 'info');
         }
 
-        /* ═══════════════════════════════════════════════════════
-           RELÓGIO E NAVEGAÇÃO
-           ═══════════════════════════════════════════════════════ */
         function atualizarRelogio() {
             const agora = new Date();
             const dataStr = agora.toLocaleDateString('pt-AO');
@@ -1614,7 +1600,9 @@
             if (window.innerWidth < 768) fecharSidebarMobile();
 
             if (tabId === 'dgp') setTimeout(() => { renderDGP(); graficoFluxo?.resize(); }, 60);
-            if (tabId === 'rh')  renderOrganogramaRH();
+            
+            // CORREÇÃO: Adicionado o 'organograma' para renderizar na aba correta
+            if (tabId === 'rh' || tabId === 'organograma') renderOrganogramaRH();
 
             if (tabId === 'frotas') {
                 setTimeout(() => {
@@ -1636,9 +1624,6 @@
             if (window.innerWidth < 768 && s && o) { s.classList.add('hidden'); o.classList.add('hidden'); }
         }
 
-        /* ═══════════════════════════════════════════════════════
-           EXPORTAÇÃO E BACKUP
-           ═══════════════════════════════════════════════════════ */
         function toggleExportMenu() { document.getElementById('export-dropdown')?.classList.toggle('hidden'); }
         window.addEventListener('click', (e) => {
             const menu = document.getElementById('export-dropdown');
@@ -1676,7 +1661,7 @@
         function exportarBackupJSON() {
             document.getElementById('export-dropdown')?.classList.add('hidden');
             const backup = { meta: { empresa: 'HANZOLO, LDA', nif: '5417271608', geradoEm: new Date().toISOString(), versao: '2.1' }, dados: {} };
-            const keys = ['colab', 'dse', 'obras', 'req', 'epiGeral', 'epiDse', 'epc', 'inv', 'auditorias']; // Ajuste para as chaves reais
+            const keys = ['colab', 'dse', 'obras', 'req', 'epiGeral', 'epiDse', 'epc', 'inv', 'auditorias']; 
             keys.forEach(k => { backup.dados[k] = JSON.parse(localStorage.getItem(STORAGE_KEYS[k]) || '[]'); });
             const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
             const link = document.createElement('a');
@@ -1734,9 +1719,6 @@
             } catch (err) { mostrarToast('Erro: ' + err.message, 'error'); }
         }
 
-        /* ═══════════════════════════════════════════════════════
-           TOASTS E NOTIFICAÇÕES
-           ═══════════════════════════════════════════════════════ */
         function mostrarToast(msg, tipo = 'info') {
             const cores = { info: 'bg-blue-500', success: 'bg-emerald-500', error: 'bg-red-500', warn: 'bg-amber-500' };
             const icones = { info: 'fa-circle-info', success: 'fa-circle-check', error: 'fa-circle-xmark', warn: 'fa-triangle-exclamation' };
@@ -1771,11 +1753,6 @@
         }
         function fecharModalAlerta() { document.getElementById('modal-alerta')?.classList.add('hidden'); }
 
-        /* ═══════════════════════════════════════════════════════
-           MODAIS E FUNÇÕES DE ADIÇÃO
-           ═══════════════════════════════════════════════════════ */
-        
-        // --- GCQ / HSST ---
         function abrirModalAuditoria() { document.getElementById('modal-auditoria').classList.remove('hidden'); }
         function fecharModalAuditoria() { document.getElementById('modal-auditoria').classList.add('hidden'); document.getElementById('form-auditoria').reset(); }
         function adicionarAuditoria(event) {
@@ -1812,7 +1789,6 @@
             mostrarToast('Fiscalização registada! O contador foi atualizado.', 'success');
         }
 
-        // --- GESTÃO DE FROTAS E VIATURAS ---
         function abrirModalGestaoFrotas() {
             const tbody = document.getElementById('tabela-gestao-frotas');
             tbody.innerHTML = VIATURAS.map(v => `
@@ -1876,12 +1852,11 @@
             }
 
             fecharModalViatura();
-            abrirModalGestaoFrotas(); // Atualiza a tabela do modal
-            renderizarViaturasMapa(); // Atualiza o mapa e a lista lateral
+            abrirModalGestaoFrotas(); 
+            renderizarViaturasMapa(); 
             mostrarToast('Viatura guardada com sucesso!', 'success');
         }
 
-        // --- OUTROS MODAIS ---
         function abrirModalColaborador() { document.getElementById('modal-colaborador')?.classList.remove('hidden'); }
         function fecharModalColaborador() { document.getElementById('modal-colaborador')?.classList.add('hidden'); }
         function abrirModalRequisicao() { 
@@ -1916,9 +1891,6 @@
         function abrirModalInventario() { document.getElementById('modal-inventario').classList.remove('hidden'); }
         function fecharModalInventario() { document.getElementById('modal-inventario').classList.add('hidden'); document.getElementById('form-inventario').reset(); }
 
-        /* ═══════════════════════════════════════════════════════
-           ADIÇÃO DE DADOS NAS TABELAS
-           ═══════════════════════════════════════════════════════ */
         function adicionarEPI(event) {
             event.preventDefault();
             const nome = document.getElementById('epi-nome').value.trim();
@@ -2052,9 +2024,6 @@
             localStorage.setItem(chave, JSON.stringify(dados));
         }
 
-        /* ═══════════════════════════════════════════════════════
-           UPLOADS E EVIDÊNCIAS
-           ═══════════════════════════════════════════════════════ */
         function configurarDropFoto() {
             const drop = document.getElementById('drop-foto');
             const input = document.getElementById('nova-foto');
@@ -2108,9 +2077,7 @@
             if (preview) preview.innerHTML = evidenciasObra.map((e, i) => `<div class="relative">${e.tipo === 'image' ? `<img src="${e.base64}" class="preview-thumb w-full h-20 object-cover">` : `<div class="preview-thumb w-full h-20 flex items-center justify-center bg-blue-500/15"><i class="fas fa-play-circle text-blue-500 text-2xl"></i></div>`}<button type="button" onclick="removerEvidencia(${i})" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center"><i class="fas fa-xmark"></i></button></div>`).join('');
         }
 
-        /* ═══════════════════════════════════════════════════════
-           ADICIONAR DADOS (FIREBASE + LOCAL)
-           ═══════════════════════════════════════════════════════ */
+        // CORREÇÃO: Verificação de NIF e E-mail duplicados
         function adicionarColaborador(event) {
             event.preventDefault();
             const depto = document.getElementById('novo-depto').value;
@@ -2121,6 +2088,19 @@
             const cargo = document.getElementById('novo-cargo').value.trim();
 
             if (!/^\d{9}[A-Z]{2}\d{3}$/.test(nif)) { mostrarToast('NIF inválido. Formato: 000000000LA000', 'error'); return; }
+
+            // Verifica se o NIF ou Email já existem na tabela para evitar duplicados
+            const emailsExistentes = Array.from(document.querySelectorAll('#tabela-colaboradores-corpo tr td:nth-child(4)')).map(td => td.innerText.trim());
+            const nifsExistentes = Array.from(document.querySelectorAll('#tabela-colaboradores-corpo tr td:nth-child(5)')).map(td => td.innerText.trim());
+
+            if (nifsExistentes.includes(nif)) {
+                mostrarToast('Erro: Este NIF já está registado no sistema!', 'error');
+                return;
+            }
+            if (emailsExistentes.includes(email)) {
+                mostrarToast('Erro: Este E-mail já está registado no sistema!', 'error');
+                return;
+            }
 
             inserirLinhaColaborador(nome, tel, email, nif, cargo, fotoColaboradorBase64, depto);
             
@@ -2353,9 +2333,6 @@
             if (elC) elC.innerText = linhas.length + ' técnicos';
         }
 
-        /* ═══════════════════════════════════════════════════════
-           GRÁFICOS E MAPA
-           ═══════════════════════════════════════════════════════ */
         function corGrafico() { return document.documentElement.classList.contains('light') ? '#64748b' : '#94a3b8'; }
         function corGrid() { return document.documentElement.classList.contains('light') ? 'rgba(100,116,139,0.15)' : 'rgba(148,163,184,0.1)'; }
         
@@ -2420,14 +2397,13 @@
             const tileLayer = L.tileLayer(temaMapaLeaflet(), { maxZoom: 19, subdomains: 'abcd' }).addTo(mapaLeaflet);
             window.tileLayerAtual = tileLayer;
             
-            renderizarViaturasMapa(); // Chama a função para criar os marcadores
+            renderizarViaturasMapa(); 
             window.mapaLeaflet = mapaLeaflet;
         }
 
         function renderizarViaturasMapa() {
             if (!mapaLeaflet) return;
             
-            // Limpar marcadores antigos
             Object.values(marcadoresLeaflet).forEach(m => mapaLeaflet.removeLayer(m));
             marcadoresLeaflet = {};
 
@@ -2438,7 +2414,6 @@
                 marcadoresLeaflet[v.id] = marker;
             });
             
-            // Atualizar a lista lateral de viaturas
             const listaEl = document.getElementById('lista-viaturas-lateral');
             if (listaEl) {
                 listaEl.innerHTML = VIATURAS.map(v => {
@@ -2518,10 +2493,18 @@
             if (m) m.setLatLng([v.pos.lat, v.pos.lng]);
         }, 4000);
 
-        /* ═══════════════════════════════════════════════════════
-           RH E ORGANOGRAMA DINÂMICO
-           ═══════════════════════════════════════════════════════ */
         const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+        const DEPTOS = {
+            direcao:    { nome: 'DIREÇÃO GERAL',   sub: 'Administração',            cor: 'violet',  ic: 'fa-building' },
+            chefia:     { nome: 'CHEFIA',          sub: 'Chefes de Departamento',   cor: 'blue',    ic: 'fa-user-tie' },
+            dgp:        { nome: 'DGP',             sub: 'Coordenação de Projectos', cor: 'blue',    ic: 'fa-diagram-project' },
+            supervisao: { nome: 'SUPERVISÃO',      sub: 'Turnos & Obras',           cor: 'emerald', ic: 'fa-user-shield' },
+            dse:        { nome: 'DSE',             sub: 'Segurança Electrónica',    cor: 'cyan',    ic: 'fa-video' },
+            dl:         { nome: 'DL',              sub: 'Departamento Lógico',      cor: 'indigo',  ic: 'fa-network-wired' },
+            tecnico:    { nome: 'CORPO TÉCNICO',   sub: 'Execução de Campo',        cor: 'amber',   ic: 'fa-screwdriver-wrench' },
+            apoio:      { nome: 'APOIO',           sub: 'Logística & RH',           cor: 'violet',  ic: 'fa-briefcase' },
+            outros:     { nome: 'POR CLASSIFICAR', sub: 'Sem departamento',         cor: 'slate',   ic: 'fa-user' }
+        };
 
         function classificarColab(c) {
             if (c.depto && DEPTOS[c.depto]) return c.depto;
@@ -2575,326 +2558,6 @@
             alvos.forEach(el => el.innerHTML = html);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           DGP — PROJECTOS
-           ═══════════════════════════════════════════════════════ */
-        async function gravarProjeto(p) {
-            localStorage.setItem(PROJ_KEY, JSON.stringify(PROJETOS));
-            if (!window.dbFirebase) return;
-            try {
-                const { doc, setDoc } = await import(FS_URL);
-                await setDoc(doc(window.dbFirebase, 'projetos', p.cod), p);
-            } catch (e) { console.error('Erro Firestore (projetos):', e); }
-        }
-
-        async function carregarProjetos() {
-            let lista = null, semente = false;
-            try {
-                if (window.dbFirebase) {
-                    const { collection, getDocs } = await import(FS_URL);
-                    const snap = await getDocs(collection(window.dbFirebase, 'projetos'));
-                    if (!snap.empty) lista = snap.docs.map(d => d.data());
-                }
-            } catch (e) { console.error('Erro a ler projetos:', e); }
-            if (!lista) lista = JSON.parse(localStorage.getItem(PROJ_KEY) || 'null');
-            if (!lista || !lista.length) { lista = JSON.parse(JSON.stringify(PROJ_BASE)); semente = true; }
-            PROJETOS = lista;
-            if (semente) PROJETOS.forEach(gravarProjeto);
-            renderDGP();
-        }
-
-        const getP = () => PROJETOS.find(x => x.cod === projetoSel);
-
-        function renderDGP() {
-            atualizarListaColabs();
-            const n = PROJETOS.length;
-            const media = n ? Math.round(PROJETOS.reduce((a, p) => a + (+p.progresso || 0), 0) / n) : 0;
-            const set = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
-            set('dgp-kpi-total', n);
-            set('dgp-kpi-curso', PROJETOS.filter(p => p.estado === 'Em Curso').length);
-            set('dgp-kpi-conc', PROJETOS.filter(p => p.estado === 'Concluído').length);
-            set('dgp-kpi-media', media + '%');
-
-            const corBarra = v => v >= 100 ? 'emerald' : v >= 50 ? 'blue' : 'amber';
-            const prog = document.getElementById('dgp-progresso');
-            if (prog) prog.innerHTML = PROJETOS.map(p => `<div class="cursor-pointer" onclick="selecionarProjeto('${p.cod}')"><div class="flex justify-between text-[11px] mb-1"><span class="text-primary-themed font-semibold">${esc(p.nome)}</span><span class="text-secondary-themed font-mono">${p.progresso}%</span></div><div class="stock-bar"><div class="bg-${corBarra(p.progresso)}-500" style="width:${p.progresso}%"></div></div></div>`).join('') || '<p class="text-xs text-secondary-themed">Sem projectos.</p>';
-
-            const tb = document.getElementById('tabela-projetos');
-            if (tb) tb.innerHTML = PROJETOS.map(p => {
-                const c = COR_ESTADO[p.estado] || 'blue';
-                return `<tr onclick="selecionarProjeto('${p.cod}')" class="hover:bg-blue-500/5 cursor-pointer ${p.cod === projetoSel ? 'bg-blue-500/10' : ''}">
-                    <td class="p-3 font-mono text-blue-500">${p.cod}</td>
-                    <td class="p-3 text-primary-themed font-medium">${esc(p.nome)}</td>
-                    <td class="p-3 text-secondary-themed">${esc(p.cliente)}</td>
-                    <td class="p-3 text-secondary-themed">${esc(p.responsavel) || '—'}</td>
-                    <td class="p-3 font-mono text-secondary-themed">${esc(p.entrega) || '—'}</td>
-                    <td class="p-3"><div class="stock-bar w-24"><div class="bg-${corBarra(p.progresso)}-500" style="width:${p.progresso}%"></div></div></td>
-                    <td class="p-3"><span class="badge-modern bg-${c}-500/15 text-${c}-500">${p.estado}</span></td>
-                    <td class="p-3"><button onclick="event.stopPropagation();removerProjeto('${p.cod}')" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`;
-            }).join('');
-
-            renderGraficoFluxo();
-            renderDetalhe();
-        }
-
-        function renderGraficoFluxo() {
-            const c = document.getElementById('graficoFluxoProjetos');
-            if (!c || !window.Chart) return;
-            const ano = new Date().getFullYear(), ini = Array(12).fill(0), ent = Array(12).fill(0);
-            PROJETOS.forEach(p => {
-                if (p.inicio && +p.inicio.slice(0, 4) === ano) ini[+p.inicio.slice(5, 7) - 1]++;
-                if (p.entrega && +p.entrega.slice(0, 4) === ano) ent[+p.entrega.slice(5, 7) - 1]++;
-            });
-            if (graficoFluxo) { graficoFluxo.data.datasets[0].data = ini; graficoFluxo.data.datasets[1].data = ent; graficoFluxo.update('none'); return; }
-            const eixo = { grid: { color: corGrid() }, ticks: { color: corGrafico(), font: { size: 10 } } };
-            graficoFluxo = new Chart(c, {
-                type: 'line',
-                data: { labels: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'], datasets: [
-                    { label: 'Iniciados', data: ini, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.15)', fill: true, tension: 0.4 },
-                    { label: 'Entregas previstas', data: ent, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.15)', fill: true, tension: 0.4 }
-                ] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: corGrafico(), font: { size: 10 }, usePointStyle: true } } },
-                    scales: { x: eixo, y: { ...eixo, beginAtZero: true, ticks: { ...eixo.ticks, stepSize: 1 } } } }
-            });
-        }
-
-        function selecionarProjeto(cod) {
-            projetoSel = cod; abaDGP = 'org'; renderDGP();
-            document.getElementById('dgp-detalhe')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function renderDetalhe() {
-            const box = document.getElementById('dgp-detalhe');
-            const p = getP();
-            if (!box) return;
-            if (!p) { box.classList.add('hidden'); return; }
-            p.termos = p.termos || []; p.plano = p.plano || []; p.equipa = p.equipa || [];
-            const c = COR_ESTADO[p.estado] || 'blue';
-            const abas = [['org', 'fa-sitemap', 'Organograma'], ['termos', 'fa-file-circle-check', 'Termos de Entrega'], ['plano', 'fa-list-check', 'Plano de Ação']];
-            const tabs = abas.map(([k, ic, t]) => `<button onclick="abaDGP='${k}';renderDetalhe()" class="px-4 py-2 rounded-xl text-xs font-semibold ${abaDGP === k ? 'bg-blue-500 text-white' : 'text-secondary-themed hover:bg-blue-500/10'}"><i class="fas ${ic} mr-1.5"></i>${t}</button>`).join('');
-            const conc = p.plano.filter(x => x.estado === 'Concluída').length, ace = p.termos.filter(x => x.estado === 'Aceite').length;
-            const corpo = abaDGP === 'org' ? htmlOrgProjeto(p) : abaDGP === 'termos' ? htmlTermos(p) : htmlPlano(p);
-
-            box.classList.remove('hidden');
-            box.innerHTML = `
-                <div class="p-4 border-b border-themed flex justify-between items-start flex-wrap gap-3">
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap"><h3 class="font-black text-primary-themed">${esc(p.nome)}</h3><span class="badge-modern bg-${c}-500/15 text-${c}-500">${p.estado}</span></div>
-                        <p class="text-[11px] text-secondary-themed mt-1">${p.cod} • ${esc(p.cliente)} • ${esc(p.tipo)} • Entrega: ${esc(p.entrega) || '—'}</p>
-                        <p class="text-[11px] text-secondary-themed mt-1">Ações concluídas: <strong class="text-primary-themed">${conc}/${p.plano.length}</strong> • Termos aceites: <strong class="text-primary-themed">${ace}/${p.termos.length}</strong></p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="abrirModalProjeto('${p.cod}')" class="px-3 py-2 border-themed border rounded-xl text-xs font-semibold text-secondary-themed hover:bg-blue-500/10"><i class="fas fa-pen mr-1"></i> Editar</button>
-                        <button onclick="projetoSel=null;renderDGP()" class="w-9 h-9 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500"><i class="fas fa-xmark"></i></button>
-                    </div>
-                </div>
-                <div class="p-4 flex gap-2 flex-wrap border-b border-themed">${tabs}</div>
-                <div class="p-4">${corpo}</div>`;
-        }
-
-        function htmlOrgProjeto(p) {
-            const eq = p.equipa.map(n => {
-                const col = COLABORADORES.find(x => x.nome === n);
-                return `<li><div class="card-node border-amber-500/40 !min-w-[150px]"><div class="font-bold text-[11px] text-primary-themed">${esc(n)}</div><div class="text-[9px] text-amber-500 mt-0.5">${esc(col?.cargo || 'Membro')}</div></div></li>`;
-            }).join('');
-            const gestor = p.responsavel ? `<li><div class="card-node border-emerald-500/60 !min-w-[180px]"><div class="text-[9px] text-secondary-themed uppercase">Gestor</div><div class="font-bold text-emerald-500 text-[11px]">${esc(p.responsavel)}</div></div>${eq ? `<ul>${eq}</ul>` : ''}</li>` : (eq || '');
-            return `<div class="overflow-x-auto py-4"><div class="tree min-w-max text-xs"><ul><li>
-                <div class="card-node border-violet-500/50 !min-w-[180px]"><div class="text-[9px] text-secondary-themed uppercase">Cliente</div><div class="font-bold text-violet-500">${esc(p.cliente)}</div></div>
-                <ul><li><div class="card-node root !min-w-[200px]">${esc(p.nome)}<div class="text-[10px] text-white/70 font-normal mt-1">${p.cod} • ${p.progresso}%</div></div>
-                ${gestor ? `<ul>${gestor}</ul>` : ''}</li></ul></li></ul></div></div>`;
-        }
-
-        function htmlTermos(p) {
-            const linhas = p.termos.map((t, i) => `<tr><td class="p-3 text-primary-themed">${esc(t.descricao)}</td><td class="p-3 font-mono text-secondary-themed">${esc(t.data) || '—'}</td><td class="p-3"><button onclick="avancarItem('termos',${i})" class="badge-modern bg-${COR_ITEM[t.estado]}-500/15 text-${COR_ITEM[t.estado]}-500">${t.estado}</button></td><td class="p-3"><button onclick="removerItem('termos',${i})" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`).join('');
-            return `<div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed"><tr><th class="p-3">Termo</th><th class="p-3">Data</th><th class="p-3">Estado</th><th class="p-3"></th></tr></thead><tbody class="divide-y divide-themed">${linhas || '<tr><td colspan="4" class="p-4 text-center text-secondary-themed">Sem termos.</td></tr>'}</tbody></table></div>
-                <div class="flex gap-2 flex-wrap mt-4"><input id="ter-desc" class="flex-1 min-w-[200px] border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);" placeholder="Novo termo..."><input id="ter-data" type="date" class="border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);"><button onclick="adicionarItem('termos')" class="bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl"><i class="fas fa-plus"></i></button></div>`;
-        }
-
-        function htmlPlano(p) {
-            const linhas = p.plano.map((t, i) => `<tr><td class="p-3 text-primary-themed">${esc(t.acao)}</td><td class="p-3 text-secondary-themed">${esc(t.responsavel) || '—'}</td><td class="p-3 font-mono text-secondary-themed">${esc(t.prazo) || '—'}</td><td class="p-3"><button onclick="avancarItem('plano',${i})" class="badge-modern bg-${COR_ITEM[t.estado]}-500/15 text-${COR_ITEM[t.estado]}-500">${t.estado}</button></td><td class="p-3"><button onclick="removerItem('plano',${i})" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`).join('');
-            return `<div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed"><tr><th class="p-3">Ação</th><th class="p-3">Resp.</th><th class="p-3">Prazo</th><th class="p-3">Estado</th><th class="p-3"></th></tr></thead><tbody class="divide-y divide-themed">${linhas || '<tr><td colspan="5" class="p-4 text-center text-secondary-themed">Sem ações.</td></tr>'}</tbody></table></div>
-                <div class="flex gap-2 flex-wrap mt-4"><input id="pl-acao" class="flex-1 min-w-[200px] border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);" placeholder="Nova ação..."><input id="pl-resp" list="lista-colabs" class="w-44 border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);" placeholder="Responsável"><input id="pl-prazo" type="date" class="border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed" style="background: var(--bg-app);"><button onclick="adicionarItem('plano')" class="bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl"><i class="fas fa-plus"></i></button></div>`;
-        }
-
-        function adicionarItem(tipo) {
-            const p = getP(); if (!p) return;
-            const v = id => document.getElementById(id).value.trim();
-            if (tipo === 'termos') {
-                if (!v('ter-desc')) return mostrarToast('Descreve o termo', 'warn');
-                p.termos.push({ descricao: v('ter-desc'), data: v('ter-data'), estado: 'Pendente' });
-            } else {
-                if (!v('pl-acao')) return mostrarToast('Descreve a ação', 'warn');
-                p.plano.push({ acao: v('pl-acao'), responsavel: v('pl-resp'), prazo: v('pl-prazo'), estado: 'Por fazer' });
-            }
-            gravarProjeto(p); renderDGP();
-        }
-        function avancarItem(tipo, i) {
-            const p = getP(); if (!p) return;
-            const lista = ESTADOS_ITEM[tipo], it = p[tipo][i];
-            it.estado = lista[(lista.indexOf(it.estado) + 1) % lista.length];
-            gravarProjeto(p); renderDGP();
-        }
-        function removerItem(tipo, i) {
-            const p = getP(); if (!p || !confirm('Remover este item?')) return;
-            p[tipo].splice(i, 1); gravarProjeto(p); renderDGP();
-        }
-
-        function abrirModalProjeto(cod) {
-            const p = cod ? PROJETOS.find(x => x.cod === cod) : null;
-            const f = (id, v) => document.getElementById(id).value = v;
-            f('proj-cod', p?.cod || ''); f('proj-nome', p?.nome || ''); f('proj-cliente', p?.cliente || '');
-            f('proj-tipo', p?.tipo || 'DSE'); f('proj-estado', p?.estado || 'Em Curso');
-            f('proj-inicio', p?.inicio || ''); f('proj-entrega', p?.entrega || '');
-            f('proj-progresso', p?.progresso ?? 0); f('proj-resp', p?.responsavel || '');
-            document.getElementById('proj-prog-val').innerText = (p?.progresso ?? 0) + '%';
-            document.getElementById('proj-modal-titulo').innerText = p ? 'Editar Projecto' : 'Novo Projecto';
-            atualizarListaColabs();
-            const eq = p?.equipa || [];
-            document.getElementById('proj-equipa').innerHTML = COLABORADORES.length
-                ? COLABORADORES.map(c => `<label class="flex items-center gap-2 text-[11px] text-primary-themed"><input type="checkbox" value="${esc(c.nome)}" ${eq.includes(c.nome) ? 'checked' : ''}> ${esc(c.nome)} <span class="text-secondary-themed">— ${esc(c.cargo)}</span></label>`).join('')
-                : '<p class="text-[11px] text-secondary-themed">Sem colaboradores registados.</p>';
-            document.getElementById('modal-projeto').classList.remove('hidden');
-        }
-        function fecharModalProjeto() { document.getElementById('modal-projeto').classList.add('hidden'); }
-
-        async function guardarProjetoForm(ev) {
-            ev.preventDefault();
-            const g = id => document.getElementById(id).value.trim();
-            const dados = {
-                nome: g('proj-nome'), cliente: g('proj-cliente'), tipo: g('proj-tipo'), estado: g('proj-estado'),
-                inicio: g('proj-inicio'), entrega: g('proj-entrega'), progresso: +g('proj-progresso'), responsavel: g('proj-resp'),
-                equipa: [...document.querySelectorAll('#proj-equipa input:checked')].map(i => i.value)
-            };
-            if (dados.estado === 'Concluído') dados.progresso = 100;
-            let p = PROJETOS.find(x => x.cod === g('proj-cod'));
-            if (p) Object.assign(p, dados);
-            else {
-                const n = PROJETOS.reduce((m, x) => Math.max(m, parseInt(String(x.cod).split('-')[1]) || 0), 0) + 1;
-                p = { cod: 'PRJ-' + String(n).padStart(3, '0'), ...dados, termos: [], plano: [] };
-                PROJETOS.push(p); projetoSel = p.cod; abaDGP = 'org';
-            }
-            await gravarProjeto(p);
-            fecharModalProjeto(); renderDGP();
-            mostrarToast(`Projecto ${p.cod} guardado!`, 'success');
-        }
-
-        async function removerProjeto(cod) {
-            if (!confirm('Remover este projecto?')) return;
-            PROJETOS = PROJETOS.filter(p => p.cod !== cod);
-            if (projetoSel === cod) projetoSel = null;
-            localStorage.setItem(PROJ_KEY, JSON.stringify(PROJETOS));
-            try {
-                if (window.dbFirebase) { const { doc, deleteDoc } = await import(FS_URL); await deleteDoc(doc(window.dbFirebase, 'projetos', cod)); }
-            } catch (e) { console.error(e); }
-            renderDGP(); mostrarToast('Projecto removido', 'warn');
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           CARREGAR DADOS DA NUVEM
-           ═══════════════════════════════════════════════════════ */
-        async function carregarColaboradoresNuvem() {
-            if (!window.dbFirebase) return;
-            try {
-                const { collection, getDocs } = await import(FS_URL);
-                const snap = await getDocs(collection(window.dbFirebase, "colaboradores"));
-                if (snap.empty) return;
-                const tbody = document.getElementById('tabela-colaboradores-corpo');
-                if (tbody) tbody.innerHTML = '';
-                COLABORADORES = [];
-                snap.forEach(d => {
-                    const c = d.data();
-                    inserirLinhaColaborador(c.nome, c.tel, c.email, c.nif, c.cargo, c.foto, c.depto);
-                });
-                const kpi = document.getElementById('kpi-efetivo');
-                if (kpi) kpi.innerText = snap.size;
-            } catch (e) { console.error("Erro ao ler colaboradores da nuvem:", e); }
-        }
-
-        async function carregarObrasNuvem() {
-            if (!window.dbFirebase) return;
-            try {
-                const { collection, getDocs } = await import(FS_URL);
-                const querySnapshot = await getDocs(collection(window.dbFirebase, "obras"));
-                const tbody = document.getElementById('tabela-obras');
-                if (!tbody) return;
-
-                querySnapshot.forEach((doc) => {
-                    const o = doc.data();
-                    if (tbody.innerHTML.includes(o.ref)) return;
-                    const badgeEvid = o.numEvid > 0 ? `<button class="badge-modern bg-blue-500/15 text-blue-500"><i class="fas fa-paperclip"></i> ${o.numEvid}</button>` : `<span class="text-secondary-themed text-[10px]">—</span>`;
-                    const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-blue-500/5 transition-colors cursor-pointer';
-                    tr.onclick = () => abrirDetalhesObra(o.cliente, o.servico, o.tecnico, o.ref, o.dataHora, []);
-                    tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${o.ref}</td><td class="p-3 text-primary-themed font-medium">${o.cliente}</td><td class="p-3 text-secondary-themed">${o.servico}</td><td class="p-3 text-secondary-themed">${o.tecnico}</td><td class="p-3">${badgeEvid}</td><td class="p-3"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Execução</span></td>`;
-                    tbody.appendChild(tr);
-                });
-            } catch (e) { console.error("Erro ao ler obras da nuvem:", e); }
-        }
-
-        async function carregarRequisicoesNuvem() {
-            if (!window.dbFirebase) return;
-            try {
-                const { collection, getDocs } = await import(FS_URL);
-                const querySnapshot = await getDocs(collection(window.dbFirebase, "requisicoes"));
-                const tbody = document.getElementById('tabela-requisicoes');
-                if (!tbody) return;
-                tbody.innerHTML = '';
-                querySnapshot.forEach((doc) => {
-                    const r = doc.data();
-                    const tr = document.createElement('tr');
-                    tr.dataset.req = r.cod;
-                    tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${r.cod}</td><td class="p-3 text-primary-themed">${r.desc}</td><td class="p-3 text-secondary-themed text-[10px]">${r.materiais || ''}</td><td class="p-3 text-secondary-themed">${r.sol}</td><td class="p-3 td-estado">${r.estado}</td><td class="p-3 td-acoes"></td>`;
-                    tbody.appendChild(tr);
-                    atualizarAcoesRequisicao(tr);
-                });
-            } catch(e) { console.error(e); }
-        }
-
-        async function carregarInventarioNuvem() {
-            if (!window.dbFirebase) return;
-            try {
-                const { collection, getDocs } = await import(FS_URL);
-                const querySnapshot = await getDocs(collection(window.dbFirebase, "inventario"));
-                const tbody = document.getElementById('tabela-inventario');
-                if (!tbody) return;
-                tbody.innerHTML = '';
-                let totalItens = 0;
-                querySnapshot.forEach((doc) => {
-                    const e = doc.data();
-                    totalItens++;
-                    const pct = Math.min(100, Math.round((e.qtd / Math.max(e.min, 1)) * 100));
-                    let cor = 'emerald'; if (e.qtd < e.min * 0.5) cor = 'red'; else if (e.qtd < e.min) cor = 'amber';
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `<td class="p-3 text-primary-themed font-medium">${e.nome}</td><td class="p-3 text-secondary-themed">${e.cat}</td><td class="p-3 font-mono">${e.qtd}</td><td class="p-3 font-mono text-secondary-themed">${e.min}</td><td class="p-3 text-secondary-themed">${e.local}</td><td class="p-3"><div class="stock-bar w-20"><div class="bg-${cor}-500" style="width:${pct}%"></div></div></td><td class="p-3"><button onclick="removerLinha(this,'inv')" class="text-red-500"><i class="fas fa-trash"></i></button></td>`;
-                    tbody.appendChild(tr);
-                });
-                const elTotal = document.getElementById('inv-total-itens');
-                if (elTotal) elTotal.innerText = totalItens;
-            } catch(e) { console.error(e); }
-        }
-
-        async function carregarEPIsNuvem() {
-            if (!window.dbFirebase) return;
-            try {
-                const { collection, getDocs } = await import(FS_URL);
-                const querySnapshot = await getDocs(collection(window.dbFirebase, "epis"));
-                const tbody = document.getElementById('tabela-epi-geral');
-                if (!tbody) return;
-                tbody.innerHTML = '';
-                querySnapshot.forEach((doc) => {
-                    const e = doc.data();
-                    let cor = 'emerald'; if (e.qtd < e.min * 0.5) cor = 'red'; else if (e.qtd < e.min) cor = 'amber';
-                    const estado = e.qtd < e.min * 0.5 ? 'Crítico' : e.qtd < e.min ? 'Stock Baixo' : 'OK';
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `<td class="p-3 text-primary-themed font-medium">${e.nome}</td><td class="p-3 font-mono">${e.qtd}</td><td class="p-3 font-mono text-secondary-themed">${e.min}</td><td class="p-3 font-mono text-secondary-themed">${e.validade}</td><td class="p-3"><span class="badge-modern bg-${cor}-500/15 text-${cor}-500">${estado}</span></td><td class="p-3"><button onclick="removerLinha(this,'epi')" class="text-red-500"><i class="fas fa-trash"></i></button></td>`;
-                    tbody.appendChild(tr);
-                });
-            } catch(e) { console.error(e); }
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           INICIALIZAÇÃO
-           ═══════════════════════════════════════════════════════ */
         document.addEventListener('DOMContentLoaded', () => {
             verificarSessao();
             aplicarTema(localStorage.getItem('hanzolo_tema') || 'dark');
@@ -2905,13 +2568,9 @@
             configurarDropEvidencia();
             configurarPesquisaMapa();
             
-            carregarColaboradoresNuvem();
-            carregarProjetos(); 
-            carregarObrasNuvem();
-            carregarRequisicoesNuvem();
-            carregarInventarioNuvem();
-            carregarEPIsNuvem();
-
+            // Inicializar dados e renderizações
+            renderOrganogramaRH();
+            
             ['modal-colaborador','modal-requisicao','modal-intervencao','modal-tecnico-dse','modal-alerta','modal-epi','modal-epc','modal-inventario','modal-importar','modal-projeto','modal-gestao-frotas','modal-auditoria','modal-fiscalizacao','modal-viatura'].forEach(id => {
                 const m = document.getElementById(id);
                 if (m) m.addEventListener('click', (e) => { if (e.target.id === id) m.classList.add('hidden'); });
@@ -2936,7 +2595,6 @@
             setTimeout(() => mostrarToast('Bem-vindo ao HANZOLO OPS 24-7', 'info'), 800);
         });
 
-        // Observador de tema
         new MutationObserver(() => {
             const cor = corGrafico(), grid = corGrid();
             [graficoLinhas, graficoBarras, graficoFluxoStock].forEach(g => {
