@@ -1418,6 +1418,8 @@
         /* ═══════════════════════════════════════════════════════
            CONSTANTES GLOBAIS E VARIÁVEIS DE ESTADO
            ═══════════════════════════════════════════════════════ */
+                import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         const FS_URL = "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         let COLABORADORES = [];
         let epiContextoAtual = 'geral';
@@ -1445,11 +1447,12 @@
             outros:     { nome: 'POR CLASSIFICAR', sub: 'Sem departamento',         cor: 'slate',   ic: 'fa-user' }
         };
 
-        const VIATURAS = [
-            { id: 'H-01', nome: 'Toyota Hilux', matricula: 'LD-88-21-GX', cor: 'Branco', condutor: 'Mateus Silva', pos: { lat: -8.9174, lng: 13.1836 }, status: 'Em Movimento', velocidade: 65, rota: 'Talatona → Viana', corHex: '#3b82f6' },
-            { id: 'H-02', nome: 'Nissan Hardbody', matricula: 'LD-12-44-HY', cor: 'Cinza', condutor: 'João Pedro', pos: { lat: -8.9070, lng: 13.1830 }, status: 'Estacionado', velocidade: 0, rota: 'Base Talatona', corHex: '#10b981' },
-            { id: 'H-03', nome: 'Mitsubishi L200', matricula: 'LD-55-90-ZZ', cor: 'Azul', condutor: 'António Banza', pos: { lat: -8.9050, lng: 13.3700 }, status: 'Em Intervenção', velocidade: 42, rota: 'Viana Industrial', corHex: '#f59e0b' }
-        ];
+        // Altera de const para let
+let VIATURAS = [
+    { id: 'H-01', nome: 'Toyota Hilux', matricula: 'LD-88-21-GX', cor: 'Branco', condutor: 'Mateus Silva', pos: { lat: -8.9174, lng: 13.1836 }, status: 'Em Movimento', velocidade: 65, rota: 'Talatona → Viana', corHex: '#3b82f6' },
+    { id: 'H-02', nome: 'Nissan Hardbody', matricula: 'LD-12-44-HY', cor: 'Cinza', condutor: 'João Pedro', pos: { lat: -8.9070, lng: 13.1830 }, status: 'Estacionado', velocidade: 0, rota: 'Base Talatona', corHex: '#10b981' },
+    { id: 'H-03', nome: 'Mitsubishi L200', matricula: 'LD-55-90-ZZ', cor: 'Azul', condutor: 'António Banza', pos: { lat: -8.9050, lng: 13.3700 }, status: 'Em Intervenção', velocidade: 42, rota: 'Viana Industrial', corHex: '#f59e0b' }
+];
 
         const PROJ_KEY = 'hanzolo_projetos';
         let PROJETOS = [], projetoSel = null, abaDGP = 'org', graficoFluxo = null;
@@ -1485,6 +1488,15 @@
 
                 await signInWithEmailAndPassword(auth, email, senha);
                 document.getElementById('ecra-login').classList.add('hidden');
+                // Iniciar a app apenas aqui
+                renderizarAlertas();
+                configurarImportacao();
+                configurarDropFoto();
+                configurarDropEvidencia();
+                configurarPesquisaMapa();
+                carregarColaboradoresNuvem();
+                carregarProjetos(); 
+                // ... etc
                 mostrarToast('Bem-vindo de volta, ' + email.split('@')[0], 'success');
             } catch (error) {
                 console.error("ERRO DE LOGIN:", error);
@@ -1746,19 +1758,96 @@
         function fecharModalInventario() { document.getElementById('modal-inventario').classList.add('hidden'); document.getElementById('form-inventario').reset(); }
         
         // Print 6 - Abrir Gestão de Frotas
-        function abrirModalGestaoFrotas() {
-            const tbody = document.getElementById('tabela-gestao-frotas');
-            tbody.innerHTML = VIATURAS.map(v => `
-                <tr>
-                    <td class="p-3 font-mono text-primary-themed">${v.id}</td>
-                    <td class="p-3 font-mono text-blue-500">${v.matricula}</td>
-                    <td class="p-3 text-primary-themed">${v.nome} (${v.cor})</td>
-                    <td class="p-3 text-secondary-themed">${v.condutor}</td>
-                    <td class="p-3"><span class="badge-modern bg-${v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber'}-500/15 text-${v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber'}-500">${v.status}</span></td>
-                    <td class="p-3"><button onclick="mostrarToast('Edição em breve', 'info')" class="text-blue-500"><i class="fas fa-pen"></i></button></td>
-                </tr>
-            `).join('');
-            document.getElementById('modal-gestao-frotas').classList.remove('hidden');
+                        function abrirModalViatura(id = null) {
+            // Como não tens o HTML do modal-viatura, cria-o dinamicamente aqui
+            let modal = document.getElementById('modal-viatura');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'modal-viatura';
+                modal.className = 'hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[9999] flex items-center justify-center p-4';
+                modal.innerHTML = `
+                    <div class="modal-panel border-themed border rounded-3xl w-full max-w-md shadow-2xl" style="background: var(--bg-card);">
+                        <div class="p-5 border-b border-themed flex justify-between items-center">
+                            <h3 class="font-bold text-sm text-primary-themed uppercase">${id ? 'Editar Viatura' : 'Adicionar Viatura'}</h3>
+                            <button onclick="document.getElementById('modal-viatura').classList.add('hidden')" class="w-8 h-8 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500"><i class="fas fa-xmark"></i></button>
+                        </div>
+                        <form onsubmit="guardarViatura(event, '${id || ''}')" class="p-5 space-y-4 text-xs">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div><label class="block text-secondary-themed mb-1 text-[10px] uppercase">Matrícula *</label><input type="text" id="viat-matricula" required class="w-full border-themed border rounded-xl px-3 py-2 text-primary-themed" style="background: var(--bg-app);"></div>
+                                <div><label class="block text-secondary-themed mb-1 text-[10px] uppercase">Modelo *</label><input type="text" id="viat-modelo" required class="w-full border-themed border rounded-xl px-3 py-2 text-primary-themed" style="background: var(--bg-app);"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div><label class="block text-secondary-themed mb-1 text-[10px] uppercase">Cor *</label><input type="text" id="viat-cor" required class="w-full border-themed border rounded-xl px-3 py-2 text-primary-themed" style="background: var(--bg-app);"></div>
+                                <div><label class="block text-secondary-themed mb-1 text-[10px] uppercase">Condutor *</label><input type="text" id="viat-condutor" required class="w-full border-themed border rounded-xl px-3 py-2 text-primary-themed" style="background: var(--bg-app);"></div>
+                            </div>
+                            <div><label class="block text-secondary-themed mb-1 text-[10px] uppercase">Estado *</label>
+                                <select id="viat-estado" class="w-full border-themed border rounded-xl px-3 py-2 text-primary-themed" style="background: var(--bg-app);">
+                                    <option value="Em Movimento">Em Movimento</option>
+                                    <option value="Estacionado">Estacionado</option>
+                                    <option value="Em Intervenção">Em Intervenção</option>
+                                </select>
+                            </div>
+                            <div class="pt-3 flex justify-end gap-2">
+                                <button type="button" onclick="document.getElementById('modal-viatura').classList.add('hidden')" class="px-4 py-2 border rounded-xl font-semibold text-secondary-themed">Cancelar</button>
+                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-xl font-semibold">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+
+            // Preencher dados se for editar
+            if (id) {
+                const v = VIATURAS.find(x => x.id === id);
+                if (v) {
+                    document.getElementById('viat-matricula').value = v.matricula;
+                    document.getElementById('viat-modelo').value = v.nome;
+                    document.getElementById('viat-cor').value = v.cor;
+                    document.getElementById('viat-condutor').value = v.condutor;
+                    document.getElementById('viat-estado').value = v.status;
+                }
+            } else {
+                document.getElementById('viat-matricula').value = '';
+                document.getElementById('viat-modelo').value = '';
+                document.getElementById('viat-cor').value = '';
+                document.getElementById('viat-condutor').value = '';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function guardarViatura(event, id) {
+            event.preventDefault();
+            const matricula = document.getElementById('viat-matricula').value;
+            const modelo = document.getElementById('viat-modelo').value;
+            const cor = document.getElementById('viat-cor').value;
+            const condutor = document.getElementById('viat-condutor').value;
+            const estado = document.getElementById('viat-estado').value;
+
+            if (id) {
+                // Editar
+                const idx = VIATURAS.findIndex(x => x.id === id);
+                if (idx > -1) {
+                    VIATURAS[idx] = { ...VIATURAS[idx], matricula, nome: modelo, cor, condutor, status: estado };
+                }
+            } else {
+                // Adicionar
+                const novoId = 'H-0' + (VIATURAS.length + 1);
+                VIATURAS.push({
+                    id: novoId, nome: modelo, matricula, cor, condutor, status: estado,
+                    pos: { lat: -8.9070 + (Math.random()-0.5)*0.01, lng: 13.2400 + (Math.random()-0.5)*0.01 },
+                    velocidade: estado === 'Em Movimento' ? 60 : 0, rota: 'Nova Rota', corHex: '#3b82f6'
+                });
+            }
+
+            document.getElementById('modal-viatura').classList.add('hidden');
+            abrirModalGestaoFrotas(); // Recarrega a lista
+            if (typeof inicializarMapa === 'function') {
+                // Limpa e recria os marcadores no mapa (simplificado)
+                inicializarMapa(); 
+            }
+            mostrarToast('Viatura guardada com sucesso!', 'success');
         }
         function fecharModalGestaoFrotas() { document.getElementById('modal-gestao-frotas').classList.add('hidden'); }
 
@@ -1819,11 +1908,12 @@
             fecharModalInventario();
             mostrarToast(`Item "${nome}" adicionado!`, 'success');
 
-            if (window.dbFirebase) {
-                import(FS_URL).then(({ collection, addDoc }) => {
-                    addDoc(collection(window.dbFirebase, "inventario"), { nome, cat, qtd, min, local });
-                });
-            }
+            // Substitui o bloco final por:
+if (window.dbFirebase) {
+    addDoc(collection(window.dbFirebase, "inventario"), { nome, cat, qtd, min, local })
+    .then(() => console.log("Guardado na nuvem!"))
+    .catch(err => console.error("Erro ao guardar:", err));
+}
         }
       
         function atualizarKPIsInventario() {
@@ -1882,11 +1972,23 @@
             mostrarToast(`Requisição ${cod} → ${novoEstado}`, 'success');
         }
         
-        function removerLinha(btn, tipo) {
-            if (!confirm('Remover este registo?')) return;
+                function removerLinha(btn, tipo) {
+            if (!confirm('Tem a certeza que deseja remover este registo? Esta ação não pode ser desfeita.')) return;
+            
+            // 1. Apaga visualmente
             btn.closest('tr').remove();
+            
+            // 2. Atualiza KPIs se for inventário
             if (tipo === 'inv') atualizarKPIsInventario();
-            mostrarToast('Registo removido', 'warn');
+
+            // 3. Apaga do localStorage (Opcional: Aqui deverias adicionar a lógica para apagar do Firebase também)
+            // Nota: Como o teu código atual não guarda um ID único para as linhas do localStorage, 
+            // a remoção direta do localStorage pode ser complexa. O ideal é recarregar a tabela.
+            
+            mostrarToast('Registo removido da interface', 'warn');
+            
+            // NOTA IMPORTANTE: Para apagar do Firebase de forma correta, precisas de ter o ID do documento.
+            // Como estamos a melhorar sem destruir, sugiro que, para já, garantes que o utilizador sabe que apagou da vista.
         }
 
         function guardar(chave, obj) {
@@ -1971,8 +2073,10 @@
                 import(FS_URL).then(({ collection, addDoc }) => {
                     addDoc(collection(window.dbFirebase, "colaboradores"), { nome, tel, email, nif, cargo, depto, foto: fotoColaboradorBase64, dataRegisto: new Date().toISOString() })
                     .then(() => mostrarToast('Guardado na nuvem!', 'success'))
-                    .catch(err => mostrarToast('Guardado localmente (sem internet)', 'warn'));
-                });
+                    .catch(err => {
+    console.error(err);
+    mostrarToast('Erro de ligação. Guardado apenas no dispositivo.', 'error');
+});
             }
 
             fecharModalColaborador();
@@ -2713,7 +2817,7 @@
         /* ═══════════════════════════════════════════════════════
            INICIALIZAÇÃO
            ═══════════════════════════════════════════════════════ */
-        document.addEventListener('DOMContentLoaded', () => {
+       document.addEventListener('DOMContentLoaded', () => {
             verificarSessao();
             aplicarTema(localStorage.getItem('hanzolo_tema') || 'dark');
             atualizarRelogio();
