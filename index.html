@@ -49,14 +49,18 @@
         window.firebaseConfig = firebaseConfig;
     </script>
 
-    <script type="module">
+        <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { initializeFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const app = initializeApp(window.firebaseConfig);
         const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
+        const auth = getAuth(app);
         
         window.dbFirebase = db;
+        window.firebaseAuth = auth;
+        window.firebaseOnAuth = onAuthStateChanged;
         console.log("Firebase ligado com sucesso!");
     </script>
 
@@ -75,6 +79,34 @@
             --border: #e2e8f0; --text-primary: #0f172a; --text-secondary: #64748b;
             --accent: #2563eb; --map-bg: #e2e8f0;
         }
+        /* Melhorias Tipográficas */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Títulos principais */
+h2 { 
+    letter-spacing: -0.02em; /* Deixa as letras grandes mais juntas e elegantes */
+    font-weight: 800;
+}
+
+/* Subtítulos e Cabeçalhos de Tabelas */
+h3, thead th { 
+    letter-spacing: 0.05em; /* Espaça ligeiramente maiúsculas */
+}
+
+/* Textos de Tabelas e Parágrafos */
+table td, p {
+    font-size: 13px; /* Em vez de usar text-xs (12px), usa 13px para melhor leitura em ecrãs */
+    line-height: 1.6; 
+}
+
+/* Números (KPIs, Quantidades) */
+.font-mono, .kpi-number {
+    letter-spacing: -0.03em;
+    font-weight: 600;
+}
         body { background: var(--bg-app); color: var(--text-primary); transition: background 0.3s ease, color 0.3s ease; }
         .card-themed { background: var(--bg-card); border: 1px solid var(--border); transition: all 0.3s ease; }
         .card-themed:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(59,130,246,0.15); }
@@ -220,6 +252,7 @@
         </div>
     </div>
 
+    <div id="app-content" class="hidden flex flex-col min-h-screen">
     <!-- CABEÇALHO DE IMPRESSÃO -->
     <div class="print-header bg-white text-gray-900 px-10 py-6 border-b-2 border-blue-600 items-center justify-between">
         <div class="flex items-center gap-6">
@@ -802,69 +835,102 @@
             </div>
 
             <!-- TAB: FROTAS -->
-            <div id="tab-frotas" class="tab-content hidden space-y-6">
-                <div class="flex justify-between items-center pb-4 border-b border-themed flex-wrap gap-3">
-                    <div>
-                        <h2 class="text-2xl font-black tracking-tight text-primary-themed">Frotas &amp; GPS em Tempo Real</h2>
-                        <p class="text-xs text-secondary-themed mt-1">Monitorização de viaturas, rotas e gestão de motoristas.</p>
-                    </div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <button onclick="abrirModalGestaoFrotas()" class="bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-lg flex items-center gap-2">
-                            <i class="fas fa-cogs"></i> Gestão de Viaturas
-                        </button>
-                        <button onclick="centralizarTodasViaturas()" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2">
-                            <i class="fas fa-crosshairs"></i> Centralizar Tudo
-                        </button>
-                    </div>
-                </div>
+            <div id="tab-frotas" class="tab-content hidden space-y-4">
+    <!-- Cabeçalho -->
+    <div class="flex justify-between items-center pb-4 border-b border-themed flex-wrap gap-3">
+        <div>
+            <h2 class="text-2xl font-black tracking-tight text-primary-themed">Frotas & GPS em Tempo Real</h2>
+            <p class="text-sm text-secondary-themed mt-1">Monitorização de viaturas, rotas e gestão de motoristas.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="abrirModalGestaoFrotas()" class="bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2">
+                <i class="fas fa-cogs"></i> Gestão
+            </button>
+            <button onclick="centralizarTodasViaturas()" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2">
+                <i class="fas fa-crosshairs"></i> Centralizar
+            </button>
+        </div>
+    </div>
 
-                <div class="grid grid-cols-1 xl:grid-cols-4 gap-4">
-                    <div class="xl:col-span-3 relative">
-                        <div id="mapa-frotas" class="relative overflow-hidden">
-                            <div id="mapa-fallback" class="hidden w-full h-full flex flex-col items-center justify-center p-8 text-center" style="background: var(--bg-app);">
-                                <i class="fas fa-map-location-dot text-4xl text-blue-500 mb-4"></i>
-                                <p class="text-sm font-bold text-primary-themed">A carregar mapa…</p>
-                            </div>
-                        </div>
-                        
-                        <div id="uber-panel" class="hidden absolute bottom-4 left-4 right-4 backdrop-blur-xl border-themed border rounded-2xl p-4 shadow-2xl z-[500] modal-panel" style="background: color-mix(in srgb, var(--bg-card) 92%, transparent);">
-                            <div class="flex justify-between items-start gap-4">
-                                <div class="flex items-start gap-3 flex-1">
-                                    <div id="uber-icon" class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-lg flex-shrink-0" style="background: #3b82f6;">
-                                        <i class="fas fa-truck"></i>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-2 flex-wrap">
-                                            <h4 id="uber-titulo" class="font-black text-primary-themed text-sm">—</h4>
-                                            <span id="uber-estado" class="badge-modern bg-emerald-500/15 text-emerald-500">—</span>
-                                        </div>
-                                        <p id="uber-info" class="text-[11px] text-secondary-themed mt-1">—</p>
-                                        <div id="uber-detalhes" class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 pt-3 border-t border-themed"></div>
-                                    </div>
-                                </div>
-                                <button onclick="fecharUberPanel()" class="w-8 h-8 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500 flex-shrink-0"><i class="fas fa-xmark"></i></button>
-                            </div>
-                        </div>
-
-                        <div class="absolute top-4 right-4 flex flex-col gap-2 z-[400]">
-                            <button onclick="mapaZoomIn()" class="w-10 h-10 rounded-xl backdrop-blur-xl border border-themed flex items-center justify-center text-primary-themed hover:bg-blue-500/15 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 90%, transparent);"><i class="fas fa-plus"></i></button>
-                            <button onclick="mapaZoomOut()" class="w-10 h-10 rounded-xl backdrop-blur-xl border border-themed flex items-center justify-center text-primary-themed hover:bg-blue-500/15 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 90%, transparent);"><i class="fas fa-minus"></i></button>
-                            <button onclick="mapaMinhaLocalizacao()" class="w-10 h-10 rounded-xl backdrop-blur-xl border border-themed flex items-center justify-center text-blue-500 hover:bg-blue-500/15 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 90%, transparent);"><i class="fas fa-location-crosshairs"></i></button>
-                        </div>
-                        
-                        <div class="absolute top-4 left-4 right-20 z-[400]">
-                            <div class="backdrop-blur-xl border border-themed rounded-2xl px-4 py-3 flex items-center gap-3 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 92%, transparent);">
-                                <i class="fas fa-magnifying-glass text-secondary-themed text-sm"></i>
-                                <input id="mapa-search" type="text" placeholder="Pesquisar viatura, matrícula ou condutor…" class="bg-transparent outline-none text-xs text-primary-themed flex-1">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-3 xl:max-h-[600px] xl:overflow-y-auto pr-1">
-                        <!-- Cards de viaturas preenchidos dinamicamente -->
-                    </div>
+    <!-- Layout Principal (Mapa + Lista Lateral) -->
+    <div class="grid grid-cols-1 xl:grid-cols-4 gap-4">
+        <!-- Mapa -->
+        <div class="xl:col-span-3 relative h-[500px]">
+            <div id="mapa-frotas" class="w-full h-full rounded-2xl border border-themed relative z-0"></div>
+            
+            <!-- Controlos do Mapa -->
+            <div class="absolute top-4 right-4 flex flex-col gap-2 z-[400]">
+                <button onclick="mapaZoomIn()" class="w-10 h-10 rounded-xl backdrop-blur-xl border border-themed flex items-center justify-center text-primary-themed hover:bg-blue-500/15 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 90%, transparent);"><i class="fas fa-plus"></i></button>
+                <button onclick="mapaZoomOut()" class="w-10 h-10 rounded-xl backdrop-blur-xl border border-themed flex items-center justify-center text-primary-themed hover:bg-blue-500/15 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 90%, transparent);"><i class="fas fa-minus"></i></button>
+            </div>
+            
+            <!-- Barra de Pesquisa -->
+            <div class="absolute top-4 left-4 right-20 z-[400]">
+                <div class="backdrop-blur-xl border border-themed rounded-2xl px-4 py-3 flex items-center gap-3 shadow-lg" style="background: color-mix(in srgb, var(--bg-card) 92%, transparent);">
+                    <i class="fas fa-magnifying-glass text-secondary-themed text-sm"></i>
+                    <input id="mapa-search" type="text" placeholder="Pesquisar viatura, matrícula..." class="bg-transparent outline-none text-xs text-primary-themed flex-1">
                 </div>
             </div>
+
+                        <!-- Painel Uber (Detalhes da Viatura selecionada) -->
+            <div id="uber-panel" class="hidden absolute bottom-4 left-4 right-4 backdrop-blur-xl border-themed border rounded-2xl p-4 shadow-2xl z-[500] modal-panel" style="background: color-mix(in srgb, var(--bg-card) 92%, transparent);">
+                
+                <div class="flex justify-between items-start gap-4">
+                    <div class="flex items-start gap-3 flex-1">
+                        <div id="uber-icon" class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-lg flex-shrink-0" style="background: #3b82f6;">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h4 id="uber-titulo" class="font-black text-primary-themed text-sm">—</h4>
+                                <span id="uber-estado" class="badge-modern bg-emerald-500/15 text-emerald-500">—</span>
+                            </div>
+                            <p id="uber-info" class="text-[11px] text-secondary-themed mt-1">—</p>
+                            <div id="uber-detalhes" class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 pt-3 border-t border-themed"></div>
+                        </div>
+                    </div>
+                    <button onclick="fecharUberPanel()" class="w-8 h-8 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500 flex-shrink-0"><i class="fas fa-xmark"></i></button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Lista Lateral de Viaturas (O teu desenho à direita) -->
+        <div class="xl:col-span-1 space-y-3 max-h-[500px] overflow-y-auto pr-1" id="lista-cartoes-viaturas">
+            <!-- Preenchido via JavaScript -->
+        </div>
+    </div>
+
+    <!-- Secção de Análise (Os teus desenhos em baixo) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <!-- Gráfico de Rotas -->
+        <div class="card-themed p-5 rounded-2xl">
+            <h3 class="text-xs font-bold text-primary-themed uppercase tracking-wider mb-4">Distribuição de Rotas</h3>
+            <div class="h-48"><canvas id="graficoRotas"></canvas></div>
+        </div>
+        
+        <!-- Gráfico de Incidentes -->
+        <div class="card-themed p-5 rounded-2xl">
+            <h3 class="text-xs font-bold text-primary-themed uppercase tracking-wider mb-4">Incidentes (Últimos 6 meses)</h3>
+            <div class="h-48"><canvas id="graficoIncidentes"></canvas></div>
+        </div>
+
+        <!-- KPI: Viatura com mais troço -->
+        <div class="card-themed p-5 rounded-2xl flex flex-col justify-between">
+            <div>
+                <h3 class="text-xs font-bold text-primary-themed uppercase tracking-wider mb-2">Viatura Mais Ativa</h3>
+                <p class="text-[10px] text-secondary-themed">Maior distância percorrida no mês</p>
+            </div>
+            <div class="my-auto py-4 text-center">
+                <div class="w-16 h-16 mx-auto rounded-full bg-blue-500/15 flex items-center justify-center mb-3">
+                    <i class="fas fa-truck-fast text-2xl text-blue-500"></i>
+                </div>
+                <h4 class="text-xl font-black text-primary-themed" id="kpi-viatura-top">Toyota Hilux</h4>
+                <p class="text-sm font-mono text-emerald-500 mt-1" id="kpi-viatura-km">1,245 km</p>
+            </div>
+        </div>
+    </div>
+</div>
 
             <!-- TAB: COMPRAS -->
             <div id="tab-compras" class="tab-content hidden space-y-6">
@@ -962,6 +1028,7 @@
 
         </main>
     </div>
+ </div>
 
     <!-- MODAIS -->
     
@@ -1616,17 +1683,23 @@
             }
         }
 
-        async function verificarSessao() {
-            try {
-                const { getApps } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
-                const { getAuth, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
-                const app = getApps()[0];
-                if (!app) return;
-                onAuthStateChanged(getAuth(app), (user) => {
-                    // Como o login está desativado, não fazemos toggle aqui.
-                });
-            } catch (e) { console.log("Erro ao verificar sessão", e); }
+// Função para proteger a app
+function verificarSessao() {
+    if(!window.firebaseAuth) return;
+    window.firebaseOnAuth(window.firebaseAuth, (user) => {
+        const ecraLogin = document.getElementById('ecra-login');
+        const appContent = document.getElementById('app-content');
+
+        if (user) {
+            if(ecraLogin) ecraLogin.classList.add('hidden');
+            if(appContent) appContent.classList.remove('hidden');
+        } else {
+            if(ecraLogin) ecraLogin.classList.remove('hidden');
+            if(appContent) appContent.classList.add('hidden');
         }
+    });
+    }
+
 
         function aplicarTema(tema) {
             const html = document.documentElement;
@@ -1674,14 +1747,21 @@
             if (tabId === 'dgp') setTimeout(() => { renderDGP(); graficoFluxo?.resize(); }, 60);
             if (tabId === 'rh' || tabId === 'organograma') renderOrganogramaRH();
 
-            if (tabId === 'frotas') {
-                setTimeout(() => {
-                    if (window.mapaLeaflet) window.mapaLeaflet.invalidateSize();
-                    else if (typeof inicializarMapa === 'function') inicializarMapa();
-                }, 350);
+                if (tabId === 'frotas') {
+        setTimeout(() => {
+            if (window.mapaLeaflet) window.mapaLeaflet.invalidateSize();
+            else inicializarMapa();
+            
+            renderizarCartoesViaturas();
+            
+            // Inicializa gráficos apenas se ainda não existirem
+            if(!window.frotasGraficosInit) {
+                inicializarGraficosFrotas();
+                window.frotasGraficosInit = true;
             }
-        }
-
+        }, 300);
+    }
+}
         function toggleSidebarMobile() {
             const s = document.getElementById('sidebar');
             const o = document.getElementById('sidebar-overlay');
@@ -2243,56 +2323,32 @@
         function fecharDetalhesObra() { document.getElementById('modal-detalhes-obra').classList.add('hidden'); }
 
         async function exportarObraPDF() {
-            if (!obraAtualAberta) return;
-            const btn = document.getElementById('btn-exportar-pdf-obra');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> A gerar...';
-            
-            const { cliente, servico, tecnico, ref, data, evidencias } = obraAtualAberta;
-            let fotos = evidencias;
-            if (!fotos || fotos.length === 0) {
-                const salvas = localStorage.getItem('hanzolo_evid_' + ref.replace('#', '_'));
-                if (salvas) fotos = JSON.parse(salvas);
-            }
+    if (!obraAtualAberta) return;
+    const btn = document.getElementById('btn-exportar-pdf-obra');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> A gerar...';
+    
+    const elemento = document.querySelector('#modal-detalhes-obra .modal-panel');
 
-            document.getElementById('pdf-ref').innerText = ref;
-            document.getElementById('pdf-cliente').innerText = cliente;
-            document.getElementById('pdf-data').innerText = data;
-            document.getElementById('pdf-tecnico').innerText = tecnico;
-            document.getElementById('pdf-servico').innerText = servico;
-            document.getElementById('pdf-descricao').innerText = "Serviço executado conforme solicitado. Verificações realizadas e sistema testado em pleno funcionamento.";
+    try {
+        const canvas = await html2canvas(elemento, { scale: 2, useCORS: true, backgroundColor: '#1e293b' });
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`Relatorio_${obraAtualAberta.ref.replace('#', '')}_${obraAtualAberta.cliente}.pdf`);
+        mostrarToast('PDF gerado com sucesso!', 'success');
+    } catch (error) {
+        console.error(error);
+        mostrarToast('Erro ao gerar o PDF.', 'error');
+    } finally {
+        btn.innerHTML = '<i class="fas fa-file-pdf"></i> Descarregar PDF';
+    }
+}
 
-            const galeriaPdf = document.getElementById('pdf-galeria');
-            const containerFotos = document.getElementById('pdf-fotos-container');
-            if (fotos && fotos.length > 0) {
-                containerFotos.style.display = 'block';
-                galeriaPdf.innerHTML = fotos.filter(f => f.tipo === 'image').map(f => `<img src="${f.base64}" style="width: 180px; height: 130px; object-fit: cover; border: 1px solid #ccc;">`).join('');
-            } else {
-                containerFotos.style.display = 'none';
-            }
-
-            const elemento = document.getElementById('pdf-folha-obra');
-            elemento.classList.remove('hidden');
-
-            try {
-                const canvas = await html2canvas(elemento, { scale: 2, useCORS: true });
-                const imgData = canvas.toDataURL('image/png');
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save(`Relatorio_${ref.replace('#', '')}_${cliente}.pdf`);
-                mostrarToast('PDF gerado com sucesso!', 'success');
-            } catch (error) {
-                console.error(error);
-                mostrarToast('Erro ao gerar o PDF.', 'error');
-            } finally {
-                elemento.classList.add('hidden');
-                btn.innerHTML = '<i class="fas fa-file-pdf"></i> Descarregar PDF';
-            }
-        }
-
+        
         function adicionarTecnicoDSE(event) {
             event.preventDefault();
             const nome = document.getElementById('dse-nome').value.trim();
@@ -2419,6 +2475,65 @@
             if (graficoLinhas) { graficoLinhas.data.datasets[0].data = graficoLinhas.data.datasets[0].data.map(v => Math.max(5, Math.min(40, v + Math.floor(Math.random() * 7 - 3)))); graficoLinhas.update('none'); }
             if (graficoBarras) { graficoBarras.data.datasets[0].data = graficoBarras.data.datasets[0].data.map(v => Math.max(30, Math.min(120, v + Math.floor(Math.random() * 11 - 5)))); graficoBarras.update('none'); }
         }
+
+        // --- INÍCIO DO CÓDIGO NOVO ---
+function inicializarGraficosFrotas() {
+    if(!window.Chart) return;
+    
+    // 1. Gráfico de Rotas (Donut)
+    const ctxRotas = document.getElementById('graficoRotas');
+    if(ctxRotas) {
+        new Chart(ctxRotas, {
+            type: 'doughnut',
+            data: {
+                labels: ['Talatona', 'Viana', 'Ingombota', 'Kilamba'],
+                datasets: [{ data: [40, 25, 20, 15], backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'], borderWidth: 0 }]
+            },
+            options: { cutout: '70%', plugins: { legend: { position: 'right', labels: { color: corGrafico(), font: { size: 10 } } } } }
+        });
+    }
+
+    // 2. Gráfico de Incidentes (Linhas)
+    const ctxIncidentes = document.getElementById('graficoIncidentes');
+    if(ctxIncidentes) {
+        new Chart(ctxIncidentes, {
+            type: 'line',
+            data: {
+                labels: ['Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
+                datasets: [{ label: 'Incidentes', data: [2, 0, 4, 1, 3, 1], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true, tension: 0.4 }]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: corGrafico() } }, y: { grid: { color: corGrid() }, ticks: { color: corGrafico(), stepSize: 1 } } } }
+        });
+    }
+}
+
+function renderizarCartoesViaturas() {
+    const container = document.getElementById('lista-cartoes-viaturas');
+    if(!container) return;
+
+    container.innerHTML = VIATURAS.map(v => {
+        const corStatus = v.status === 'Em Movimento' ? 'emerald' : v.status === 'Estacionado' ? 'blue' : 'amber';
+        return `
+            <div onclick="focarViatura('${v.id}')" class="card-themed p-4 rounded-2xl cursor-pointer hover:border-blue-500/50 transition-all">
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white" style="background: ${v.corHex}">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-primary-themed">${v.id} - ${v.nome}</h4>
+                            <p class="text-[10px] text-secondary-themed font-mono">${v.matricula}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-themed">
+                    <span class="text-[10px] text-secondary-themed"><i class="fas fa-user mr-1"></i> ${v.condutor}</span>
+                    <span class="badge-modern bg-${corStatus}-500/15 text-${corStatus}-500">${v.status}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
         function temaMapaLeaflet() { return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'; }
         
@@ -2889,6 +3004,7 @@
            INICIALIZAÇÃO
            ═══════════════════════════════════════════════════════ */
         document.addEventListener('DOMContentLoaded', () => {
+            verificarSessao();
             // Como o login está escondido, iniciamos a app imediatamente
             aplicarTema(localStorage.getItem('hanzolo_tema') || 'dark');
             atualizarRelogio();
