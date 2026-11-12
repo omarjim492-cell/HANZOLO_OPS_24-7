@@ -2972,6 +2972,157 @@ function renderizarCartoesViaturas() {
             atualizarTemaMapa();
         }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     </script>
-    <script type="module" src="./requisicoes.js"></script>
+        <script type="module">
+    import {
+      collection, addDoc, updateDoc, deleteDoc, doc,
+      onSnapshot, serverTimestamp, runTransaction
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    /* ---------- Camada de dados ---------- */
+    const dbx = () => {
+      if (!window.dbFirebase) throw new Error("Firestore não inicializado");
+      return window.dbFirebase;
+    };
+    const uid = () => window.firebaseAuth?.currentUser?.uid ?? null;
+
+    const criar = (col, data) =>
+      addDoc(collection(dbx(), col), { ...data, criadoPor: uid(), criadoEm: serverTimestamp() });
+    const atualizar = (col, id, data) =>
+      updateDoc(doc(dbx(), col, id), { ...data, atualizadoPor: uid(), atualizadoEm: serverTimestamp() });
+    const remover = (col, id) => deleteDoc(doc(dbx(), col, id));
+    const ouvir = (col, onDados, onErro) =>
+      onSnapshot(collection(dbx(), col),
+        (snap) => onDados(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+        (err) => { console.error('Erro ao ouvir ' + col, err); onErro?.(err); });
+
+    async function proximoCodigo(prefixo, ano = new Date().getFullYear()) {
+      const ref = doc(dbx(), "contadores", prefixo + "-" + ano);
+      const n = await runTransaction(dbx(), async (tx) => {
+        const snap = await tx.get(ref);
+        const prox = (snap.exists() ? snap.data().n : 0) + 1;
+        tx.set(ref, { n: prox });
+        return prox;
+      });
+      return prefixo + "-" + ano + "-" + String(n).padStart(3, "0");
+    }
+
+    /* ---------- Módulo Requisições ---------- */
+    const COL = "requisicoes";
+    const ESTADOS = {
+      "Em Análise": { cls: "bg-amber-500/15 text-amber-500", icone: "fa-clock" },
+      "Aprovado":   { cls: "bg-emerald-500/15 text-emerald-500", icone: "fa-check" },
+      "Rejeitado":  { cls: "bg-red-500/15 text-red-500", icone: "fa-xmark" },
+    };
+    const escR = (s) => String(s ?? "").replace(/[&<>"']/g, (m) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+    const toast = (msg, tipo = "info") => window.mostrarToast?.(msg, tipo);
+
+    function materiaisHTML(m) {
+      if (Array.isArray(m)) return m.map((x) => escR(x.qtd) + " - " + escR(x.nome)).join(", ");
+      return escR(m || "");
+    }
+
+    function acoesHTML(r) {
+      const id = escR(r.id);
+      const aprovar = '<button data-acao="aprovar" data-id="' + id + '" title="Aprovar" class="text-emerald-500 hover:text-emerald-400 mr-2"><i class="fas fa-check"></i></button>';
+      const rejeitar = '<button data-acao="rejeitar" data-id="' + id + '" title="Rejeitar" class="text-red-500 hover:text-red-400 mr-2"><i class="fas fa-xmark"></i></button>';
+      const apagar = '<button data-acao="remover" data-id="' + id + '" title="Apagar" class="text-secondary-themed hover:text-red-500"><i class="fas fa-trash"></i></button>';
+      const estado = r.estado || "Em Análise";
+      if (estado === "Aprovado") return rejeitar + apagar;
+      if (estado === "Rejeitado") return aprovar + apagar;
+      return aprovar + rejeitar + apagar;
+    }
+
+    const tempo = (r) => r.criadoEm === undefined ? 0 : (r.criadoEm?.toMillis?.() ?? Date.now());
+
+    function renderReqs(lista) {
+      const tbody = document.getElementById("tabela-requisicoes");
+      if (!tbody) return;
+      if (!lista.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-secondary-themed">Sem requisições registadas.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = [...lista].sort((a, b) => tempo(b) - tempo(a)).map((r) => {
+        const estado = ESTADOS[r.estado] ? r.estado : "Em Análise";
+        const e = ESTADOS[estado];
+        return '<tr data-id="' + escR(r.id) + '" class="hover:bg-blue-500/5 transition-colors">' +
+          '<td class="p-3 font-mono text-blue-500">' + escR(r.cod) + '</td>' +
+          '<td class="p-3 text-primary-themed">' + escR(r.desc) + '</td>' +
+          '<td class="p-3 text-secondary-themed text-[10px]">' + materiaisHTML(r.materiais) + '</td>' +
+          '<td class="p-3 text-secondary-themed">' + escR(r.sol) + '</td>' +
+          '<td class="p-3"><span class="badge-modern ' + e.cls + '"><i class="fas ' + e.icone + ' text-[8px]"></i> ' + escR(estado) + '</span></td>' +
+          '<td class="p-3">' + acoesHTML(r) + '</td></tr>';
+      }).join("");
+    }
+
+    document.getElementById("tabela-requisicoes")?.addEventListener("click", async (ev) => {
+      const btn = ev.target.closest("button[data-acao]");
+      if (!btn) return;
+      const { acao, id } = btn.dataset;
+      try {
+        if (acao === "remover") {
+          if (!confirm("Apagar esta requisição definitivamente?")) return;
+          btn.disabled = true;
+          await remover(COL, id);
+          toast("Requisição apagada", "warn");
+        } else {
+          const estado = acao === "aprovar" ? "Aprovado" : "Rejeitado";
+          btn.disabled = true;
+          await atualizar(COL, id, { estado, decididoPor: window.firebaseAuth?.currentUser?.email ?? null });
+          toast("Requisição → " + estado, "success");
+        }
+      } catch (err) {
+        console.error(err);
+        btn.disabled = false;
+        toast("Sem permissão ou erro de ligação", "error");
+      }
+    });
+
+    const formReq = document.getElementById("form-requisicao");
+    formReq?.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const desc = document.getElementById("req-desc").value.trim();
+      const sol = document.getElementById("req-solicitante").value.trim();
+      const materiais = [...document.querySelectorAll("#lista-materiais-req .item-material")]
+        .map((div) => ({
+          nome: div.querySelector(".mat-nome").value.trim(),
+          qtd: div.querySelector(".mat-qtd").value.trim(),
+        }))
+        .filter((m) => m.nome && m.qtd);
+      if (!materiais.length) return toast("Adiciona pelo menos um material", "warn");
+
+      const btn = formReq.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      try {
+        const cod = await proximoCodigo("REQ-DL");
+        await criar(COL, { cod, desc, sol, materiais, estado: "Em Análise" });
+        window.fecharModalRequisicao?.();
+        formReq.reset();
+        toast("Requisição " + cod + " submetida!", "success");
+      } catch (err) {
+        console.error(err);
+        toast("Não foi possível submeter a requisição", "error");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    let pararReqs = null;
+    function iniciarReqs() {
+      if (pararReqs) return;
+      pararReqs = ouvir(COL, renderReqs, () => toast("Erro ao carregar requisições", "error"));
+    }
+    function terminarReqs() {
+      pararReqs?.();
+      pararReqs = null;
+      renderReqs([]);
+    }
+
+    if (window.firebaseOnAuth && window.firebaseAuth) {
+      window.firebaseOnAuth(window.firebaseAuth, (user) => (user ? iniciarReqs() : terminarReqs()));
+    } else {
+      console.error("Firebase Auth não está disponível — módulo de requisições não arrancou.");
+    }
+    </script>
 </body>
 </html>
