@@ -1146,7 +1146,7 @@ table td, p {
                 </h3>
                 <button onclick="fecharModalRequisicao()" class="w-8 h-8 rounded-lg hover:bg-red-500/15 text-secondary-themed hover:text-red-500"><i class="fas fa-xmark"></i></button>
             </div>
-            <form id="form-requisicao" onsubmit="adicionarRequisicao(event)" class="p-5 space-y-4 text-xs">
+            <form id="form-requisicao" class="p-5 space-y-4 text-xs">
                 <div>
                     <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Descrição Geral / Justificação *</label>
                     <textarea id="req-desc" required rows="2" class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed focus:outline-none focus:border-blue-500" style="background: var(--bg-app);" placeholder="Ex: Necessidade de equipamentos para novo projeto no Porto..."></textarea>
@@ -2092,46 +2092,6 @@ function verificarSessao() {
             if (elAlertas) elAlertas.innerText = alertas;
         }
 
-        function atualizarAcoesRequisicao(tr) {
-            const cod = tr.dataset.req;
-            if (!cod) return;
-            const tdEstado = tr.querySelector('.td-estado');
-            const tdAcoes = tr.querySelector('.td-acoes');
-            if (!tdEstado || !tdAcoes) return;
-            const estado = (tdEstado.innerText || '').trim();
-            const mapa = {
-                'Aprovado': { cor: 'emerald', icone: 'fa-check' },
-                'Rejeitado': { cor: 'red', icone: 'fa-xmark' },
-                'Em Análise': { cor: 'amber', icone: 'fa-clock' }
-            };
-            const info = mapa[estado] || mapa['Em Análise'];
-            tdEstado.innerHTML = `<span class="badge-modern bg-${info.cor}-500/15 text-${info.cor}-500"><i class="fas ${info.icone} text-[8px]"></i> ${estado}</span>`;
-            if (estado === 'Em Análise') {
-                tdAcoes.innerHTML = `<button onclick="mudarEstadoReq('${cod}', 'Aprovado')" class="text-emerald-500 hover:text-emerald-400 mr-2"><i class="fas fa-check"></i></button><button onclick="mudarEstadoReq('${cod}', 'Rejeitado')" class="text-red-500 hover:text-red-400"><i class="fas fa-xmark"></i></button>`;
-            } else if (estado === 'Aprovado') {
-                tdAcoes.innerHTML = `<button onclick="mudarEstadoReq('${cod}', 'Rejeitado')" class="text-red-500 hover:text-red-400"><i class="fas fa-xmark"></i></button>`;
-            } else {
-                tdAcoes.innerHTML = `<button onclick="mudarEstadoReq('${cod}', 'Aprovado')" class="text-emerald-500 hover:text-emerald-400"><i class="fas fa-check"></i></button>`;
-            }
-        }
-
-        async function mudarEstadoReq(cod, novoEstado) {
-            const tr = document.querySelector(`tr[data-req="${cod}"]`);
-            if (!tr) return;
-            tr.querySelector('.td-estado').innerText = novoEstado;
-            atualizarAcoesRequisicao(tr);
-
-            if (window.dbFirebase) {
-                const { collection, getDocs, updateDoc, doc } = await import(FS_URL);
-                const querySnapshot = await getDocs(collection(window.dbFirebase, "requisicoes"));
-                querySnapshot.forEach(async (documento) => {
-                    if (documento.data().cod === cod) {
-                        await updateDoc(doc(window.dbFirebase, "requisicoes", documento.id), { estado: novoEstado });
-                    }
-                });
-            }
-            mostrarToast(`Requisição ${cod} → ${novoEstado}`, 'success');
-        }
         
         function removerLinha(btn, tipo) {
             if (!confirm('Remover este registo?')) return;
@@ -2232,38 +2192,7 @@ function verificarSessao() {
             if (box) box.innerHTML = `<i class="fas fa-cloud-arrow-up text-3xl text-blue-500 mb-3"></i><p class="text-sm text-primary-themed font-semibold">Arrasta a foto ou clica</p><p class="text-[10px] text-secondary-themed mt-1">PNG, JPG — máx 2 MB</p>`;
             fotoColaboradorBase64 = null;
         }
-
-        async function adicionarRequisicao(event) {
-            event.preventDefault();
-            const desc = document.getElementById('req-desc').value.trim();
-            const sol = document.getElementById('req-solicitante').value.trim();
-            const cod = 'REQ-DL-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-3);
-
-            let materiaisArr = [];
-            document.querySelectorAll('.item-material').forEach(div => {
-                const n = div.querySelector('.mat-nome').value.trim();
-                const q = div.querySelector('.mat-qtd').value.trim();
-                if(n && q) materiaisArr.push(`${q} - ${n}`);
-            });
-            const materiaisStr = materiaisArr.join(', ');
-
-            const tr = document.createElement('tr');
-            tr.dataset.req = cod;
-            tr.className = 'hover:bg-blue-500/5 transition-colors';
-            tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${cod}</td><td class="p-3 text-primary-themed">${desc}</td><td class="p-3 text-secondary-themed text-[10px]">${materiaisStr}</td><td class="p-3 text-secondary-themed">${sol}</td><td class="p-3 td-estado"><span class="badge-modern bg-amber-500/15 text-amber-500">Em Análise</span></td><td class="p-3 td-acoes"></td>`;
-            document.getElementById('tabela-requisicoes').appendChild(tr);
-            atualizarAcoesRequisicao(tr);
-
-            if (window.dbFirebase) {
-                import(FS_URL).then(({ collection, addDoc }) => {
-                    addDoc(collection(window.dbFirebase, "requisicoes"), { cod, desc, materiais: materiaisStr, sol, estado: 'Em Análise' });
-                });
-            }
-
-            fecharModalRequisicao();
-            document.getElementById('form-requisicao').reset();
-            mostrarToast(`Requisição ${cod} submetida!`, 'success');
-        }        
+        
 
         function adicionarIntervencao(event) {
             event.preventDefault();
@@ -2939,24 +2868,6 @@ function renderizarCartoesViaturas() {
             } catch (e) { console.error("Erro ao ler obras da nuvem:", e); }
         }
 
-        async function carregarRequisicoesNuvem() {
-            if (!window.dbFirebase) return;
-            try {
-                const { collection, getDocs } = await import(FS_URL);
-                const querySnapshot = await getDocs(collection(window.dbFirebase, "requisicoes"));
-                const tbody = document.getElementById('tabela-requisicoes');
-                if (!tbody) return;
-                tbody.innerHTML = '';
-                querySnapshot.forEach((doc) => {
-                    const r = doc.data();
-                    const tr = document.createElement('tr');
-                    tr.dataset.req = r.cod;
-                    tr.innerHTML = `<td class="p-3 font-mono text-blue-500">${r.cod}</td><td class="p-3 text-primary-themed">${r.desc}</td><td class="p-3 text-secondary-themed text-[10px]">${r.materiais || ''}</td><td class="p-3 text-secondary-themed">${r.sol}</td><td class="p-3 td-estado">${r.estado}</td><td class="p-3 td-acoes"></td>`;
-                    tbody.appendChild(tr);
-                    atualizarAcoesRequisicao(tr);
-                });
-            } catch(e) { console.error(e); }
-        }
 
         async function carregarInventarioNuvem() {
             if (!window.dbFirebase) return;
@@ -3018,7 +2929,6 @@ function renderizarCartoesViaturas() {
             carregarColaboradoresNuvem();
             carregarProjetos(); 
             carregarObrasNuvem();
-            carregarRequisicoesNuvem();
             carregarInventarioNuvem();
             carregarEPIsNuvem();
 
@@ -3062,5 +2972,6 @@ function renderizarCartoesViaturas() {
             atualizarTemaMapa();
         }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     </script>
+    <script type="module" src="./requisicoes.js"></script>
 </body>
 </html>
