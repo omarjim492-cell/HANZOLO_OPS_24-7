@@ -3587,5 +3587,196 @@ if (window.firebaseOnAuth && window.firebaseAuth) {
 }
 new MutationObserver(() => render()).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
 </script>
+   <!-- ═══════════ EXPORTAR PAINEL DO DIA PARA POWERPOINT — colar antes de </body>, DEPOIS do bloco do Painel do Dia ═══════════ -->
+<script type="module">
+import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+/*PPTX_START*/
+const ehISO = (s) => /^\d{4}-\d{2}-\d{2}$/.test(s || "");
+const fmt = (iso) => { if (!ehISO(iso)) return iso || "—"; const [y, m, d] = iso.split("-"); return d + "/" + m + "/" + y.slice(2); };
+const diasAte = (iso) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  const h = new Date(); h.setHours(0, 0, 0, 0);
+  return Math.round((new Date(y, m - 1, d) - h) / 86400000);
+};
+const projDoCliente = (c, proj) => {
+  const chv = (c.chaves && c.chaves.length ? c.chaves : [c.nome]).map((x) => String(x).toLowerCase());
+  return proj.filter((p) => chv.includes(String(p.cliente || "").toLowerCase()));
+};
+const COR = { navy: "0B2447", azul: "E8F0FB", txt: "0F172A", cinza: "475569", linha: "D5DBE5", R: "DC2626", A: "F59E0B", V: "10B981", P: "64748B" };
+const RELT = { V: "Boa", A: "Em risco", R: "Crítica" };
+
+function construirPptx(Pptx, d) {
+  const pres = new Pptx();
+  pres.layout = "LAYOUT_16x9";
+  pres.title = "Painel do dia — " + fmt(d.dia);
+  pres.author = "HANZOLO — Área de Projetos e Operações";
+  const FONT = "Calibri", dd = d.dd || {};
+  const ativos = d.proj.filter((p) => !p.concluido);
+  const n = (s) => ativos.filter((p) => p.status === s).length;
+  const equipas = (dd.equipas || []).filter((x) => x.equipa || x.local || x.atividade);
+  const txt = (s, t, o) => s.addText(t, { fontFace: FONT, margin: 0, isTextBox: true, color: COR.txt, ...o });
+
+  const topo = (s, titulo, sub) => {
+    s.background = { color: "FFFFFF" };
+    txt(s, titulo, { x: 0.4, y: 0.2, w: 7.4, h: 0.45, fontSize: 20, bold: true, color: COR.navy });
+    txt(s, "HANZOLO", { x: 7.8, y: 0.22, w: 1.8, h: 0.35, fontSize: 16, bold: true, color: "2563EB", align: "right" });
+    if (sub) txt(s, sub, { x: 0.4, y: 0.68, w: 9.2, h: 0.25, fontSize: 8.5, color: COR.cinza });
+    txt(s, "Equipa UNSE · Área de Projetos e Operações · Uso interno   —   Atualização diária até às 17h00; registar apenas o que mudou nas últimas 24 h.   V = no prazo · A = em risco · R = atrasado/bloqueado · P = planeado",
+      { x: 0.4, y: 5.3, w: 9.2, h: 0.22, fontSize: 6, color: "64748B" });
+  };
+  const th = (t) => ({ text: t, options: { bold: true, color: "FFFFFF", fill: { color: COR.navy }, fontFace: FONT, fontSize: 7.5, valign: "middle" } });
+  const td = (t, o) => ({ text: String(t == null ? "" : t), options: { fontFace: FONT, fontSize: 7.5, color: COR.txt, valign: "middle", ...(o || {}) } });
+  const rag = (s) => ({ text: String(s || ""), options: { bold: true, color: "FFFFFF", fill: { color: COR[s] || COR.P }, align: "center", fontFace: FONT, fontSize: 7.5, valign: "middle" } });
+  const borda = { type: "solid", pt: 0.5, color: COR.linha };
+  const vazio = (cols) => [td("—", { color: COR.cinza }), ...Array(cols - 1).fill(0).map(() => td(""))];
+  const titSec = (s, t, x, y, w) => txt(s, t, { x, y, w, h: 0.22, fontSize: 9.5, bold: true, color: COR.navy });
+
+  /* 1 — Painel do dia */
+  let s = pres.addSlide();
+  topo(s, "Painel do dia — projetos em curso", "Data: " + fmt(d.dia) + "   ·   Preenchido por: " + (dd.preenchidoPor || "—") + "   ·   Base: Planilha dos Projectos");
+  const kp = [[ativos.length, "Em curso", COR.navy], [n("P"), "Pendentes", COR.navy], [n("R"), "Prazo ultrapassado", COR.R], [equipas.length, "Equipas no terreno hoje", COR.navy], [dd.intervFechadasOntem === undefined || dd.intervFechadasOntem === "" ? "—" : dd.intervFechadasOntem, "Intervenções fechadas ontem", COR.navy]];
+  kp.forEach((k, i) => {
+    const x = 0.4 + i * 1.86;
+    s.addShape(pres.ShapeType.roundRect, { x, y: 0.98, w: 1.76, h: 0.55, fill: { color: COR.azul }, line: { color: COR.azul }, rectRadius: 0.06 });
+    txt(s, String(k[0]), { x: x + 0.1, y: 0.98, w: 0.55, h: 0.55, fontSize: 20, bold: true, color: k[2], valign: "middle" });
+    txt(s, k[1], { x: x + 0.66, y: 0.98, w: 1.04, h: 0.55, fontSize: 7.5, valign: "middle" });
+  });
+  const linhas = [[th("Cliente"), th("Projeto"), th("%"), th("Término"), th("St."), th("Ponto crítico / próxima ação (24 h)"), th("Resp.")]];
+  ativos.forEach((p) => {
+    const atrasado = ehISO(p.termino) && diasAte(p.termino) < 0 && (+p.progresso || 0) < 100;
+    linhas.push([td(p.cliente, { bold: true }), td(p.projeto), td((+p.progresso || 0) + "%"), td(fmt(p.termino), atrasado ? { color: COR.R, bold: true } : {}), rag(p.status), td(p.ponto), td(p.resp)]);
+  });
+  if (linhas.length === 1) linhas.push(vazio(7));
+  s.addTable(linhas, { x: 0.4, y: 1.68, w: 9.2, colW: [0.85, 1.6, 0.4, 0.65, 0.4, 4.4, 0.9], rowH: 0.235, border: borda, autoPage: true, autoPageRepeatHeader: true, newSlideStartY: 0.5 });
+
+  /* 2 — Hoje no terreno */
+  s = pres.addSlide();
+  topo(s, "Hoje no terreno, bloqueios e clientes", "Equipas em campo, decisões pendentes e contactos com clientes do dia");
+  const fecho = (v) => (v === "ok" ? "✓" : v === "nok" ? "✗" : "");
+  titSec(s, "Equipas no terreno hoje", 0.4, 1.0, 4.5);
+  const rEq = [[th("Equipa / técnicos"), th("Cliente / local"), th("Atividade"), th("Fecho")]];
+  (dd.equipas || []).forEach((x) => rEq.push([td(x.equipa), td(x.local), td(x.atividade), td(fecho(x.fecho), { align: "center", bold: true })]));
+  if (rEq.length === 1) rEq.push(vazio(4));
+  s.addTable(rEq, { x: 0.4, y: 1.25, w: 4.5, colW: [1.3, 0.9, 1.7, 0.6], rowH: 0.24, border: borda });
+  titSec(s, "Bloqueios e decisões necessárias", 5.1, 1.0, 4.5);
+  const rBl = [[th("Tema"), th("Impacto"), th("Decide"), th("Até")]];
+  (dd.bloqueios || []).forEach((x) => rBl.push([td(x.tema), td(x.impacto), td(x.decide), td(fmt(x.ate))]));
+  if (rBl.length === 1) rBl.push(vazio(4));
+  s.addTable(rBl, { x: 5.1, y: 1.25, w: 4.5, colW: [1.5, 1.4, 0.8, 0.8], rowH: 0.24, border: borda });
+  titSec(s, "Contactos com clientes hoje", 0.4, 3.3, 9.2);
+  const rCt = [[th("Cliente"), th("Interlocutor"), th("Assunto"), th("Resultado / compromisso assumido"), th("Próximo contacto")]];
+  (dd.contactos || []).forEach((x) => rCt.push([td(x.cliente, { bold: true }), td(x.interlocutor || "—"), td(x.assunto), td(x.resultado), td(fmt(x.proximo))]));
+  if (rCt.length === 1) rCt.push(vazio(5));
+  s.addTable(rCt, { x: 0.4, y: 3.55, w: 9.2, colW: [1.0, 1.0, 2.6, 3.4, 1.2], rowH: 0.24, border: borda });
+
+  /* 3… — Fichas por cliente */
+  const fichas = d.cli.filter((c) => projDoCliente(c, d.proj).length || c.feito || c.proximoPasso || c.insatisfacao);
+  fichas.forEach((c, idx) => {
+    const ps = projDoCliente(c, d.proj);
+    s = pres.addSlide();
+    topo(s, "Cliente: " + c.nome,
+      "Interlocutor: " + (c.interlocutor || "—") + "   ·   Gestor Hanzolo: " + (c.gestor || "—") + "   ·   Último contacto: " + fmt(c.ultimoContacto) + "   ·   Ficha " + (idx + 1) + " de " + fichas.length);
+    s.addShape(pres.ShapeType.roundRect, { x: 0.4, y: 1.0, w: 9.2, h: 0.5, fill: { color: COR.azul }, line: { color: COR.azul }, rectRadius: 0.06 });
+    txt(s, "Relação com o cliente", { x: 0.55, y: 1.0, w: 1.6, h: 0.5, fontSize: 8.5, bold: true, color: COR.navy, valign: "middle" });
+    s.addShape(pres.ShapeType.roundRect, { x: 2.15, y: 1.12, w: 0.9, h: 0.26, fill: { color: COR[c.relacao] || COR.P }, line: { color: COR[c.relacao] || COR.P }, rectRadius: 0.05 });
+    txt(s, c.relacao ? RELT[c.relacao] : "—", { x: 2.15, y: 1.12, w: 0.9, h: 0.26, fontSize: 8, bold: true, color: "FFFFFF", align: "center", valign: "middle" });
+    txt(s, (c.insatisfacao || "Sem insatisfação registada.") + "   Próximo contacto: " + fmt(c.proximoContacto), { x: 3.2, y: 1.0, w: 6.3, h: 0.5, fontSize: 8, valign: "middle" });
+    const rp = [[th("Projetos em curso"), th("%"), th("Término"), th("St.")]];
+    ps.forEach((p) => rp.push([td(p.projeto), td((+p.progresso || 0) + "%"), td(p.concluido ? "Concluído" : fmt(p.termino)), rag(p.status)]));
+    if (rp.length === 1) rp.push([td("Sem projeto na planilha — confirmar", { color: COR.cinza }), td(""), td(""), td("")]);
+    s.addTable(rp, { x: 0.4, y: 1.65, w: 9.2, colW: [5.6, 1.0, 1.9, 0.7], rowH: 0.21, border: borda });
+    const caixas = [["Feito (24 h)", c.feito], ["Próximo passo", c.proximoPasso], ["Bloqueio / quem resolve", c.bloqueio], ["Planeamento futuro e oportunidades", c.futuro]];
+    caixas.forEach((b, i) => {
+      const x = 0.4 + (i % 2) * 4.7, y = 3.4 + Math.floor(i / 2) * 0.95;
+      s.addShape(pres.ShapeType.roundRect, { x, y, w: 4.5, h: 0.85, fill: { color: "FFFFFF" }, line: { color: COR.linha, width: 0.75 }, rectRadius: 0.05 });
+      txt(s, b[0].toUpperCase(), { x: x + 0.1, y: y + 0.06, w: 4.3, h: 0.18, fontSize: 6.5, bold: true, color: "2563EB" });
+      txt(s, b[1] || "—", { x: x + 0.1, y: y + 0.26, w: 4.3, h: 0.55, fontSize: 8, valign: "top" });
+    });
+  });
+
+  /* Última — Síntese */
+  s = pres.addSlide();
+  topo(s, "Síntese e próximos passos (24 h)", "Onde está o risco hoje e o que tem de ficar decidido até amanhã");
+  const media = ativos.length ? Math.round(ativos.reduce((a, p) => a + (+p.progresso || 0), 0) / ativos.length) : 0;
+  const crit = d.cli.filter((c) => c.relacao === "R").length;
+  [[n("R"), "projetos com prazo ultrapassado", COR.R], [n("A"), "projetos em risco", "D97706"], [media + "%", "progresso médio da carteira", COR.navy], [crit, "clientes com relação crítica", COR.R]].forEach((k, i) => {
+    const y = 1.05 + i * 0.62;
+    s.addShape(pres.ShapeType.roundRect, { x: 0.4, y, w: 2.5, h: 0.54, fill: { color: COR.azul }, line: { color: COR.azul }, rectRadius: 0.06 });
+    txt(s, String(k[0]), { x: 0.5, y, w: 0.8, h: 0.54, fontSize: 20, bold: true, color: k[2], valign: "middle" });
+    txt(s, k[1], { x: 1.3, y, w: 1.55, h: 0.54, fontSize: 7.5, valign: "middle" });
+  });
+  titSec(s, "Decisões que fecham o dia", 3.15, 1.0, 6.4);
+  const rd = [[th("#"), th("Decisão"), th("Resp.")]];
+  (dd.decisoes || []).forEach((x, i) => rd.push([td(i + 1, { align: "center", bold: true }), td(x.texto), td(x.resp, { align: "center" })]));
+  if (rd.length === 1) rd.push([td("—"), td("Sem decisões registadas."), td("")]);
+  s.addTable(rd, { x: 3.15, y: 1.25, w: 6.45, colW: [0.4, 5.3, 0.75], rowH: 0.3, border: borda });
+  s.addShape(pres.ShapeType.roundRect, { x: 0.4, y: 3.75, w: 9.2, h: 1.3, fill: { color: COR.navy }, line: { color: COR.navy }, rectRadius: 0.06 });
+  txt(s, "MENSAGEM DO DIA", { x: 0.6, y: 3.85, w: 8.8, h: 0.2, fontSize: 7, bold: true, color: "93C5FD" });
+  txt(s, dd.mensagem || "—", { x: 0.6, y: 4.1, w: 8.8, h: 0.85, fontSize: 11, color: "FFFFFF", valign: "top" });
+  return pres;
+}
+/*PPTX_END*/
+
+/* ───────── Ligação à plataforma ───────── */
+const toast = (m, t = "info") => window.mostrarToast?.(m, t);
+const hojeISO = () => { const d = new Date(), p = (n) => String(n).padStart(2, "0"); return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()); };
+
+async function carregarLib() {
+  if (window.PptxGenJS) return window.PptxGenJS;
+  await new Promise((ok, ko) => {
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js";
+    s.onload = ok; s.onerror = () => ko(new Error("Não foi possível carregar a biblioteca do PowerPoint"));
+    document.head.appendChild(s);
+  });
+  return window.PptxGenJS;
+}
+
+async function exportar(btn) {
+  const original = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> A gerar...';
+  try {
+    const db = window.dbFirebase;
+    const dia = document.querySelector('#tab-painel-dia [data-f="dia"]')?.value || hojeISO();
+    const [Pptx, sp, sc, sd] = await Promise.all([
+      carregarLib(),
+      getDocs(collection(db, "acomp_projetos")),
+      getDocs(collection(db, "acomp_clientes")),
+      getDoc(doc(db, "acomp_dias", dia)),
+    ]);
+    const proj = sp.docs.map((x) => ({ id: x.id, ...x.data() })).sort((a, b) => (a.ordem ?? 999) - (b.ordem ?? 999));
+    const cli = sc.docs.map((x) => ({ id: x.id, ...x.data() })).sort((a, b) => String(a.nome).localeCompare(String(b.nome), "pt"));
+    if (!proj.length) { toast("Ainda não há projetos no Painel do Dia", "warn"); return; }
+    const pres = construirPptx(Pptx, { dia, proj, cli, dd: sd.exists() ? sd.data() : {} });
+    await pres.writeFile({ fileName: "Acompanhamento_Diario_Projetos_" + dia + ".pptx" });
+    toast("PowerPoint gerado!", "success");
+  } catch (e) {
+    console.error(e);
+    toast("Erro ao gerar o PowerPoint", "error");
+  } finally {
+    btn.disabled = false; btn.innerHTML = original;
+  }
+}
+
+function injetar() {
+  const tab = document.getElementById("tab-painel-dia");
+  const imp = tab && tab.querySelector('[data-act="print"]');
+  if (!imp || tab.querySelector("#pd-pptx")) return;
+  const b = document.createElement("button");
+  b.id = "pd-pptx";
+  b.className = "bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2";
+  b.innerHTML = '<i class="fas fa-file-powerpoint"></i> Exportar PowerPoint';
+  imp.after(b);
+}
+function ligar() {
+  const tab = document.getElementById("tab-painel-dia");
+  if (!tab) { setTimeout(ligar, 300); return; }
+  new MutationObserver(injetar).observe(tab, { childList: true, subtree: true });
+  injetar();
+}
+document.addEventListener("click", (e) => { const b = e.target.closest("#pd-pptx"); if (b) exportar(b); });
+ligar();
+</script> 
 </body>
 </html>
