@@ -3777,6 +3777,342 @@ function ligar() {
 }
 document.addEventListener("click", (e) => { const b = e.target.closest("#pd-pptx"); if (b) exportar(b); });
 ligar();
-</script> 
+</script>
+    <!-- ═══════════ INVENTÁRIO EM TEMPO REAL + LIGAÇÃO ÀS REQUISIÇÕES — colar antes de </body> ═══════════ -->
+<script type="module">
+import {
+  collection, doc, onSnapshot, setDoc, updateDoc, deleteDoc, writeBatch, runTransaction,
+  getDoc, query, orderBy, limit, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+/* Desliga as funções antigas do inventário (localStorage + leitura única) antes do DOMContentLoaded */
+window.carregarInventarioNuvem = async () => {};
+window.atualizarKPIsInventario = () => {};
+window.adicionarInventario = () => {};
+document.getElementById("form-inventario")?.removeAttribute("onsubmit");
+
+/* ───────────────────────── Utilitários ───────────────────────── */
+const C_INV = "inventario", C_MOV = "inventario_movimentos", C_REQ = "requisicoes", C_CFG = "configuracao";
+const db = () => window.dbFirebase;
+const email = () => window.firebaseAuth?.currentUser?.email ?? null;
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+const toast = (m, t = "info") => window.mostrarToast?.(m, t);
+const norm = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+const numDe = (s) => { const m = String(s ?? "").match(/(\d+(?:[.,]\d+)?)/); return m ? parseFloat(m[1].replace(",", ".")) : null; };
+const stamp = () => ({ atualizadoEm: serverTimestamp(), atualizadoPor: email() });
+const falha = (e) => { console.error(e); toast("Sem permissão ou erro de ligação", "error"); };
+const ms = (t) => (t && t.toMillis ? t.toMillis() : t === null ? Date.now() : 0);
+const CATS = ["Cablagem", "Equipamento", "CFTV", "Ferramentaria", "Consumíveis"];
+const IN = "w-full bg-transparent border border-transparent hover:border-themed focus:border-blue-500 focus:outline-none rounded-lg px-2 py-1.5 text-xs text-primary-themed";
+const bg = () => 'style="background: var(--bg-app); color-scheme: ' + (document.documentElement.classList.contains("light") ? "light" : "dark") + ';"';
+const nivel = (qtd, min) => qtd < min * 0.5 ? "r" : qtd < min ? "a" : "v";
+const NV = { r: { badge: "bg-red-500/15 text-red-500", bar: "bg-red-500" }, a: { badge: "bg-amber-500/15 text-amber-500", bar: "bg-amber-500" }, v: { badge: "bg-emerald-500/15 text-emerald-500", bar: "bg-emerald-500" } };
+
+const S = { itens: null, movs: [], reqs: null, q: "", ativoDesde: 0 };
+let unsubs = [], iniciando = false, pendente = false, tentativasGrafico = 0;
+const emCurso = new Set(), falhou = new Set();
+
+/* ───────────────────────── Movimentos de stock ───────────────────────── */
+function movDoc(item, delta, saldoApos, tipo, motivo, ref) {
+  return { itemId: item.id, nome: item.nome, tipo, delta, qtd: Math.abs(delta), saldoApos, motivo: motivo || "", ref: ref || "", criadoEm: serverTimestamp(), criadoPor: email() };
+}
+async function movimentar(item, delta, tipo, motivo) {
+  const ref = doc(db(), C_INV, item.id);
+  await runTransaction(db(), async (tx) => {
+    const s = await tx.get(ref);
+    if (!s.exists()) throw new Error("Item apagado");
+    const cur = +s.data().qtd || 0, novo = Math.max(0, cur + delta);
+    tx.update(ref, { qtd: novo, ...stamp() });
+    tx.set(doc(collection(db(), C_MOV)), movDoc(item, novo - cur, novo, tipo, motivo));
+  });
+}
+async function criarItem(d) {
+  const b = writeBatch(db());
+  const ref = doc(collection(db(), C_INV));
+  b.set(ref, { nome: d.nome, cat: d.cat, qtd: d.qtd, min: d.min, local: d.local, ...stamp() });
+  if (d.qtd > 0) b.set(doc(collection(db(), C_MOV)), movDoc({ id: ref.id, nome: d.nome }, d.qtd, d.qtd, "entrada", "Stock inicial"));
+  await b.commit();
+}
+
+/* ───────────────────────── Ligação às Requisições ───────────────────────── */
+async function ativar() {
+  const ref = doc(db(), C_CFG, "inventario");
+  try {
+    await runTransaction(db(), async (tx) => {
+      const s = await tx.get(ref);
+      if (!s.exists()) tx.set(ref, { ativoDesde: serverTimestamp(), por: email() });
+    });
+    const s = await getDoc(ref);
+    S.ativoDesde = s.exists() ? ms(s.data().ativoDesde) || Date.now() : Date.now();
+  } catch (e) { console.error(e); S.ativoDesde = Date.now(); }
+}
+function casar(req) {
+  const porId = new Map(), sem = [];
+  (Array.isArray(req.materiais) ? req.materiais : []).forEach((m) => {
+    const q = numDe(m.qtd), it = S.itens.find((i) => norm(i.nome) === norm(m.nome));
+    if (!it) sem.push({ nome: m.nome, motivo: "sem correspondência no inventário" });
+    else if (!q || q <= 0) sem.push({ nome: m.nome, motivo: "quantidade inválida" });
+    else porId.set(it.id, { item: it, q: (porId.get(it.id)?.q || 0) + q });
+  });
+  return { ok: [...porId.values()], sem };
+}
+async function baixar(r) {
+  const { ok, sem: sem0 } = casar(r);
+  let resumo = null;
+  await runTransaction(db(), async (tx) => {
+    const rr = doc(db(), C_REQ, r.id), rs = await tx.get(rr);
+    if (!rs.exists()) return;
+    const cur = rs.data();
+    if (cur.estado !== "Aprovado" || cur.stockBaixado) { resumo = null; return; }
+    const snaps = await Promise.all(ok.map((o) => tx.get(doc(db(), C_INV, o.item.id))));
+    const sem = [...sem0], faltas = [], baixas = [], baixo = [];
+    ok.forEach((o, i) => {
+      const s = snaps[i];
+      if (!s.exists()) { sem.push({ nome: o.item.nome, motivo: "item apagado" }); return; }
+      const d = s.data(), atual = +d.qtd || 0, novo = Math.max(0, atual - o.q), real = atual - novo;
+      if (real < o.q) faltas.push({ nome: d.nome, falta: o.q - real });
+      if (real > 0) {
+        tx.update(s.ref, { qtd: novo, ...stamp() });
+        tx.set(doc(collection(db(), C_MOV)), movDoc({ id: o.item.id, nome: d.nome }, -real, novo, "saida", "Requisição aprovada", cur.cod));
+        baixas.push({ itemId: o.item.id, qtd: real });
+        if (novo < (+d.min || 0)) baixo.push(d.nome);
+      }
+    });
+    const nota = "Abatidos: " + baixas.length + (sem.length ? " · sem correspondência: " + sem.map((x) => x.nome).join(", ") : "") + (faltas.length ? " · stock insuficiente: " + faltas.map((x) => x.nome + " (faltam " + x.falta + ")").join(", ") : "");
+    tx.update(rr, { stockBaixado: true, stockMov: baixas, stockNota: nota });
+    resumo = { cod: cur.cod, baixas: baixas.length, sem, faltas, baixo };
+  });
+  return resumo;
+}
+async function repor(r) {
+  let resumo = null;
+  await runTransaction(db(), async (tx) => {
+    const rr = doc(db(), C_REQ, r.id), rs = await tx.get(rr);
+    if (!rs.exists()) return;
+    const cur = rs.data();
+    if (cur.estado === "Aprovado" || !cur.stockBaixado) return;
+    const movs = cur.stockMov || [];
+    const snaps = await Promise.all(movs.map((m) => tx.get(doc(db(), C_INV, m.itemId))));
+    let n = 0;
+    movs.forEach((m, i) => {
+      const s = snaps[i];
+      if (!s.exists()) return;
+      const d = s.data(), novo = (+d.qtd || 0) + m.qtd;
+      tx.update(s.ref, { qtd: novo, ...stamp() });
+      tx.set(doc(collection(db(), C_MOV)), movDoc({ id: m.itemId, nome: d.nome }, m.qtd, novo, "entrada", "Reposição — requisição " + cur.estado.toLowerCase(), cur.cod));
+      n++;
+    });
+    tx.update(rr, { stockBaixado: false, stockMov: [], stockNota: "Stock reposto (" + n + " itens)" });
+    resumo = { cod: cur.cod, repostos: n };
+  });
+  return resumo;
+}
+async function processar(r, modo) {
+  emCurso.add(r.id);
+  try {
+    if (modo === "baixa") {
+      const x = await baixar(r);
+      if (!x) return;
+      toast("Requisição " + x.cod + ": stock abatido (" + x.baixas + " item" + (x.baixas === 1 ? "" : "s") + ")", "success");
+      if (x.sem.length) toast("Sem correspondência no inventário (abater manualmente): " + x.sem.map((s) => s.nome).join(", "), "warn");
+      if (x.faltas.length) toast("Stock insuficiente: " + x.faltas.map((f) => f.nome + " (faltam " + f.falta + ")").join(", "), "warn");
+      if (x.baixo.length) toast("Stock baixo: " + x.baixo.join(", "), "warn");
+    } else {
+      const x = await repor(r);
+      if (x) toast("Requisição " + x.cod + ": stock reposto (" + x.repostos + " itens)", "info");
+    }
+  } catch (e) { console.error(e); falhou.add(r.id); toast("Não foi possível atualizar o stock da requisição " + (r.cod || ""), "error"); }
+  finally { emCurso.delete(r.id); }
+}
+function triagem() {
+  if (S.itens === null || S.reqs === null || !S.ativoDesde) return;
+  S.reqs.forEach((r) => {
+    if (emCurso.has(r.id) || falhou.has(r.id)) return;
+    if (r.estado === "Aprovado" && !r.stockBaixado && ms(r.atualizadoEm) >= S.ativoDesde) processar(r, "baixa");
+    else if (r.estado !== "Aprovado" && r.stockBaixado) processar(r, "repor");
+  });
+}
+
+/* ───────────────────────── Interface ───────────────────────── */
+function render(force) {
+  if (S.itens === null) return;
+  const tbody = document.getElementById("tabela-inventario");
+  if (!tbody) return;
+  if (!force && editando()) { pendente = true; return; }
+  pendente = false;
+  const q = norm(S.q);
+  const lista = S.itens.filter((i) => !q || norm(i.nome).includes(q) || norm(i.cat).includes(q) || norm(i.local).includes(q));
+  const BT = "px-1.5 py-1 rounded-md hover:bg-blue-500/10";
+  tbody.innerHTML = lista.map((i) => {
+    const qtd = +i.qtd || 0, min = +i.min || 0, n = nivel(qtd, min), pct = Math.min(100, Math.round((qtd / Math.max(min, 1)) * 100)), id = esc(i.id);
+    const cats = (CATS.includes(i.cat) ? CATS : [...CATS, i.cat]).filter(Boolean);
+    return '<tr>' +
+      '<td class="p-1.5 min-w-[160px]"><input data-id="' + id + '" data-f="nome" value="' + esc(i.nome) + '" class="' + IN + ' font-medium"></td>' +
+      '<td class="p-1.5 w-36"><select data-id="' + id + '" data-f="cat" ' + bg() + ' class="border-themed border rounded-lg px-2 py-1.5 text-xs text-primary-themed w-full">' + cats.map((c) => '<option ' + (c === i.cat ? "selected" : "") + ">" + esc(c) + "</option>").join("") + "</select></td>" +
+      '<td class="p-3"><span class="badge-modern ' + NV[n].badge + ' font-mono">' + qtd + "</span></td>" +
+      '<td class="p-1.5 w-20"><input type="number" min="0" data-id="' + id + '" data-f="min" value="' + min + '" class="' + IN + ' text-right font-mono"></td>' +
+      '<td class="p-1.5 w-36"><input data-id="' + id + '" data-f="local" value="' + esc(i.local) + '" class="' + IN + '"></td>' +
+      '<td class="p-3"><div class="stock-bar w-20"><div class="' + NV[n].bar + '" style="width:' + pct + '%"></div></div></td>' +
+      '<td class="p-1.5 whitespace-nowrap">' +
+      '<button data-ia="entrada" data-id="' + id + '" title="Entrada de stock" class="text-emerald-500 ' + BT + '"><i class="fas fa-plus"></i></button>' +
+      '<button data-ia="saida" data-id="' + id + '" title="Saída de stock" class="text-amber-500 ' + BT + '"><i class="fas fa-minus"></i></button>' +
+      '<button data-ia="ajuste" data-id="' + id + '" title="Ajustar quantidade (contagem)" class="text-blue-500 ' + BT + '"><i class="fas fa-pen"></i></button>' +
+      '<button data-ia="del" data-id="' + id + '" title="Apagar item" class="text-red-500 ' + BT + '"><i class="fas fa-trash"></i></button></td></tr>';
+  }).join("") || '<tr><td colspan="7" class="p-6 text-center text-secondary-themed">' + (S.itens.length ? "Nenhum item corresponde à pesquisa." : "Sem itens em stock. Usa «Novo Item» para começar.") + "</td></tr>";
+  const t = document.getElementById("inv-total-itens"), a = document.getElementById("inv-alertas");
+  if (t) t.innerText = S.itens.length;
+  if (a) a.innerText = S.itens.filter((i) => (+i.qtd || 0) < (+i.min || 0)).length;
+  const dl = document.getElementById("lista-inventario");
+  if (dl) dl.innerHTML = S.itens.map((i) => '<option value="' + esc(i.nome) + '">').join("");
+}
+const editando = () => { const a = document.activeElement; return !!a && !!a.closest && !!a.closest("#tabela-inventario") && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName); };
+
+function renderMov() {
+  const box = document.getElementById("inv-mov-corpo");
+  if (!box) return;
+  box.innerHTML = S.movs.slice(0, 40).map((m) => {
+    const quando = m.criadoEm && m.criadoEm.toDate ? m.criadoEm.toDate().toLocaleString("pt-PT", { dateStyle: "short", timeStyle: "short" }) : "…";
+    const d = +m.delta || 0, cls = d > 0 ? "bg-emerald-500/15 text-emerald-500" : d < 0 ? "bg-red-500/15 text-red-500" : "bg-blue-500/15 text-blue-500";
+    return '<tr><td class="p-3 text-secondary-themed font-mono">' + esc(quando) + '</td><td class="p-3 text-primary-themed font-medium">' + esc(m.nome) +
+      '</td><td class="p-3"><span class="badge-modern ' + cls + ' font-mono">' + (d > 0 ? "+" : d < 0 ? "−" : "±") + Math.abs(d) + '</span></td><td class="p-3 font-mono text-secondary-themed">' + esc(m.saldoApos) +
+      '</td><td class="p-3 text-secondary-themed">' + esc(m.motivo) + (m.ref ? ' · <span class="font-mono text-blue-500">' + esc(m.ref) + "</span>" : "") + '</td><td class="p-3 text-secondary-themed">' + esc(m.criadoPor || "—") + "</td></tr>";
+  }).join("") || '<tr><td colspan="6" class="p-6 text-center text-secondary-themed">Ainda não há movimentos de stock.</td></tr>';
+}
+
+function graficoStock() {
+  const cv = document.getElementById("graficoFluxoStock");
+  const ch = window.Chart && cv && window.Chart.getChart ? window.Chart.getChart(cv) : null;
+  if (!ch) { if (tentativasGrafico++ < 20) setTimeout(graficoStock, 500); return; }
+  const nomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"], hoje = new Date(), meses = [];
+  for (let k = 5; k >= 0; k--) { const d = new Date(hoje.getFullYear(), hoje.getMonth() - k, 1); meses.push({ y: d.getFullYear(), m: d.getMonth() }); }
+  const ent = meses.map(() => 0), sai = meses.map(() => 0);
+  S.movs.forEach((x) => {
+    if (!x.criadoEm || !x.criadoEm.toDate) return;
+    const d = x.criadoEm.toDate(), i = meses.findIndex((p) => p.y === d.getFullYear() && p.m === d.getMonth());
+    if (i < 0) return;
+    if (x.tipo === "entrada") ent[i] += +x.qtd || 0; else if (x.tipo === "saida") sai[i] += +x.qtd || 0;
+  });
+  ch.data.labels = meses.map((p) => nomes[p.m]);
+  ch.data.datasets[0].data = ent; ch.data.datasets[1].data = sai;
+  ch.update("none");
+}
+
+function montar() {
+  const tbody = document.getElementById("tabela-inventario");
+  if (!tbody || document.getElementById("inv-mov")) return;
+  const card = tbody.closest(".card-themed");
+  const botao = card.firstElementChild.querySelector("button");
+  const busca = document.createElement("input");
+  busca.id = "inv-busca"; busca.placeholder = "Pesquisar item, categoria, local...";
+  busca.setAttribute("style", "background: var(--bg-app);");
+  busca.className = "border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed focus:outline-none focus:border-blue-500 w-56";
+  botao.before(busca);
+  const mov = document.createElement("div");
+  mov.id = "inv-mov"; mov.className = "card-themed rounded-2xl overflow-hidden";
+  mov.innerHTML = '<div class="p-4 border-b border-themed"><h3 class="font-bold text-xs text-primary-themed uppercase tracking-wider flex items-center gap-2"><i class="fas fa-clock-rotate-left text-blue-500"></i> Movimentos de stock</h3>' +
+    '<p class="text-[10px] text-secondary-themed mt-1">Últimos 40 movimentos · as requisições aprovadas abatem o stock automaticamente</p></div>' +
+    '<div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed"><tr>' +
+    ["Data", "Item", "Qtd.", "Saldo", "Motivo / Ref.", "Utilizador"].map((t) => '<th class="p-3 font-bold">' + t + "</th>").join("") +
+    '</tr></thead><tbody id="inv-mov-corpo" class="divide-y divide-themed"></tbody></table></div>';
+  card.after(mov);
+  const dl = document.createElement("datalist"); dl.id = "lista-inventario"; document.body.appendChild(dl);
+
+  busca.addEventListener("input", () => { S.q = busca.value; render(true); });
+  tbody.addEventListener("focusout", () => setTimeout(() => { if (pendente && !editando()) render(); }, 60));
+  tbody.addEventListener("change", (e) => {
+    const t = e.target, { id, f } = t.dataset;
+    if (!id || !f) return;
+    let v = t.value;
+    if (f === "min") v = Math.max(0, parseInt(v, 10) || 0);
+    else if (f === "nome") { v = v.trim(); if (!v) { render(true); return; } }
+    updateDoc(doc(db(), C_INV, id), { [f]: v, ...stamp() }).catch(falha);
+  });
+  tbody.addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-ia]");
+    if (!b) return;
+    const item = S.itens.find((i) => i.id === b.dataset.id);
+    if (!item) return;
+    const ia = b.dataset.ia;
+    try {
+      if (ia === "del") {
+        if (confirm('Apagar "' + item.nome + '" do inventário?')) await deleteDoc(doc(db(), C_INV, item.id));
+        return;
+      }
+      if (ia === "ajuste") {
+        const r = prompt('Nova quantidade em stock de "' + item.nome + '" (atual: ' + (+item.qtd || 0) + "):");
+        if (r === null) return;
+        const novo = parseInt(r, 10);
+        if (isNaN(novo) || novo < 0) { toast("Quantidade inválida", "warn"); return; }
+        await movimentar(item, novo - (+item.qtd || 0), "ajuste", prompt("Motivo do ajuste (opcional):", "Contagem de inventário") || "Ajuste");
+        return;
+      }
+      const r = prompt((ia === "entrada" ? "Quantidade a ENTRAR em" : "Quantidade a SAIR de") + ' "' + item.nome + '":');
+      if (r === null) return;
+      const q = parseInt(r, 10);
+      if (isNaN(q) || q <= 0) { toast("Quantidade inválida", "warn"); return; }
+      if (ia === "saida" && q > (+item.qtd || 0) && !confirm("A saída é superior ao stock atual (" + (+item.qtd || 0) + "). O stock ficará a 0. Continuar?")) return;
+      const motivo = prompt("Motivo / referência (opcional):", ia === "entrada" ? "Compra" : "Saída manual") || (ia === "entrada" ? "Entrada manual" : "Saída manual");
+      await movimentar(item, ia === "entrada" ? q : -q, ia, motivo);
+    } catch (err) { falha(err); }
+  });
+
+  const form = document.getElementById("form-inventario");
+  form?.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const nome = document.getElementById("inv-nome").value.trim(), cat = document.getElementById("inv-categoria").value;
+    const qtd = Math.max(0, parseInt(document.getElementById("inv-qtd").value, 10) || 0), min = Math.max(0, parseInt(document.getElementById("inv-min").value, 10) || 0);
+    const local = document.getElementById("inv-local").value.trim() || "—";
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    try {
+      const dup = (S.itens || []).find((i) => norm(i.nome) === norm(nome));
+      if (dup) {
+        if (!confirm('"' + dup.nome + '" já existe no stock. Somar ' + qtd + " à quantidade existente?")) return;
+        if (qtd > 0) await movimentar(dup, qtd, "entrada", "Entrada manual");
+      } else await criarItem({ nome, cat, qtd, min, local });
+      window.fecharModalInventario?.();
+      toast('Item "' + nome + '" guardado!', "success");
+    } catch (err) { falha(err); } finally { btn.disabled = false; }
+  });
+
+  /* Sugestões de nomes de inventário nas requisições (para os nomes coincidirem e o abate funcionar) */
+  const ligarLista = () => document.querySelectorAll("#lista-materiais-req .mat-nome").forEach((i) => i.setAttribute("list", "lista-inventario"));
+  const lm = document.getElementById("lista-materiais-req");
+  if (lm) { new MutationObserver(ligarLista).observe(lm, { childList: true, subtree: true }); ligarLista(); }
+}
+
+/* ───────────────────────── Ligação ao Firestore ───────────────────────── */
+async function iniciar() {
+  if (unsubs.length || iniciando) return;
+  iniciando = true;
+  await ativar();
+  unsubs.push(onSnapshot(collection(db(), C_INV), (s) => {
+    S.itens = s.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => String(a.nome).localeCompare(String(b.nome), "pt"));
+    render(); triagem();
+  }, falha));
+  unsubs.push(onSnapshot(query(collection(db(), C_MOV), orderBy("criadoEm", "desc"), limit(300)), (s) => {
+    S.movs = s.docs.map((d) => ({ id: d.id, ...d.data() }));
+    renderMov(); tentativasGrafico = 0; graficoStock();
+  }, falha));
+  unsubs.push(onSnapshot(collection(db(), C_REQ), (s) => {
+    S.reqs = s.docs.map((d) => ({ id: d.id, ...d.data() }));
+    triagem();
+  }, falha));
+  iniciando = false;
+}
+function parar() {
+  unsubs.forEach((u) => u()); unsubs = [];
+  S.itens = null; S.movs = []; S.reqs = null;
+  const tb = document.getElementById("tabela-inventario"); if (tb) tb.innerHTML = "";
+  renderMov();
+}
+
+montar();
+if (window.firebaseOnAuth && window.firebaseAuth) {
+  window.firebaseOnAuth(window.firebaseAuth, (user) => (user ? iniciar() : parar()));
+} else {
+  console.error("Firebase Auth não está disponível — Inventário não arrancou.");
+}
+</script>
 </body>
 </html>
