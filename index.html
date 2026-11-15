@@ -4114,5 +4114,265 @@ if (window.firebaseOnAuth && window.firebaseAuth) {
   console.error("Firebase Auth não está disponível — Inventário não arrancou.");
 }
 </script>
+    <!-- ═══════════ COMPRAS — pedidos automáticos por stock insuficiente — colar antes de </body>, DEPOIS do bloco do Inventário ═══════════ -->
+<script type="module">
+import {
+  collection, doc, onSnapshot, updateDoc, deleteDoc, writeBatch, runTransaction, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+/* ───────────────────────── Utilitários ───────────────────────── */
+const C_CMP = "compras", C_INV = "inventario", C_MOV = "inventario_movimentos", C_REQ = "requisicoes";
+const db = () => window.dbFirebase;
+const email = () => window.firebaseAuth?.currentUser?.email ?? null;
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+const toast = (m, t = "info") => window.mostrarToast?.(m, t);
+const norm = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+const slug = (s) => norm(s).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
+const numDe = (s) => { const m = String(s ?? "").match(/(\d+(?:[.,]\d+)?)/); return m ? parseFloat(m[1].replace(",", ".")) : null; };
+const stamp = () => ({ atualizadoEm: serverTimestamp(), atualizadoPor: email() });
+const falha = (e) => { console.error(e); toast("Sem permissão ou erro de ligação", "error"); };
+const kz = (n) => Math.round(n).toLocaleString("pt-PT") + " Kz";
+const tema = () => (document.documentElement.classList.contains("light") ? "light" : "dark");
+const bg = () => 'style="background: var(--bg-app); color-scheme: ' + tema() + ';"';
+const IN = "w-full bg-transparent border border-transparent hover:border-themed focus:border-blue-500 focus:outline-none rounded-lg px-2 py-1.5 text-xs text-primary-themed disabled:opacity-60";
+const BOX = "border-themed border rounded-xl px-3 py-2 text-xs text-primary-themed focus:outline-none focus:border-blue-500";
+const ESTADOS = {
+  "Por encomendar": "bg-amber-500/15 text-amber-500",
+  "Encomendado": "bg-blue-500/15 text-blue-500",
+  "Recebido": "bg-emerald-500/15 text-emerald-500",
+  "Cancelado": "bg-slate-500/20 text-slate-400",
+};
+const ABERTOS = ["Por encomendar", "Encomendado"];
+const S = { itens: null, reqs: null, cmp: null, filtro: "abertos" };
+let unsubs = [], pendente = false;
+const emCurso = new Set();
+
+/* ───────────────────────── Criar pedidos ───────────────────────── */
+async function criarPedido(d, idFixo) {
+  const ano = new Date().getFullYear();
+  const cref = doc(db(), "contadores", "PC-" + ano);
+  const pref = idFixo ? doc(db(), C_CMP, idFixo) : doc(collection(db(), C_CMP));
+  let cod = null;
+  await runTransaction(db(), async (tx) => {
+    const ps = await tx.get(pref), cs = await tx.get(cref);
+    if (ps.exists()) { cod = null; return; }
+    const n = (cs.exists() ? +cs.data().n || 0 : 0) + 1;
+    cod = "PC-" + ano + "-" + String(n).padStart(3, "0");
+    tx.set(cref, { n });
+    tx.set(pref, { cod, estado: "Por encomendar", fornecedor: "", previsao: "", preco: "", stockEntrou: false, cancelAuto: false, ...d, criadoEm: serverTimestamp(), criadoPor: email() });
+  });
+  return cod;
+}
+
+/* Faltas = o que a requisição pediu menos o que o Inventário conseguiu abater (mesma regra de correspondência do Inventário) */
+function faltasDe(r) {
+  const porNome = new Map();
+  (Array.isArray(r.materiais) ? r.materiais : []).forEach((m) => {
+    const q = numDe(m.qtd);
+    if (!q || q <= 0) return;
+    const k = norm(m.nome), it = S.itens.find((i) => norm(i.nome) === k);
+    const cur = porNome.get(k) || { key: k, itemId: it ? it.id : null, nome: it ? it.nome : String(m.nome || "").trim().replace(/[:;,.\s]+$/, ""), q: 0 };
+    cur.q += q; porNome.set(k, cur);
+  });
+  const feito = new Map((r.stockMov || []).map((x) => [x.itemId, +x.qtd || 0]));
+  return [...porNome.values()].map((x) => ({ ...x, falta: x.q - (x.itemId ? feito.get(x.itemId) || 0 : 0) })).filter((x) => x.falta > 0);
+}
+async function sincronizar(r) {
+  const ativa = r.estado === "Aprovado" && r.stockBaixado === true;
+  const want = ativa ? faltasDe(r) : [];
+  const ids = new Set();
+  for (const w of want) {
+    const id = "rq_" + r.id + "_" + slug(w.key);
+    ids.add(id);
+    const ex = S.cmp.find((c) => c.id === id);
+    if (!ex) {
+      const cod = await criarPedido({ nome: w.nome, itemId: w.itemId, qtd: w.falta, origem: "requisicao", ref: r.cod || "", reqId: r.id }, id);
+      if (cod) toast("Pedido de compra " + cod + " criado: " + w.nome + " (" + w.falta + ") — stock insuficiente em " + (r.cod || "requisição"), "info");
+    } else if (ex.estado === "Cancelado" && ex.cancelAuto) {
+      await updateDoc(doc(db(), C_CMP, id), { estado: "Por encomendar", qtd: w.falta, cancelAuto: false, nota: "", ...stamp() });
+    }
+  }
+  for (const c of S.cmp.filter((c) => c.origem === "requisicao" && c.reqId === r.id && !ids.has(c.id) && c.estado === "Por encomendar")) {
+    await updateDoc(doc(db(), C_CMP, c.id), { estado: "Cancelado", cancelAuto: true, nota: "Cancelado automaticamente: a requisição já não está aprovada", ...stamp() });
+  }
+}
+function triagem() {
+  if (S.itens === null || S.reqs === null || S.cmp === null) return;
+  S.reqs.forEach((r) => {
+    const precisa = (r.estado === "Aprovado" && r.stockBaixado === true) || S.cmp.some((c) => c.reqId === r.id && c.origem === "requisicao" && c.estado === "Por encomendar");
+    if (!precisa || emCurso.has(r.id)) return;
+    emCurso.add(r.id);
+    sincronizar(r).catch((e) => { console.error(e); toast("Erro ao gerar pedidos de compra", "error"); }).finally(() => emCurso.delete(r.id));
+  });
+}
+
+/* ───────────────────────── Ações manuais ───────────────────────── */
+async function novoManual() {
+  const nome = document.getElementById("cmp-item").value.trim(), qtd = parseFloat(String(document.getElementById("cmp-qtd").value).replace(",", "."));
+  if (!nome || !(qtd > 0)) { toast("Indica o item e a quantidade", "warn"); return; }
+  const it = S.itens.find((i) => norm(i.nome) === norm(nome));
+  try {
+    const cod = await criarPedido({ nome: it ? it.nome : nome, itemId: it ? it.id : null, qtd, origem: "manual", ref: "" });
+    toast("Pedido " + cod + " criado", "success");
+    document.getElementById("cmp-item").value = ""; document.getElementById("cmp-qtd").value = "";
+  } catch (e) { falha(e); }
+}
+async function gerarMinimos() {
+  const abertos = new Set(S.cmp.filter((c) => ABERTOS.includes(c.estado)).map((c) => c.itemId).filter(Boolean));
+  const baixos = S.itens.filter((i) => (+i.qtd || 0) < (+i.min || 0) && !abertos.has(i.id));
+  if (!baixos.length) { toast("Nenhum item abaixo do mínimo sem pedido em aberto", "info"); return; }
+  if (!confirm(baixos.length + " item(ns) abaixo do mínimo. Criar pedidos para repor até ao dobro do mínimo?")) return;
+  try {
+    let n = 0;
+    for (const i of baixos) {
+      const falta = Math.max(1, (+i.min || 0) * 2 - (+i.qtd || 0));
+      if (await criarPedido({ nome: i.nome, itemId: i.id, qtd: falta, origem: "minimo", ref: "Abaixo do mínimo" })) n++;
+    }
+    toast(n + " pedido(s) de reposição criados", "success");
+  } catch (e) { falha(e); }
+}
+async function receber(p) {
+  const it = (p.itemId && S.itens.find((i) => i.id === p.itemId)) || S.itens.find((i) => norm(i.nome) === norm(p.nome));
+  const q = +p.qtd || 0;
+  if (!(q > 0)) { toast("Quantidade inválida no pedido", "warn"); return false; }
+  const pref = doc(db(), C_CMP, p.id);
+  if (!it) {
+    if (!confirm('"' + p.nome + '" ainda não existe no inventário. Criar o item com ' + q + " unidade(s) em stock?")) return false;
+    const b = writeBatch(db()), iref = doc(collection(db(), C_INV));
+    b.set(iref, { nome: p.nome, cat: "Equipamento", qtd: q, min: 0, local: "Armazém", ...stamp() });
+    b.set(doc(collection(db(), C_MOV)), { itemId: iref.id, nome: p.nome, tipo: "entrada", delta: q, qtd: q, saldoApos: q, motivo: "Compra " + p.cod, ref: p.cod, criadoEm: serverTimestamp(), criadoPor: email() });
+    b.update(pref, { estado: "Recebido", stockEntrou: true, itemId: iref.id, recebidoEm: serverTimestamp(), ...stamp() });
+    await b.commit();
+    return true;
+  }
+  const iref = doc(db(), C_INV, it.id);
+  return runTransaction(db(), async (tx) => {
+    const ps = await tx.get(pref), is = await tx.get(iref);
+    if (!ps.exists() || ps.data().estado === "Recebido" || ps.data().stockEntrou) return false;
+    if (!is.exists()) throw new Error("Item de inventário apagado");
+    const atual = +is.data().qtd || 0, novo = atual + q;
+    tx.update(iref, { qtd: novo, ...stamp() });
+    tx.set(doc(collection(db(), C_MOV)), { itemId: it.id, nome: is.data().nome, tipo: "entrada", delta: q, qtd: q, saldoApos: novo, motivo: "Compra " + p.cod, ref: p.cod, criadoEm: serverTimestamp(), criadoPor: email() });
+    tx.update(pref, { estado: "Recebido", stockEntrou: true, itemId: it.id, recebidoEm: serverTimestamp(), ...stamp() });
+    return true;
+  });
+}
+
+/* ───────────────────────── Interface ───────────────────────── */
+const editando = () => { const a = document.activeElement; return !!a && !!a.closest && !!a.closest("#compras-app") && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName); };
+const tempo = (c) => (c.criadoEm && c.criadoEm.toMillis ? c.criadoEm.toMillis() : c.criadoEm === null ? Date.now() : 0);
+
+function render(force) {
+  const app = document.getElementById("compras-app");
+  if (!app || S.cmp === null) return;
+  if (!force && editando()) { pendente = true; return; }
+  pendente = false;
+  const n = (e) => S.cmp.filter((c) => c.estado === e).length;
+  const emAberto = S.cmp.filter((c) => ABERTOS.includes(c.estado) && c.preco !== "" && c.preco != null).reduce((a, c) => a + (+c.qtd || 0) * (+c.preco || 0), 0);
+  const badge = document.getElementById("btn-compras");
+  if (badge) {
+    let s = badge.querySelector(".cmp-badge");
+    if (!s) { s = document.createElement("span"); s.className = "cmp-badge ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500"; badge.appendChild(s); }
+    s.textContent = n("Por encomendar"); s.style.display = n("Por encomendar") ? "" : "none";
+  }
+  const lista = S.cmp.filter((c) => S.filtro === "todos" ? true : S.filtro === "abertos" ? ABERTOS.includes(c.estado) : S.filtro === "recebidos" ? c.estado === "Recebido" : c.estado === "Cancelado")
+    .sort((a, b) => tempo(b) - tempo(a));
+  const kpi = (t, v, cor, sub) => '<div class="card-themed p-5 rounded-2xl"><p class="text-[10px] text-secondary-themed font-bold uppercase tracking-widest">' + t + '</p><h3 class="text-3xl font-black ' + cor + ' mt-2">' + v + '</h3><p class="text-[10px] text-secondary-themed mt-1">' + sub + "</p></div>";
+  const rows = lista.map((c) => {
+    const id = esc(c.id), bloq = c.estado === "Recebido" ? "disabled" : "";
+    const origem = c.origem === "requisicao" ? '<span class="badge-modern bg-blue-500/15 text-blue-500">Requisição</span> <span class="font-mono text-[10px] text-secondary-themed">' + esc(c.ref) + "</span>"
+      : c.origem === "minimo" ? '<span class="badge-modern bg-amber-500/15 text-amber-500">Mínimo</span>' : '<span class="badge-modern bg-slate-500/20 text-slate-400">Manual</span>';
+    return "<tr>" +
+      '<td class="p-3 font-mono text-blue-500">' + esc(c.cod) + "</td>" +
+      '<td class="p-3 text-primary-themed font-medium">' + esc(c.nome) + (c.nota ? '<div class="text-[10px] text-secondary-themed font-normal">' + esc(c.nota) + "</div>" : "") + "</td>" +
+      '<td class="p-1.5 w-20"><input type="number" min="0" step="any" data-id="' + id + '" data-f="qtd" value="' + esc(c.qtd) + '" ' + bloq + ' class="' + IN + ' text-right font-mono"></td>' +
+      '<td class="p-3">' + origem + "</td>" +
+      '<td class="p-1.5 w-36"><input data-id="' + id + '" data-f="fornecedor" value="' + esc(c.fornecedor) + '" placeholder="Fornecedor" ' + bloq + ' class="' + IN + '"></td>' +
+      '<td class="p-1.5 w-36"><input type="date" data-id="' + id + '" data-f="previsao" value="' + esc(c.previsao) + '" ' + bloq + " " + bg() + ' class="' + IN + ' font-mono"></td>' +
+      '<td class="p-1.5 w-28"><input type="number" min="0" step="any" data-id="' + id + '" data-f="preco" value="' + esc(c.preco) + '" placeholder="Kz/un" ' + bloq + ' class="' + IN + ' text-right font-mono"></td>' +
+      '<td class="p-1.5 w-36"><select data-id="' + id + '" data-f="estado" ' + bloq + " " + bg() + ' class="' + BOX + " w-full font-bold " + ESTADOS[c.estado] + '">' +
+      Object.keys(ESTADOS).map((e) => "<option " + (e === c.estado ? "selected" : "") + ">" + e + "</option>").join("") + "</select></td>" +
+      '<td class="p-1.5">' + (c.estado === "Recebido" ? "" : '<button data-ia="del" data-id="' + id + '" title="Apagar pedido" class="text-red-500 hover:text-red-400 px-2"><i class="fas fa-trash"></i></button>') + "</td></tr>";
+  }).join("") || '<tr><td colspan="9" class="p-8 text-center text-secondary-themed">' + (S.cmp.length ? "Nenhum pedido neste filtro." : "Sem pedidos de compra. Surgem aqui automaticamente quando uma requisição aprovada não tem stock suficiente.") + "</td></tr>";
+  app.innerHTML = '<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">' +
+    kpi("Por encomendar", n("Por encomendar"), "text-amber-500", "pedidos a tratar") +
+    kpi("Encomendados", n("Encomendado"), "text-blue-500", "a aguardar entrega") +
+    kpi("Recebidos", n("Recebido"), "text-emerald-500", "entraram em stock") +
+    kpi("Valor em aberto", emAberto ? kz(emAberto) : "—", "text-primary-themed", "pedidos com preço indicado") + "</div>" +
+    '<div class="card-themed rounded-2xl overflow-hidden"><div class="p-4 border-b border-themed flex justify-between items-center flex-wrap gap-3">' +
+    '<div><h3 class="font-bold text-xs text-primary-themed uppercase tracking-wider"><i class="fas fa-cart-shopping text-blue-500 mr-2"></i>Pedidos de compra</h3>' +
+    '<p class="text-[10px] text-secondary-themed mt-1">Gerados automaticamente pelas faltas de stock · ao marcar «Recebido» a quantidade entra no inventário</p></div>' +
+    '<div class="flex items-center gap-2 flex-wrap"><select data-meta="filtro" ' + bg() + ' class="' + BOX + '">' +
+    [["abertos", "Em aberto"], ["recebidos", "Recebidos"], ["cancelados", "Cancelados"], ["todos", "Todos"]].map(([k, t]) => '<option value="' + k + '" ' + (S.filtro === k ? "selected" : "") + ">" + t + "</option>").join("") + "</select>" +
+    '<button data-ia="minimos" class="text-xs font-semibold px-3.5 py-2 rounded-xl border border-themed text-secondary-themed hover:bg-blue-500/10"><i class="fas fa-triangle-exclamation text-amber-500 mr-1.5"></i>Gerar dos mínimos</button></div></div>' +
+    '<div class="p-4 border-b border-themed flex gap-2 flex-wrap items-end"><div class="flex-1 min-w-[200px]"><label class="block text-[10px] text-secondary-themed uppercase font-bold mb-1">Novo pedido manual</label>' +
+    '<input id="cmp-item" list="lista-inventario" placeholder="Item (escolhe do inventário ou escreve)" ' + bg() + ' class="' + BOX + ' w-full"></div>' +
+    '<input id="cmp-qtd" type="number" min="0" step="any" placeholder="Qtd" ' + bg() + ' class="' + BOX + ' w-24">' +
+    '<button data-ia="novo" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2"><i class="fas fa-plus"></i> Adicionar</button></div>' +
+    '<div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed"><tr>' +
+    ["Pedido", "Item", "Qtd.", "Origem", "Fornecedor", "Previsão", "Preço un.", "Estado", ""].map((t) => '<th class="p-3 font-bold">' + t + "</th>").join("") +
+    '</tr></thead><tbody class="divide-y divide-themed">' + rows + "</tbody></table></div></div>";
+}
+
+function montar() {
+  const tab = document.getElementById("tab-compras");
+  if (!tab || document.getElementById("compras-app")) return;
+  tab.querySelector(".card-themed.p-10")?.remove();
+  const app = document.createElement("div");
+  app.id = "compras-app"; app.className = "space-y-6";
+  tab.appendChild(app);
+  app.addEventListener("focusout", () => setTimeout(() => { if (pendente && !editando()) render(); }, 60));
+  app.addEventListener("change", async (e) => {
+    const t = e.target;
+    if (t.dataset.meta === "filtro") { S.filtro = t.value; render(true); return; }
+    const { id, f } = t.dataset;
+    if (!id || !f) return;
+    const p = S.cmp.find((c) => c.id === id);
+    if (!p) return;
+    try {
+      if (f === "estado") {
+        if (t.value === "Recebido") { const ok = await receber(p); if (ok) toast("Recebido: " + p.nome + " (+" + p.qtd + ") deu entrada no inventário", "success"); else render(true); }
+        else await updateDoc(doc(db(), C_CMP, id), { estado: t.value, cancelAuto: false, ...stamp() });
+        return;
+      }
+      let v = t.value;
+      if (f === "qtd") { v = parseFloat(String(v).replace(",", ".")); if (!(v > 0)) { render(true); return; } }
+      else if (f === "preco") v = v === "" ? "" : Math.max(0, parseFloat(String(v).replace(",", ".")) || 0);
+      await updateDoc(doc(db(), C_CMP, id), { [f]: v, ...stamp() });
+    } catch (err) { falha(err); render(true); }
+  });
+  app.addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-ia]");
+    if (!b) return;
+    if (b.dataset.ia === "novo") novoManual();
+    else if (b.dataset.ia === "minimos") gerarMinimos();
+    else if (b.dataset.ia === "del") {
+      const p = S.cmp.find((c) => c.id === b.dataset.id);
+      if (p && confirm("Apagar o pedido " + p.cod + " (" + p.nome + ")?")) deleteDoc(doc(db(), C_CMP, p.id)).catch(falha);
+    }
+  });
+}
+
+/* ───────────────────────── Ligação ao Firestore ───────────────────────── */
+function iniciar() {
+  if (unsubs.length) return;
+  unsubs.push(onSnapshot(collection(db(), C_INV), (s) => { S.itens = s.docs.map((d) => ({ id: d.id, ...d.data() })); triagem(); }, falha));
+  unsubs.push(onSnapshot(collection(db(), C_REQ), (s) => { S.reqs = s.docs.map((d) => ({ id: d.id, ...d.data() })); triagem(); }, falha));
+  unsubs.push(onSnapshot(collection(db(), C_CMP), (s) => { S.cmp = s.docs.map((d) => ({ id: d.id, ...d.data() })); render(); triagem(); }, falha));
+}
+function parar() {
+  unsubs.forEach((u) => u()); unsubs = [];
+  S.itens = S.reqs = S.cmp = null;
+  const app = document.getElementById("compras-app"); if (app) app.innerHTML = "";
+}
+
+montar();
+if (window.firebaseOnAuth && window.firebaseAuth) {
+  window.firebaseOnAuth(window.firebaseAuth, (user) => (user ? iniciar() : parar()));
+} else {
+  console.error("Firebase Auth não está disponível — Compras não arrancou.");
+}
+new MutationObserver(() => render(true)).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+</script>
 </body>
 </html>
