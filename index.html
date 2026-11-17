@@ -1,12 +1,3 @@
-analiza e corruja.
-Não aparece a opção perfil, sair e fazer login.
-
-poderia tambem arrumar editar e apagar perfil.
-
-Adiciona alertas notorias.
-
-
-
 <!DOCTYPE html>
 <html lang="pt" class="dark">
 <head>
@@ -57,8 +48,6 @@ Adiciona alertas notorias.
         };
         window.firebaseConfig = firebaseConfig;
     </script>
-
-
         <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { initializeFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -73,6 +62,226 @@ Adiciona alertas notorias.
         window.firebaseOnAuth = onAuthStateChanged;
         console.log("Firebase ligado com sucesso!");
     </script>
+
+    <!-- ═══════════ PERFIS DE ACESSO (admin · supervisor · técnico) ═══════════
+     Módulo de perfis: executado DEPOIS da inicialização Firebase para preservar onAuthStateChanged. -->
+<script type="module">
+import {
+  doc, getDoc, setDoc, updateDoc, collection, query, limit, getDocs, onSnapshot, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+/* Opcional: e-mail do primeiro administrador. Se ficar vazio, o primeiro utilizador a entrar torna-se administrador. */
+const ADMIN_INICIAL = "";
+
+const TABS = {
+  supervisor: ["visao-geral", "organograma", "dgp", "gcq", "hsst", "dse", "dl", "logistica", "requisicoes", "frotas", "compras", "folha-obras", "rh", "painel-dia"],
+  tecnico: ["visao-geral", "hsst", "dse", "dl", "logistica", "requisicoes", "frotas", "folha-obras"],
+};
+const ROTULO = { admin: "Administrador", supervisor: "Supervisor", tecnico: "Técnico", pendente: "Pendente" };
+const COR = { admin: "bg-violet-500/15 text-violet-500", supervisor: "bg-blue-500/15 text-blue-500", tecnico: "bg-emerald-500/15 text-emerald-500", pendente: "bg-amber-500/15 text-amber-500" };
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+const toast = (m, t = "info") => window.mostrarToast?.(m, t);
+const db = () => window.dbFirebase;
+
+window.__papel = null; window.__perfil = null;
+const origOnAuth = window.firebaseOnAuth;
+let cache = { uid: null, promessa: null }, unsubPerfil = null, unsubUsers = null, ultimoPapel = null;
+
+/* ───────────────────────── Perfil do utilizador ───────────────────────── */
+async function criarOuLerPerfil(user) {
+  const ref = doc(db(), "utilizadores", user.uid);
+  try {
+    const s = await getDoc(ref);
+    if (s.exists()) return { id: user.uid, ...s.data() };
+  } catch (e) { console.error("Perfil:", e); return { id: user.uid, email: user.email, role: "pendente", erro: true }; }
+  let vazio = false;
+  try { vazio = (await getDocs(query(collection(db(), "utilizadores"), limit(1)))).empty; } catch (e) { vazio = false; }
+  const permitido = vazio && (!ADMIN_INICIAL || String(user.email).toLowerCase() === ADMIN_INICIAL.toLowerCase());
+  const novo = { email: user.email, nome: String(user.email || "").split("@")[0], role: permitido ? "admin" : "pendente", ativo: true, criadoEm: serverTimestamp() };
+  try { await setDoc(ref, novo); return { id: user.uid, ...novo }; }
+  catch (e) { console.error("Perfil:", e); return { id: user.uid, ...novo, role: "pendente", erro: true }; }
+}
+const perfilDe = (user) => {
+  if (cache.uid !== user.uid) cache = { uid: user.uid, promessa: criarOuLerPerfil(user) };
+  return cache.promessa;
+};
+
+/* ───────────────────────── Ligação ao login (corre antes dos outros blocos) ───────────────────────── */
+if (typeof origOnAuth !== "function") {
+  console.error("HANZOLO: Firebase Auth não foi inicializado antes do módulo de perfis.");
+  throw new Error("Inicialização Firebase/Auth fora de ordem.");
+}
+window.firebaseOnAuth = (auth, cb) => origOnAuth(auth, async (user) => {
+  if (!user) { limpar(); cb(null); return; }
+  const perfil = await perfilDe(user);
+  definir(perfil, user);
+  if (perfil.role === "pendente" || perfil.ativo === false) { mostrarPendente(perfil); cb(null); return; }
+  esconderPendente();
+  cb(user);
+});
+
+function limpar() {
+  window.__papel = null; window.__perfil = null; cache = { uid: null, promessa: null };
+  unsubPerfil?.(); unsubPerfil = null; unsubUsers?.(); unsubUsers = null; ultimoPapel = null;
+  document.body.removeAttribute("data-papel");
+  document.getElementById("tab-utilizadores")?.remove(); document.getElementById("btn-utilizadores")?.remove();
+  document.getElementById("pd-chip")?.remove();
+  esconderPendente();
+}
+function definir(perfil, user) {
+  window.__papel = perfil.role; window.__perfil = perfil;
+  if (!unsubPerfil && !perfil.erro) {
+    let primeira = true;
+    unsubPerfil = onSnapshot(doc(db(), "utilizadores", user.uid), (s) => {
+      const d = s.exists() ? s.data() : null;
+      if (primeira) { primeira = false; ultimoPapel = (d?.role || "") + "|" + (d?.ativo !== false); return; }
+      const atual = (d?.role || "") + "|" + (d?.ativo !== false);
+      if (atual !== ultimoPapel) { toast("O teu perfil de acesso foi alterado. A atualizar...", "info"); setTimeout(() => location.reload(), 1500); }
+    }, () => {});
+  }
+  if (perfil.role === "pendente" || perfil.ativo === false) { document.body.setAttribute("data-papel", "pendente"); return; }
+  aplicarPapel(perfil);
+}
+
+/* ───────────────────────── Ecrã de conta pendente ───────────────────────── */
+function mostrarPendente(p) {
+  let o = document.getElementById("ecra-pendente");
+  if (!o) {
+    o = document.createElement("div");
+    o.id = "ecra-pendente";
+    o.className = "fixed inset-0 flex items-center justify-center p-6";
+    o.style.cssText = "z-index:10050;background:#0f172a;";
+    document.body.appendChild(o);
+  }
+  const erro = p.erro, inativo = p.ativo === false;
+  o.innerHTML = '<div class="max-w-md w-full text-center rounded-3xl p-8" style="background:#1e293b;border:1px solid #334155;color:#f1f5f9">' +
+    '<div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4" style="background:rgba(245,158,11,.15)"><i class="fas ' + (erro ? "fa-wifi" : "fa-user-clock") + ' text-3xl" style="color:#f59e0b"></i></div>' +
+    '<h2 class="text-xl font-black mb-2">' + (erro ? "Não foi possível validar o teu acesso" : inativo ? "Conta desativada" : "Conta a aguardar aprovação") + "</h2>" +
+    '<p class="text-sm mb-1" style="color:#94a3b8">' + (erro ? "Verifica a ligação à internet e tenta de novo." : inativo ? "Contacta o administrador do sistema." : "A tua conta foi criada, mas ainda não tem um perfil de acesso atribuído. Pede ao administrador para a aprovar.") + "</p>" +
+    '<p class="text-xs mb-6" style="color:#64748b">' + esc(p.email || "") + "</p>" +
+    '<div class="flex gap-2 justify-center">' + (erro ? '<button id="pd-reload" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style="background:#3b82f6">Tentar de novo</button>' : "") +
+    '<button id="pd-sair" class="px-5 py-2.5 rounded-xl text-sm font-semibold" style="border:1px solid #334155;color:#94a3b8">Terminar sessão</button></div></div>';
+  o.classList.remove("hidden");
+  document.getElementById("pd-sair").onclick = sair;
+  document.getElementById("pd-reload")?.addEventListener("click", () => location.reload());
+}
+function esconderPendente() { document.getElementById("ecra-pendente")?.classList.add("hidden"); }
+async function sair() { try { await signOut(window.firebaseAuth); } catch (e) { console.error(e); } location.reload(); }
+
+/* ───────────────────────── Aplicação do perfil à interface ───────────────────────── */
+const podeVer = (tab) => {
+  const p = window.__papel;
+  if (p === "admin") return true;
+  if (tab === "utilizadores") return false;
+  return !!TABS[p] && TABS[p].includes(tab);
+};
+const style = document.createElement("style");
+style.textContent = `
+body[data-papel="tecnico"] [data-acao="aprovar"], body[data-papel="tecnico"] [data-acao="rejeitar"], body[data-papel="tecnico"] [data-acao="remover"],
+body[data-papel="tecnico"] #tabela-inventario [data-ia], body[data-papel="tecnico"] #tabela-epi-geral [data-del], body[data-papel="tecnico"] #tabela-epi-dse [data-del],
+body[data-papel="tecnico"] #tabela-epc [data-del], body[data-papel="tecnico"] #tabela-dse-tecnicos [data-del], body[data-papel="tecnico"] [data-seed],
+body[data-papel="tecnico"] button[onclick="abrirModalInventario()"], body[data-papel="tecnico"] button[onclick="abrirModalEPI('geral')"], body[data-papel="tecnico"] button[onclick="abrirModalEPI('dse')"],
+body[data-papel="tecnico"] button[onclick="abrirModalEPC()"], body[data-papel="tecnico"] button[onclick="abrirModalTecnicoDSE()"], body[data-papel="tecnico"] button[onclick="abrirModalGestaoFrotas()"],
+body[data-papel="tecnico"] button[onclick="abrirModalProjeto()"], body[data-papel="supervisor"] button[onclick="abrirModalColaborador()"] { display: none !important; }
+body[data-papel="tecnico"] #tabela-inventario input, body[data-papel="tecnico"] #tabela-inventario select,
+body[data-papel="tecnico"] #tabela-epi-geral input, body[data-papel="tecnico"] #tabela-epi-geral select, body[data-papel="tecnico"] #tabela-epi-dse input, body[data-papel="tecnico"] #tabela-epi-dse select,
+body[data-papel="tecnico"] #tabela-epc input, body[data-papel="tecnico"] #tabela-dse-tecnicos input, body[data-papel="tecnico"] #tabela-dse-tecnicos select { pointer-events: none; opacity: .75; }`;
+document.head.appendChild(style);
+
+const switchTab0 = window.switchTab;
+window.switchTab = function (id) {
+  if (window.__papel && !podeVer(id)) { toast("Não tens permissão para aceder a este módulo", "warn"); return; }
+  return switchTab0.apply(this, arguments);
+};
+
+function aplicarPapel(perfil) {
+  document.body.setAttribute("data-papel", perfil.role);
+  document.querySelectorAll('#sidebar button[id^="btn-"]').forEach((b) => {
+    const tab = b.id.slice(4);
+    if (tab === "utilizadores") return;
+    b.style.display = podeVer(tab) ? "" : "none";
+  });
+  document.querySelectorAll("#sidebar .border-l-2").forEach((g) => { g.style.display = [...g.children].some((c) => c.style.display !== "none") ? "" : "none"; });
+  chip(perfil);
+  if (perfil.role === "admin") montarUtilizadores(perfil);
+  window.__acesso = { papel: perfil.role, perfil, pode: podeVer };
+}
+function chip(perfil) {
+  document.getElementById("pd-chip")?.remove();
+  const bell = document.querySelector('header button[onclick="toggleNotificacoes()"]');
+  if (!bell) return;
+  const c = document.createElement("div");
+  c.id = "pd-chip"; c.className = "flex items-center gap-2";
+  c.innerHTML = '<div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl border-themed border text-xs" style="background: var(--bg-app);" title="' + esc(perfil.email) + '"><i class="fas fa-user text-secondary-themed text-[10px]"></i>' +
+    '<span class="text-primary-themed font-medium max-w-[120px] truncate">' + esc(perfil.nome || perfil.email) + '</span><span class="badge-modern ' + COR[perfil.role] + '">' + ROTULO[perfil.role] + "</span></div>" +
+    '<button id="pd-sair-hd" class="p-2 rounded-xl hover:bg-red-500/10" title="Terminar sessão"><i class="fas fa-right-from-bracket text-primary-themed text-sm"></i></button>';
+  bell.before(c);
+  document.getElementById("pd-sair-hd").onclick = sair;
+}
+
+/* ───────────────────────── Página «Utilizadores» (só administrador) ───────────────────────── */
+const IN = "border-themed border rounded-lg px-2 py-1.5 text-xs text-primary-themed w-full focus:outline-none focus:border-blue-500";
+function montarUtilizadores(perfil) {
+  if (!document.getElementById("tab-utilizadores")) {
+    const main = document.querySelector("main"), side = document.getElementById("sidebar");
+    if (!main || !side) return;
+    const tab = document.createElement("div");
+    tab.id = "tab-utilizadores"; tab.className = "tab-content hidden space-y-6";
+    tab.innerHTML = '<div class="pb-4 border-b border-themed"><h2 class="text-2xl font-black tracking-tight text-primary-themed">Utilizadores e perfis de acesso</h2>' +
+      '<p class="text-xs text-secondary-themed mt-1">Define quem pode ver e alterar o quê. As permissões são aplicadas no servidor (regras do Firestore).</p></div>' +
+      '<div class="card-themed rounded-2xl p-5 text-xs text-secondary-themed space-y-1"><p class="text-primary-themed font-bold text-sm mb-2">Como adicionar uma pessoa</p>' +
+      '<p>1. No Firebase: Authentication → Utilizadores → <strong class="text-primary-themed">Adicionar utilizador</strong> (e-mail + palavra-passe).</p>' +
+      '<p>2. A pessoa entra na plataforma uma primeira vez. Fica <strong class="text-amber-500">Pendente</strong> e aparece aqui.</p>' +
+      '<p>3. Escolhe o perfil abaixo: <strong class="text-primary-themed">Técnico</strong> (consulta e regista obras e requisições), <strong class="text-primary-themed">Supervisor</strong> (gere operações, aprova requisições, vê RH) ou <strong class="text-primary-themed">Administrador</strong> (tudo, incluindo RH e utilizadores).</p></div>' +
+      '<div class="card-themed rounded-2xl overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed"><tr>' +
+      ["E-mail", "Nome", "Perfil", "Ativo"].map((t) => '<th class="p-3 font-bold">' + t + "</th>").join("") + '</tr></thead><tbody id="tabela-utilizadores" class="divide-y divide-themed"></tbody></table></div></div>';
+    main.appendChild(tab);
+    const btn = document.createElement("button");
+    btn.id = "btn-utilizadores"; btn.setAttribute("onclick", "switchTab('utilizadores')");
+    btn.className = "nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-secondary-themed hover:text-primary-themed";
+    btn.innerHTML = '<i class="fas fa-user-lock w-4 text-center"></i><span>Utilizadores</span>';
+    side.appendChild(btn);
+    tab.addEventListener("change", (e) => {
+      const t = e.target, { id, f } = t.dataset;
+      if (!id || !f) return;
+      let v = f === "ativo" ? t.checked : t.value;
+      if (f === "role" && v === "admin" && !confirm("Dar acesso total (administrador) a esta pessoa?")) { render(true); return; }
+      if (f === "nome") v = v.trim();
+      updateDoc(doc(db(), "utilizadores", id), { [f]: v }).catch((err) => { console.error(err); toast("Sem permissão para alterar este utilizador", "error"); render(true); });
+    });
+  }
+  if (!unsubUsers) {
+    unsubUsers = onSnapshot(collection(db(), "utilizadores"), (s) => { lista = s.docs.map((d) => ({ id: d.id, ...d.data() })); render(); }, (e) => console.error(e));
+  }
+}
+let lista = [], pendente = false;
+const editando = () => { const a = document.activeElement; return !!a && !!a.closest && !!a.closest("#tab-utilizadores") && /^(INPUT|SELECT)$/.test(a.tagName); };
+function render(force) {
+  const tb = document.getElementById("tabela-utilizadores");
+  if (!tb) return;
+  if (!force && editando()) { pendente = true; return; }
+  pendente = false;
+  const me = window.__perfil?.id;
+  const ord = [...lista].sort((a, b) => (a.role === "pendente" ? 0 : 1) - (b.role === "pendente" ? 0 : 1) || String(a.email).localeCompare(String(b.email)));
+  tb.innerHTML = ord.map((u) => {
+    const eu = u.id === me, id = esc(u.id), bloq = eu ? "disabled" : "";
+    return '<tr class="' + (u.role === "pendente" ? "bg-amber-500/5" : "") + '"><td class="p-3 text-primary-themed">' + esc(u.email) + (eu ? ' <span class="badge-modern bg-blue-500/15 text-blue-500">tu</span>' : "") + "</td>" +
+      '<td class="p-2 w-48"><input data-id="' + id + '" data-f="nome" value="' + esc(u.nome) + '" style="background: var(--bg-app);" class="' + IN + '"></td>' +
+      '<td class="p-2 w-44"><select data-id="' + id + '" data-f="role" ' + bloq + ' style="background: var(--bg-app);" class="' + IN + ' font-bold">' +
+      ["pendente", "tecnico", "supervisor", "admin"].map((r) => '<option value="' + r + '" ' + (u.role === r ? "selected" : "") + ">" + ROTULO[r] + "</option>").join("") + "</select></td>" +
+      '<td class="p-3"><input type="checkbox" data-id="' + id + '" data-f="ativo" ' + (u.ativo !== false ? "checked" : "") + " " + bloq + "></td></tr>";
+  }).join("") || '<tr><td colspan="4" class="p-6 text-center text-secondary-themed">Sem utilizadores.</td></tr>';
+  const n = lista.filter((u) => u.role === "pendente").length, b = document.getElementById("btn-utilizadores");
+  if (b) {
+    let s = b.querySelector(".pend-badge");
+    if (!s) { s = document.createElement("span"); s.className = "pend-badge ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500"; b.appendChild(s); }
+    s.textContent = n; s.style.display = n ? "" : "none";
+  }
+}
+document.addEventListener("focusout", (e) => { if (e.target.closest?.("#tab-utilizadores")) setTimeout(() => { if (pendente && !editando()) render(); }, 60); });
+</script>
+
 
     <!-- Leaflet Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -291,223 +500,7 @@ table td, p {
     </div>
 
     <!-- HEADER DIGITAL -->
-    <header class="no-print sticky top-0 backdrop-blur-xl border-b px-4 md:px-6 
-
-    <!-- ═══════════ PERFIS DE ACESSO (admin · supervisor · técnico) ═══════════
-     COLAR NA <head>, logo a seguir ao </script> do bloco que contém "Firebase ligado com sucesso!"
-     (tem de correr ANTES dos restantes blocos) -->
-<script type="module">
-import {
-  doc, getDoc, setDoc, updateDoc, collection, query, limit, getDocs, onSnapshot, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-/* Opcional: e-mail do primeiro administrador. Se ficar vazio, o primeiro utilizador a entrar torna-se administrador. */
-const ADMIN_INICIAL = "";
-
-const TABS = {
-  supervisor: ["visao-geral", "organograma", "dgp", "gcq", "hsst", "dse", "dl", "logistica", "requisicoes", "frotas", "compras", "folha-obras", "rh", "painel-dia"],
-  tecnico: ["visao-geral", "hsst", "dse", "dl", "logistica", "requisicoes", "frotas", "folha-obras"],
-};
-const ROTULO = { admin: "Administrador", supervisor: "Supervisor", tecnico: "Técnico", pendente: "Pendente" };
-const COR = { admin: "bg-violet-500/15 text-violet-500", supervisor: "bg-blue-500/15 text-blue-500", tecnico: "bg-emerald-500/15 text-emerald-500", pendente: "bg-amber-500/15 text-amber-500" };
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
-const toast = (m, t = "info") => window.mostrarToast?.(m, t);
-const db = () => window.dbFirebase;
-
-window.__papel = null; window.__perfil = null;
-const origOnAuth = window.firebaseOnAuth;
-let cache = { uid: null, promessa: null }, unsubPerfil = null, unsubUsers = null, ultimoPapel = null;
-
-/* ───────────────────────── Perfil do utilizador ───────────────────────── */
-async function criarOuLerPerfil(user) {
-  const ref = doc(db(), "utilizadores", user.uid);
-  try {
-    const s = await getDoc(ref);
-    if (s.exists()) return { id: user.uid, ...s.data() };
-  } catch (e) { console.error("Perfil:", e); return { id: user.uid, email: user.email, role: "pendente", erro: true }; }
-  let vazio = false;
-  try { vazio = (await getDocs(query(collection(db(), "utilizadores"), limit(1)))).empty; } catch (e) { vazio = false; }
-  const permitido = vazio && (!ADMIN_INICIAL || String(user.email).toLowerCase() === ADMIN_INICIAL.toLowerCase());
-  const novo = { email: user.email, nome: String(user.email || "").split("@")[0], role: permitido ? "admin" : "pendente", ativo: true, criadoEm: serverTimestamp() };
-  try { await setDoc(ref, novo); return { id: user.uid, ...novo }; }
-  catch (e) { console.error("Perfil:", e); return { id: user.uid, ...novo, role: "pendente", erro: true }; }
-}
-const perfilDe = (user) => {
-  if (cache.uid !== user.uid) cache = { uid: user.uid, promessa: criarOuLerPerfil(user) };
-  return cache.promessa;
-};
-
-/* ───────────────────────── Ligação ao login (corre antes dos outros blocos) ───────────────────────── */
-window.firebaseOnAuth = (auth, cb) => origOnAuth(auth, async (user) => {
-  if (!user) { limpar(); cb(null); return; }
-  const perfil = await perfilDe(user);
-  definir(perfil, user);
-  if (perfil.role === "pendente" || perfil.ativo === false) { mostrarPendente(perfil); cb(null); return; }
-  esconderPendente();
-  cb(user);
-});
-
-function limpar() {
-  window.__papel = null; window.__perfil = null; cache = { uid: null, promessa: null };
-  unsubPerfil?.(); unsubPerfil = null; unsubUsers?.(); unsubUsers = null; ultimoPapel = null;
-  document.body.removeAttribute("data-papel");
-  document.getElementById("tab-utilizadores")?.remove(); document.getElementById("btn-utilizadores")?.remove();
-  document.getElementById("pd-chip")?.remove();
-  esconderPendente();
-}
-function definir(perfil, user) {
-  window.__papel = perfil.role; window.__perfil = perfil;
-  if (!unsubPerfil && !perfil.erro) {
-    let primeira = true;
-    unsubPerfil = onSnapshot(doc(db(), "utilizadores", user.uid), (s) => {
-      const d = s.exists() ? s.data() : null;
-      if (primeira) { primeira = false; ultimoPapel = (d?.role || "") + "|" + (d?.ativo !== false); return; }
-      const atual = (d?.role || "") + "|" + (d?.ativo !== false);
-      if (atual !== ultimoPapel) { toast("O teu perfil de acesso foi alterado. A atualizar...", "info"); setTimeout(() => location.reload(), 1500); }
-    }, () => {});
-  }
-  if (perfil.role === "pendente" || perfil.ativo === false) { document.body.setAttribute("data-papel", "pendente"); return; }
-  aplicarPapel(perfil);
-}
-
-/* ───────────────────────── Ecrã de conta pendente ───────────────────────── */
-function mostrarPendente(p) {
-  let o = document.getElementById("ecra-pendente");
-  if (!o) {
-    o = document.createElement("div");
-    o.id = "ecra-pendente";
-    o.className = "fixed inset-0 flex items-center justify-center p-6";
-    o.style.cssText = "z-index:10050;background:#0f172a;";
-    document.body.appendChild(o);
-  }
-  const erro = p.erro, inativo = p.ativo === false;
-  o.innerHTML = '<div class="max-w-md w-full text-center rounded-3xl p-8" style="background:#1e293b;border:1px solid #334155;color:#f1f5f9">' +
-    '<div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4" style="background:rgba(245,158,11,.15)"><i class="fas ' + (erro ? "fa-wifi" : "fa-user-clock") + ' text-3xl" style="color:#f59e0b"></i></div>' +
-    '<h2 class="text-xl font-black mb-2">' + (erro ? "Não foi possível validar o teu acesso" : inativo ? "Conta desativada" : "Conta a aguardar aprovação") + "</h2>" +
-    '<p class="text-sm mb-1" style="color:#94a3b8">' + (erro ? "Verifica a ligação à internet e tenta de novo." : inativo ? "Contacta o administrador do sistema." : "A tua conta foi criada, mas ainda não tem um perfil de acesso atribuído. Pede ao administrador para a aprovar.") + "</p>" +
-    '<p class="text-xs mb-6" style="color:#64748b">' + esc(p.email || "") + "</p>" +
-    '<div class="flex gap-2 justify-center">' + (erro ? '<button id="pd-reload" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style="background:#3b82f6">Tentar de novo</button>' : "") +
-    '<button id="pd-sair" class="px-5 py-2.5 rounded-xl text-sm font-semibold" style="border:1px solid #334155;color:#94a3b8">Terminar sessão</button></div></div>';
-  o.classList.remove("hidden");
-  document.getElementById("pd-sair").onclick = sair;
-  document.getElementById("pd-reload")?.addEventListener("click", () => location.reload());
-}
-function esconderPendente() { document.getElementById("ecra-pendente")?.classList.add("hidden"); }
-async function sair() { try { await signOut(window.firebaseAuth); } catch (e) { console.error(e); } location.reload(); }
-
-/* ───────────────────────── Aplicação do perfil à interface ───────────────────────── */
-const podeVer = (tab) => {
-  const p = window.__papel;
-  if (p === "admin") return true;
-  if (tab === "utilizadores") return false;
-  return !!TABS[p] && TABS[p].includes(tab);
-};
-const style = document.createElement("style");
-style.textContent = `
-body[data-papel="tecnico"] [data-acao="aprovar"], body[data-papel="tecnico"] [data-acao="rejeitar"], body[data-papel="tecnico"] [data-acao="remover"],
-body[data-papel="tecnico"] #tabela-inventario [data-ia], body[data-papel="tecnico"] #tabela-epi-geral [data-del], body[data-papel="tecnico"] #tabela-epi-dse [data-del],
-body[data-papel="tecnico"] #tabela-epc [data-del], body[data-papel="tecnico"] #tabela-dse-tecnicos [data-del], body[data-papel="tecnico"] [data-seed],
-body[data-papel="tecnico"] button[onclick="abrirModalInventario()"], body[data-papel="tecnico"] button[onclick="abrirModalEPI('geral')"], body[data-papel="tecnico"] button[onclick="abrirModalEPI('dse')"],
-body[data-papel="tecnico"] button[onclick="abrirModalEPC()"], body[data-papel="tecnico"] button[onclick="abrirModalTecnicoDSE()"], body[data-papel="tecnico"] button[onclick="abrirModalGestaoFrotas()"],
-body[data-papel="tecnico"] button[onclick="abrirModalProjeto()"], body[data-papel="supervisor"] button[onclick="abrirModalColaborador()"] { display: none !important; }
-body[data-papel="tecnico"] #tabela-inventario input, body[data-papel="tecnico"] #tabela-inventario select,
-body[data-papel="tecnico"] #tabela-epi-geral input, body[data-papel="tecnico"] #tabela-epi-geral select, body[data-papel="tecnico"] #tabela-epi-dse input, body[data-papel="tecnico"] #tabela-epi-dse select,
-body[data-papel="tecnico"] #tabela-epc input, body[data-papel="tecnico"] #tabela-dse-tecnicos input, body[data-papel="tecnico"] #tabela-dse-tecnicos select { pointer-events: none; opacity: .75; }`;
-document.head.appendChild(style);
-
-const switchTab0 = window.switchTab;
-window.switchTab = function (id) {
-  if (window.__papel && !podeVer(id)) { toast("Não tens permissão para aceder a este módulo", "warn"); return; }
-  return switchTab0.apply(this, arguments);
-};
-
-function aplicarPapel(perfil) {
-  document.body.setAttribute("data-papel", perfil.role);
-  document.querySelectorAll('#sidebar button[id^="btn-"]').forEach((b) => {
-    const tab = b.id.slice(4);
-    if (tab === "utilizadores") return;
-    b.style.display = podeVer(tab) ? "" : "none";
-  });
-  document.querySelectorAll("#sidebar .border-l-2").forEach((g) => { g.style.display = [...g.children].some((c) => c.style.display !== "none") ? "" : "none"; });
-  chip(perfil);
-  if (perfil.role === "admin") montarUtilizadores(perfil);
-  window.__acesso = { papel: perfil.role, perfil, pode: podeVer };
-}
-function chip(perfil) {
-  document.getElementById("pd-chip")?.remove();
-  const bell = document.querySelector('header button[onclick="toggleNotificacoes()"]');
-  if (!bell) return;
-  const c = document.createElement("div");
-  c.id = "pd-chip"; c.className = "flex items-center gap-2";
-  c.innerHTML = '<div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl border-themed border text-xs" style="background: var(--bg-app);" title="' + esc(perfil.email) + '"><i class="fas fa-user text-secondary-themed text-[10px]"></i>' +
-    '<span class="text-primary-themed font-medium max-w-[120px] truncate">' + esc(perfil.nome || perfil.email) + '</span><span class="badge-modern ' + COR[perfil.role] + '">' + ROTULO[perfil.role] + "</span></div>" +
-    '<button id="pd-sair-hd" class="p-2 rounded-xl hover:bg-red-500/10" title="Terminar sessão"><i class="fas fa-right-from-bracket text-primary-themed text-sm"></i></button>';
-  bell.before(c);
-  document.getElementById("pd-sair-hd").onclick = sair;
-}
-
-/* ───────────────────────── Página «Utilizadores» (só administrador) ───────────────────────── */
-const IN = "border-themed border rounded-lg px-2 py-1.5 text-xs text-primary-themed w-full focus:outline-none focus:border-blue-500";
-function montarUtilizadores(perfil) {
-  if (!document.getElementById("tab-utilizadores")) {
-    const main = document.querySelector("main"), side = document.getElementById("sidebar");
-    if (!main || !side) return;
-    const tab = document.createElement("div");
-    tab.id = "tab-utilizadores"; tab.className = "tab-content hidden space-y-6";
-    tab.innerHTML = '<div class="pb-4 border-b border-themed"><h2 class="text-2xl font-black tracking-tight text-primary-themed">Utilizadores e perfis de acesso</h2>' +
-      '<p class="text-xs text-secondary-themed mt-1">Define quem pode ver e alterar o quê. As permissões são aplicadas no servidor (regras do Firestore).</p></div>' +
-      '<div class="card-themed rounded-2xl p-5 text-xs text-secondary-themed space-y-1"><p class="text-primary-themed font-bold text-sm mb-2">Como adicionar uma pessoa</p>' +
-      '<p>1. No Firebase: Authentication → Utilizadores → <strong class="text-primary-themed">Adicionar utilizador</strong> (e-mail + palavra-passe).</p>' +
-      '<p>2. A pessoa entra na plataforma uma primeira vez. Fica <strong class="text-amber-500">Pendente</strong> e aparece aqui.</p>' +
-      '<p>3. Escolhe o perfil abaixo: <strong class="text-primary-themed">Técnico</strong> (consulta e regista obras e requisições), <strong class="text-primary-themed">Supervisor</strong> (gere operações, aprova requisições, vê RH) ou <strong class="text-primary-themed">Administrador</strong> (tudo, incluindo RH e utilizadores).</p></div>' +
-      '<div class="card-themed rounded-2xl overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-secondary-themed uppercase text-[10px] tracking-wider border-b border-themed"><tr>' +
-      ["E-mail", "Nome", "Perfil", "Ativo"].map((t) => '<th class="p-3 font-bold">' + t + "</th>").join("") + '</tr></thead><tbody id="tabela-utilizadores" class="divide-y divide-themed"></tbody></table></div></div>';
-    main.appendChild(tab);
-    const btn = document.createElement("button");
-    btn.id = "btn-utilizadores"; btn.setAttribute("onclick", "switchTab('utilizadores')");
-    btn.className = "nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-secondary-themed hover:text-primary-themed";
-    btn.innerHTML = '<i class="fas fa-user-lock w-4 text-center"></i><span>Utilizadores</span>';
-    side.appendChild(btn);
-    tab.addEventListener("change", (e) => {
-      const t = e.target, { id, f } = t.dataset;
-      if (!id || !f) return;
-      let v = f === "ativo" ? t.checked : t.value;
-      if (f === "role" && v === "admin" && !confirm("Dar acesso total (administrador) a esta pessoa?")) { render(true); return; }
-      if (f === "nome") v = v.trim();
-      updateDoc(doc(db(), "utilizadores", id), { [f]: v }).catch((err) => { console.error(err); toast("Sem permissão para alterar este utilizador", "error"); render(true); });
-    });
-  }
-  if (!unsubUsers) {
-    unsubUsers = onSnapshot(collection(db(), "utilizadores"), (s) => { lista = s.docs.map((d) => ({ id: d.id, ...d.data() })); render(); }, (e) => console.error(e));
-  }
-}
-let lista = [], pendente = false;
-const editando = () => { const a = document.activeElement; return !!a && !!a.closest && !!a.closest("#tab-utilizadores") && /^(INPUT|SELECT)$/.test(a.tagName); };
-function render(force) {
-  const tb = document.getElementById("tabela-utilizadores");
-  if (!tb) return;
-  if (!force && editando()) { pendente = true; return; }
-  pendente = false;
-  const me = window.__perfil?.id;
-  const ord = [...lista].sort((a, b) => (a.role === "pendente" ? 0 : 1) - (b.role === "pendente" ? 0 : 1) || String(a.email).localeCompare(String(b.email)));
-  tb.innerHTML = ord.map((u) => {
-    const eu = u.id === me, id = esc(u.id), bloq = eu ? "disabled" : "";
-    return '<tr class="' + (u.role === "pendente" ? "bg-amber-500/5" : "") + '"><td class="p-3 text-primary-themed">' + esc(u.email) + (eu ? ' <span class="badge-modern bg-blue-500/15 text-blue-500">tu</span>' : "") + "</td>" +
-      '<td class="p-2 w-48"><input data-id="' + id + '" data-f="nome" value="' + esc(u.nome) + '" style="background: var(--bg-app);" class="' + IN + '"></td>' +
-      '<td class="p-2 w-44"><select data-id="' + id + '" data-f="role" ' + bloq + ' style="background: var(--bg-app);" class="' + IN + ' font-bold">' +
-      ["pendente", "tecnico", "supervisor", "admin"].map((r) => '<option value="' + r + '" ' + (u.role === r ? "selected" : "") + ">" + ROTULO[r] + "</option>").join("") + "</select></td>" +
-      '<td class="p-3"><input type="checkbox" data-id="' + id + '" data-f="ativo" ' + (u.ativo !== false ? "checked" : "") + " " + bloq + "></td></tr>";
-  }).join("") || '<tr><td colspan="4" class="p-6 text-center text-secondary-themed">Sem utilizadores.</td></tr>';
-  const n = lista.filter((u) => u.role === "pendente").length, b = document.getElementById("btn-utilizadores");
-  if (b) {
-    let s = b.querySelector(".pend-badge");
-    if (!s) { s = document.createElement("span"); s.className = "pend-badge ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500"; b.appendChild(s); }
-    s.textContent = n; s.style.display = n ? "" : "none";
-  }
-}
-document.addEventListener("focusout", (e) => { if (e.target.closest?.("#tab-utilizadores")) setTimeout(() => { if (pendente && !editando()) render(); }, 60); });
-</script>py-3 flex items-center justify-between z-30 border-themed" style="background: color-mix(in srgb, var(--bg-card) 85%, transparent);">
+    <header class="no-print sticky top-0 backdrop-blur-xl border-b px-4 md:px-6 py-3 flex items-center justify-between z-30 border-themed" style="background: color-mix(in srgb, var(--bg-card) 85%, transparent);">
         <div class="flex items-center gap-3 md:gap-5">
             <button onclick="toggleSidebarMobile()" class="md:hidden p-2 rounded-xl hover:bg-blue-500/10">
                 <i class="fas fa-bars text-primary-themed"></i>
