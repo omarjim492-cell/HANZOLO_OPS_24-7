@@ -405,6 +405,27 @@ table td, p {
         .tree .card-node { background: var(--bg-card); border: 2px solid var(--border); border-radius: 12px; padding: 12px; min-width: 180px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: all 0.2s; }
         .tree .card-node:hover { border-color: var(--accent); transform: scale(1.02); }
         .tree .card-node.root { background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; border: none; }
+        /* Organograma HANZOLO: cinco departamentos com reporte directo e cooperação horizontal */
+        .org-chart-v2{min-width:900px;display:flex;flex-direction:column;align-items:center;gap:18px;padding:18px 8px 28px}
+        .org-root{min-width:360px;max-width:620px;width:48%;padding:18px 24px;text-align:center;border-radius:16px;color:#fff;background:linear-gradient(110deg,#2563eb,#6d3de8);box-shadow:0 12px 28px #0003;display:flex;flex-direction:column;align-items:center;gap:5px}
+        .org-root-person{font-size:10px;background:#ffffff20;border-radius:7px;padding:5px 12px;width:100%;margin-top:3px}
+        .org-direct-label{display:flex;align-items:center;gap:12px;width:100%;color:var(--text-secondary);font-size:10px;letter-spacing:.09em;text-align:center}
+        .org-direct-label span{height:1px;background:var(--border);flex:1}
+        .org-departments-grid{width:100%;display:grid;grid-template-columns:repeat(5,minmax(170px,1fr));gap:12px;align-items:start}
+        .org-department{border:1px solid var(--border);border-top:3px solid var(--dept-color);border-radius:13px;overflow:hidden;background:var(--bg-card);min-height:150px}
+        .org-dept-head{display:flex;align-items:center;gap:8px;padding:12px 10px;background:color-mix(in srgb,var(--dept-color) 12%,var(--bg-card));color:var(--dept-color)}
+        .org-dept-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:color-mix(in srgb,var(--dept-color) 18%,transparent)}
+        .org-count{margin-left:auto;border-radius:20px;padding:3px 8px;background:color-mix(in srgb,var(--dept-color) 18%,transparent);font-size:10px;font-weight:800}
+        .org-members{padding:9px;display:flex;flex-direction:column;gap:7px}
+        .org-person{padding:9px;border:1px solid var(--border);border-radius:9px;background:var(--bg-app);text-align:center}
+        .org-person.org-leader{border-color:var(--dept-color);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--dept-color) 20%,transparent)}
+        .org-empty{padding:14px 5px;text-align:center;font-size:10px;color:var(--text-secondary)}
+        .org-cooperation{display:flex;align-items:center;gap:12px;max-width:780px;width:90%;padding:13px 18px;border:1px dashed #10b981;border-radius:12px;background:#10b98110;color:#10b981}
+        .org-cooperation i{font-size:20px}.org-cooperation small{display:block;color:var(--text-secondary);font-size:10px;margin-top:3px}
+        .org-transversal{width:100%;padding:14px;border:1px dashed var(--border);border-radius:12px}.org-transversal h3{font-size:11px;font-weight:800;color:var(--text-primary)}.org-transversal p{font-size:10px;color:var(--text-secondary);margin:4px 0 10px}
+        @media(max-width:1100px){.org-departments-grid{grid-template-columns:repeat(3,minmax(180px,1fr))}}
+        @media(max-width:700px){.org-departments-grid{grid-template-columns:repeat(2,minmax(170px,1fr))}.org-root{width:80%;min-width:280px}}
+
     </style>
 </head>
 <body class="font-sans antialiased min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
@@ -1342,10 +1363,12 @@ table td, p {
                     <label class="block text-secondary-themed mb-1.5 font-medium text-[11px] uppercase tracking-wide">Departamento</label>
                     <select id="novo-depto" class="w-full border-themed border rounded-xl px-3.5 py-2.5 text-primary-themed" style="background: var(--bg-app);">
                         <option value="">Automático (pela função)</option>
-                        <option value="direcao">Direção Geral</option><option value="chefia">Chefia de Departamento</option>
-                        <option value="dgp">DGP — Projectos</option><option value="supervisao">Supervisão</option>
-                        <option value="dse">DSE</option><option value="dl">DL — Lógico</option>
-                        <option value="tecnico">Corpo Técnico</option><option value="apoio">Apoio (Logística & RH)</option>
+                        <option value="direcao">Direção Geral</option>
+                        <option value="dse">DSE — Segurança Electrónica</option>
+                        <option value="dgp">DGP — Gestão de Projectos</option>
+                        <option value="compras">COMPRAS — Aquisição e Aprovisionamento</option>
+                        <option value="dl">DL — Departamento Lógico / Logística</option>
+                        <option value="frotas">FROTAS — Viaturas e Transporte</option>
                     </select>
                 </div>
                 <div class="pt-3 flex justify-end gap-2">
@@ -1792,15 +1815,13 @@ table td, p {
         };
 
         const DEPTOS = {
-            direcao:    { nome: 'DIREÇÃO GERAL',   sub: 'Administração',            cor: 'violet',  ic: 'fa-building' },
-            chefia:     { nome: 'CHEFIA',          sub: 'Chefes de Departamento',   cor: 'blue',    ic: 'fa-user-tie' },
-            dgp:        { nome: 'DGP',             sub: 'Coordenação de Projectos', cor: 'blue',    ic: 'fa-diagram-project' },
-            supervisao: { nome: 'SUPERVISÃO',      sub: 'Turnos & Obras',           cor: 'emerald', ic: 'fa-user-shield' },
-            dse:        { nome: 'DSE',             sub: 'Segurança Electrónica',    cor: 'cyan',    ic: 'fa-video' },
-            dl:         { nome: 'DL',              sub: 'Departamento Lógico',      cor: 'indigo',  ic: 'fa-network-wired' },
-            tecnico:    { nome: 'CORPO TÉCNICO',   sub: 'Execução de Campo',        cor: 'amber',   ic: 'fa-screwdriver-wrench' },
-            apoio:      { nome: 'APOIO',           sub: 'Logística & RH',           cor: 'violet',  ic: 'fa-briefcase' },
-            outros:     { nome: 'POR CLASSIFICAR', sub: 'Sem departamento',         cor: 'slate',   ic: 'fa-user' }
+            direcao:    { nome: 'DIREÇÃO GERAL', sub: 'Administração e decisão estratégica', cor: 'violet', ic: 'fa-building' },
+            dse:        { nome: 'DSE', sub: 'Segurança Electrónica', cor: 'cyan', ic: 'fa-video' },
+            dgp:        { nome: 'DGP', sub: 'Gestão de Projectos', cor: 'blue', ic: 'fa-diagram-project' },
+            compras:    { nome: 'COMPRAS', sub: 'Aquisição e aprovisionamento', cor: 'amber', ic: 'fa-cart-shopping' },
+            dl:         { nome: 'DL', sub: 'Departamento Lógico e Logística', cor: 'indigo', ic: 'fa-network-wired' },
+            frotas:     { nome: 'FROTAS', sub: 'Viaturas, transporte e manutenção', cor: 'pink', ic: 'fa-truck' },
+            transversal:{ nome: 'ÁREAS TRANSVERSAIS / A CLASSIFICAR', sub: 'Funções ainda sem departamento principal definido', cor: 'slate', ic: 'fa-people-group' }
         };
 
         let VIATURAS = [
@@ -2780,17 +2801,20 @@ function renderizarCartoesViaturas() {
         const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
         function classificarColab(c) {
-            if (c.depto && DEPTOS[c.depto]) return c.depto;
-            const t = (c.cargo || '').toLowerCase();
-            if (/diretor|director|ceo|administra|direção|direcao/.test(t) && !/departamento/.test(t)) return 'direcao';
-            if (/chefe de dep/.test(t)) return 'chefia';
-            if (/coorden|gestor de proj|projec|projet/.test(t)) return 'dgp';
-            if (/supervis|chefe de turno/.test(t)) return 'supervisao';
-            if (/dse|cftv|alarme|seguran/.test(t)) return 'dse';
-            if (/rede|sistema|inform|\bti\b|l[óo]gic/.test(t)) return 'dl';
-            if (/armaz|log[íi]st|compras|\brh\b|recursos|administrativ|apoio/.test(t)) return 'apoio';
-            if (/t[ée]cnico|campo|instalador|el[ée]tric/.test(t)) return 'tecnico';
-            return 'outros';
+            const depto = String(c.depto || c.departamento || c.area || c.setor || '').toLowerCase().trim();
+            const mapaDepto = { direcao: 'direcao', dse: 'dse', dgp: 'dgp', compras: 'compras', dl: 'dl', frotas: 'frotas' };
+            if (mapaDepto[depto]) return mapaDepto[depto];
+            const raw = [c.depto, c.departamento, c.area, c.setor, c.cargo, c.funcao].filter(Boolean).join(' ').toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            if (/diretor|director|ceo|direcao geral|administrador geral/.test(raw)) return 'direcao';
+            // A classificação do departamento tem prioridade sobre o cargo: chefes e técnicos
+            // permanecem no seu departamento, sem criar um nível hierárquico intermédio.
+            if (/\bdse\b|seguranca eletronica|cftv|videovigilancia|alarme/.test(raw)) return 'dse';
+            if (/\bdgp\b|gestao de projectos|gestao de projetos|coordenador de projectos|coordenador de projetos|gestor de projectos|gestor de projetos/.test(raw)) return 'dgp';
+            if (/\bcompras?\b|aprovisionamento|aquisicoes|procurement/.test(raw)) return 'compras';
+            if (/\bdl\b|departamento logico|logistica|armazem|redes|sistemas informaticos|infraestrutura informatica/.test(raw)) return 'dl';
+            if (/\bfrotas?\b|viaturas|motorista|condutor|mecanico de frota|gestao de frota|transporte/.test(raw)) return 'frotas';
+            return 'transversal';
         }
 
         function lerColabsDaTabela() {
@@ -2810,24 +2834,37 @@ function renderizarCartoesViaturas() {
             const lista = COLABORADORES.length ? COLABORADORES : lerColabsDaTabela();
             const alvos = document.querySelectorAll('.org-dinamico');
             if (!alvos.length) return;
-            const g = {}; Object.keys(DEPTOS).forEach(k => g[k] = []);
-            lista.forEach(c => g[classificarColab(c)].push(c));
-            
-            const pessoa = (c, cor) => `<li><div class="card-node !min-w-[160px] border-${cor}-500/40"><div class="font-bold text-[11px] text-primary-themed mb-1">${esc(c.nome)}</div><div class="text-[10px] text-${cor}-500">${esc(c.cargo)}</div></div></li>`;
-            const depto = k => {
-                const d = DEPTOS[k];
-                return `<li><div class="card-node border-${d.cor}-500/60 text-${d.cor}-500 mb-2"><i class="fas ${d.ic} mr-1"></i><span class="font-bold">${d.nome}</span><div class="text-[9px] text-secondary-themed font-normal mt-1">${d.sub} • ${g[k].length}</div></div><ul>${g[k].map(c => pessoa(c, d.cor)).join('')}</ul></li>`;
+            const chaves = ['dse','dgp','compras','dl','frotas','transversal'];
+            const grupos = Object.fromEntries(chaves.map(k => [k, []]));
+            const direcao = [];
+            lista.forEach(c => {
+                const k = classificarColab(c);
+                if (k === 'direcao') direcao.push(c);
+                else grupos[k].push(c);
+            });
+            const escTxt = v => esc(v || '');
+            const pessoa = (c, cor) => {
+                const chefia = /chefe|director|diretor|responsavel|coordenador|gestor|supervisor/i.test(c.cargo || '');
+                return `<div class="org-person ${chefia ? 'org-leader' : ''}"><div class="font-bold text-[11px] text-primary-themed">${escTxt(c.nome)}</div><div class="text-[10px] text-${cor}-500 mt-1">${escTxt(c.cargo || 'Colaborador')}</div></div>`;
             };
-            const nomes = arr => arr.map(p => `<div class="text-[10px] text-white/90 font-medium bg-white/10 px-2 py-1 rounded mt-1">${esc(p.nome)}</div>`).join('');
-
-            const filhos = ['dgp','supervisao','dse','dl','tecnico','apoio','outros'].filter(k => g[k].length).map(depto).join('');
-            const raiz = `<div class="card-node root min-w-[220px]"><i class="fas fa-building mr-2 mb-2 text-lg"></i><div class="font-black tracking-wider text-sm">DIREÇÃO GERAL</div>${nomes(g.direcao)}</div>`;
-            const chefia = `<div class="card-node border-blue-500/60 text-blue-500 min-w-[200px]"><i class="fas fa-user-tie mr-1 mb-1"></i><div class="font-bold">CHEFIA</div>${g.chefia.map(p => `<div class="text-[10px] text-primary-themed font-normal bg-gray-500/10 px-2 py-1 rounded mt-1">${esc(p.nome)} <br><span class="text-secondary-themed text-[9px]">${esc(p.cargo)}</span></div>`).join('')}</div>`;
-            const meio = g.chefia.length ? `<li>${chefia}<ul>${filhos}</ul></li>` : filhos;
-
-            const html = lista.length
-                ? `<div class="tree min-w-max text-xs"><ul><li>${raiz}<ul>${meio}</ul></li></ul></div>`
-                : `<p class="text-xs text-secondary-themed text-center py-8">Sem colaboradores registados.</p>`;
+            const cartaoDepto = k => {
+                const d = DEPTOS[k], membros = grupos[k];
+                const corHex = {dse:'#06b6d4',dgp:'#3b82f6',compras:'#f59e0b',dl:'#6366f1',frotas:'#ec4899',transversal:'#64748b'}[k];
+                return `<section class="org-department" style="--dept-color:${corHex}">
+                    <div class="org-dept-head"><div class="org-dept-icon"><i class="fas ${d.ic}"></i></div><div><div class="font-black text-sm">${d.nome}</div><div class="text-[10px] opacity-80">${d.sub}</div></div><span class="org-count">${membros.length}</span></div>
+                    <div class="org-members">${membros.length ? membros.map(c => pessoa(c, d.cor)).join('') : '<div class="org-empty">Sem colaboradores associados</div>'}</div>
+                </section>`;
+            };
+            const raiz = `<div class="org-root"><i class="fas fa-building text-lg"></i><div class="font-black tracking-wide">DIREÇÃO GERAL</div><div class="text-[10px] opacity-80">Autoridade máxima • reporte directo dos departamentos</div>${direcao.map(c => `<div class="org-root-person">${escTxt(c.nome)}${c.cargo ? ' · '+escTxt(c.cargo) : ''}</div>`).join('')}</div>`;
+            const departamentos = chaves.filter(k => k !== 'transversal');
+            const transversal = grupos.transversal;
+            const html = `<div class="org-chart-v2">
+                ${raiz}
+                <div class="org-direct-label"><span></span><b>5 DEPARTAMENTOS INDEPENDENTES · REPORTE DIRECTO À DIREÇÃO GERAL</b><span></span></div>
+                <div class="org-departments-grid">${departamentos.map(cartaoDepto).join('')}</div>
+                <div class="org-cooperation"><i class="fas fa-arrows-left-right"></i><div><b>INTERLIGAÇÃO OPERACIONAL</b><small>Partilha de projectos, requisições, compras, materiais, logística, transporte e recursos — sem subordinação entre departamentos.</small></div></div>
+                ${transversal.length ? `<div class="org-transversal"><h3><i class="fas fa-people-group"></i> ÁREAS TRANSVERSAIS / A CLASSIFICAR</h3><p>Colaboradores cuja área principal ainda não foi identificada nos seus dados.</p><div class="org-members">${transversal.map(c => pessoa(c,'slate')).join('')}</div></div>` : ''}
+            </div>`;
             alvos.forEach(el => el.innerHTML = html);
         }
 
